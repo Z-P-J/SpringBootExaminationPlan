@@ -22,4 +22,4 @@
 1. 导入数据库sql文件exam.sql
 2. VS Code打开项目examination-plan-web，控制台运行npm install 和 npm run dev
 3. IDEA打开项目examination-plan-server，运行
-4. 浏览器输入http://localhost:9999/打开网页
+4. 浏览器输入http://localhost:9999/ 打开网页
