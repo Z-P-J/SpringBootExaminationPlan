@@ -1,68 +1,21 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : mysql
+ Source Server         : ExaminationPlan
  Source Server Type    : MySQL
- Source Server Version : 80016
+ Source Server Version : 80018
  Source Host           : localhost:3306
- Source Schema         : exam
+ Source Schema         : examination_plan_system
 
  Target Server Type    : MySQL
- Target Server Version : 80016
+ Target Server Version : 80018
  File Encoding         : 65001
 
- Date: 23/06/2020 02:22:31
+ Date: 23/06/2020 00:47:22
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
-
--- ----------------------------
--- Table structure for account
--- ----------------------------
-DROP TABLE IF EXISTS `account`;
-CREATE TABLE `account`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户Id',
-  `email` varchar(64) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '邮箱',
-  `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT '用户名',
-  `password` varchar(512) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '密码',
-  `register_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '注册时间',
-  `login_time` datetime(0) NULL DEFAULT NULL COMMENT '上一次登录时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `ix_account_name`(`name`) USING BTREE,
-  UNIQUE INDEX `ix_account_email`(`email`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of account
--- ----------------------------
-INSERT INTO `account` VALUES (1, '123456@qq.com', 'admin', 'admin123', '2019-07-01 00:00:00', '2020-06-21 22:46:47');
-INSERT INTO `account` VALUES (2, 'editor@qq.com', 'editor', '$2a$10$/m4SgZ.ZFVZ7rcbQpJW2tezmuhf/UzQtpAtXb0WZiAE3TeHxq2DYu', '2019-07-02 00:00:00', '2019-07-02 00:00:00');
-INSERT INTO `account` VALUES (3, 'test@qq.com', 'test', '$2a$10$.0gBYBHAtdkxUUQNg3kII.fqGOngF4BLe8JavthZFalt2QIXHlrhm', '2019-07-03 00:00:00', '2019-07-03 00:00:00');
-INSERT INTO `account` VALUES (6, '1@qq.com', '4321', '123456', '2020-06-20 17:46:24', '2020-06-20 18:34:21');
-INSERT INTO `account` VALUES (7, '1111@qq.com', '123', '123456', '2020-06-21 22:51:40', NULL);
-
--- ----------------------------
--- Table structure for account_role
--- ----------------------------
-DROP TABLE IF EXISTS `account_role`;
-CREATE TABLE `account_role`  (
-  `account_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户Id',
-  `role_id` bigint(20) UNSIGNED NOT NULL COMMENT '角色Id',
-  PRIMARY KEY (`account_id`, `role_id`) USING BTREE,
-  INDEX `role_id`(`role_id`) USING BTREE,
-  CONSTRAINT `account_role_fk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `account_role_fk_2` FOREIGN KEY (`account_id`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户角色表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of account_role
--- ----------------------------
-INSERT INTO `account_role` VALUES (1, 1);
-INSERT INTO `account_role` VALUES (2, 2);
-INSERT INTO `account_role` VALUES (6, 2);
-INSERT INTO `account_role` VALUES (7, 2);
-INSERT INTO `account_role` VALUES (3, 3);
 
 -- ----------------------------
 -- Table structure for certificate_replace_relationship
@@ -78,6 +31,10 @@ CREATE TABLE `certificate_replace_relationship`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of certificate_replace_relationship
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for course_charge
 -- ----------------------------
 DROP TABLE IF EXISTS `course_charge`;
@@ -86,39 +43,39 @@ CREATE TABLE `course_charge`  (
   `exam_id` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `course_register_charge` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`course_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of course_charge
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for course_info
 -- ----------------------------
 DROP TABLE IF EXISTS `course_info`;
 CREATE TABLE `course_info`  (
-  `course_id` varchar(5) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-  `national_course_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
-  `course_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
-  `course_specification` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
-  `test_source` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
-  `course_status` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `course_id` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `national_course_id` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `course_name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `course_specification` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `test_source` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `course_status` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `credit` int(255) NULL DEFAULT NULL,
   `qualified_score` int(255) NULL DEFAULT NULL,
-  `score_scale` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `score_scale` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `subjective_score` int(255) NULL DEFAULT NULL,
   `objective_score` int(255) NULL DEFAULT NULL,
   `total_score` int(255) NULL DEFAULT NULL,
   `exam_duration` int(255) NULL DEFAULT NULL,
   `is_procedural` tinyint(1) NULL DEFAULT NULL,
-  `course_property` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
-  `notes` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL,
+  `course_property` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `notes` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`course_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of course_info
 -- ----------------------------
-INSERT INTO `course_info` VALUES ('00001', '00001', '英语', '英语课程', '全国命题', '0', NULL, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
-INSERT INTO `course_info` VALUES ('00002', '00002', '英语2', '英语课程2', '全国命题', '0', NULL, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
-INSERT INTO `course_info` VALUES ('00003', '00003', '英语3', '英语课程3', '全国命题', '0', NULL, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
-INSERT INTO `course_info` VALUES ('00004', '00004', '数学', '数学课程', '全国命题', '0', NULL, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
 
 -- ----------------------------
 -- Table structure for course_textbook_info
@@ -144,6 +101,10 @@ CREATE TABLE `course_textbook_info`  (
   `textbook_end_exam_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
   PRIMARY KEY (`course_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of course_textbook_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for detail_of_student_service
@@ -178,7 +139,11 @@ number_of_full_time_teachers` int(255) NULL DEFAULT NULL COMMENT '转职教学�
   `means_of_student_servicies` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '助学手段',
   `number_of_students` int(255) NULL DEFAULT NULL COMMENT '学员数',
   PRIMARY KEY (`main_key`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of detail_of_student_service
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for elective_course_relationship_info
@@ -194,6 +159,10 @@ CREATE TABLE `elective_course_relationship_info`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of elective_course_relationship_info
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for exam_course
 -- ----------------------------
 DROP TABLE IF EXISTS `exam_course`;
@@ -202,7 +171,11 @@ CREATE TABLE `exam_course`  (
   `course_id` varchar(5) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `time_id` varchar(1) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`exam_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of exam_course
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for exam_course_info
@@ -217,6 +190,10 @@ CREATE TABLE `exam_course_info`  (
   `end_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`exam_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of exam_course_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for exam_info
@@ -234,7 +211,11 @@ CREATE TABLE `exam_info`  (
   `photo_charge` int(255) UNSIGNED ZEROFILL NULL DEFAULT 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010,
   `notes` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`exams_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of exam_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for exam_major_info
@@ -245,6 +226,10 @@ CREATE TABLE `exam_major_info`  (
   `major_id` varchar(7) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
   PRIMARY KEY (`exam_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of exam_major_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for exam_plan_approve_info
@@ -258,6 +243,10 @@ CREATE TABLE `exam_plan_approve_info`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of exam_plan_approve_info
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for exam_time
 -- ----------------------------
 DROP TABLE IF EXISTS `exam_time`;
@@ -268,7 +257,11 @@ CREATE TABLE `exam_time`  (
   `start_time` datetime(0) NULL DEFAULT NULL,
   `end_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`exam_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of exam_time
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for expend_major_apply
@@ -285,6 +278,10 @@ CREATE TABLE `expend_major_apply`  (
   `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
   PRIMARY KEY (`school_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of expend_major_apply
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for information_of_service_center
@@ -305,7 +302,11 @@ CREATE TABLE `information_of_service_center`  (
   `approval_nomber` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '审批文号',
   `service_center_introduction` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL COMMENT '服务中心简介',
   PRIMARY KEY (`main_key`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = COMPACT;
+
+-- ----------------------------
+-- Records of information_of_service_center
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for major_direction
@@ -317,7 +318,11 @@ CREATE TABLE `major_direction`  (
   `direction_name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `total_credit` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`major_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of major_direction
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for major_info
@@ -352,7 +357,11 @@ CREATE TABLE `major_info`  (
   `graduation_condition` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
   `notes` text CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL,
   PRIMARY KEY (`major_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of major_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for major_plan_adjust_apply
@@ -373,6 +382,10 @@ CREATE TABLE `major_plan_adjust_apply`  (
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of major_plan_adjust_apply
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for major_plan_adjust_course
 -- ----------------------------
 DROP TABLE IF EXISTS `major_plan_adjust_course`;
@@ -382,6 +395,10 @@ CREATE TABLE `major_plan_adjust_course`  (
   `new_course_id` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`major_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of major_plan_adjust_course
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for major_plan_version
@@ -397,7 +414,11 @@ CREATE TABLE `major_plan_version`  (
   `leader_sign` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `leader_sign_file` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   PRIMARY KEY (`plan_version_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of major_plan_version
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for major_school
@@ -408,7 +429,11 @@ CREATE TABLE `major_school`  (
   `main_target_school` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `main_target_school_code` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`major_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of major_school
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for nation_course
@@ -419,7 +444,11 @@ CREATE TABLE `nation_course`  (
   `course_name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `credit` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`nation_major_code`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of nation_course
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for nation_major
@@ -432,7 +461,11 @@ CREATE TABLE `nation_major`  (
   `education_level` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `credit` int(255) NULL DEFAULT NULL,
   PRIMARY KEY (`national_major_code`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of nation_major
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for new_major_apply
@@ -450,32 +483,8 @@ CREATE TABLE `new_major_apply`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for permission
+-- Records of new_major_apply
 -- ----------------------------
-DROP TABLE IF EXISTS `permission`;
-CREATE TABLE `permission`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '权限Id',
-  `resource` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限对应的资源',
-  `code` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '权限的代码/通配符,对应代码中@hasAuthority(xx)',
-  `handle` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '对应的资源操作',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '权限表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of permission
--- ----------------------------
-INSERT INTO `permission` VALUES (1, '账号', 'account:list', '列表');
-INSERT INTO `permission` VALUES (2, '账号', 'account:detail', '详情');
-INSERT INTO `permission` VALUES (3, '账号', 'account:add', '添加');
-INSERT INTO `permission` VALUES (4, '账号', 'account:update', '更新');
-INSERT INTO `permission` VALUES (5, '账号', 'account:delete', '删除');
-INSERT INTO `permission` VALUES (6, '账号', 'account:search', '搜索');
-INSERT INTO `permission` VALUES (7, '角色', 'role:list', '列表');
-INSERT INTO `permission` VALUES (8, '角色', 'role:detail', '详情');
-INSERT INTO `permission` VALUES (9, '角色', 'role:add', '添加');
-INSERT INTO `permission` VALUES (10, '角色', 'role:update', '更新');
-INSERT INTO `permission` VALUES (11, '角色', 'role:delete', '删除');
-INSERT INTO `permission` VALUES (12, '角色', 'role:search', '搜索');
 
 -- ----------------------------
 -- Table structure for pro_course_info
@@ -492,6 +501,10 @@ CREATE TABLE `pro_course_info`  (
   `notes` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
   PRIMARY KEY (`major_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of pro_course_info
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for pro_course_replace_relationship
@@ -511,6 +524,10 @@ CREATE TABLE `pro_course_replace_relationship`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of pro_course_replace_relationship
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for renew_major_apply
 -- ----------------------------
 DROP TABLE IF EXISTS `renew_major_apply`;
@@ -527,43 +544,8 @@ CREATE TABLE `renew_major_apply`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for role
+-- Records of renew_major_apply
 -- ----------------------------
-DROP TABLE IF EXISTS `role`;
-CREATE TABLE `role`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '角色Id',
-  `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '角色名称',
-  `create_time` datetime(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
-  `update_time` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of role
--- ----------------------------
-INSERT INTO `role` VALUES (1, '超级管理员', '2019-07-01 00:00:00', '2019-07-01 00:00:00');
-INSERT INTO `role` VALUES (2, '普通用户', '2019-07-01 00:00:00', '2019-07-01 00:00:00');
-INSERT INTO `role` VALUES (3, '测试', '2019-07-01 00:00:00', '2019-07-01 00:00:00');
-
--- ----------------------------
--- Table structure for role_permission
--- ----------------------------
-DROP TABLE IF EXISTS `role_permission`;
-CREATE TABLE `role_permission`  (
-  `role_id` bigint(20) UNSIGNED NOT NULL COMMENT '角色Id',
-  `permission_id` bigint(20) UNSIGNED NOT NULL COMMENT '权限Id',
-  PRIMARY KEY (`role_id`, `permission_id`) USING BTREE,
-  INDEX `permission_id`(`permission_id`) USING BTREE,
-  CONSTRAINT `role_permission_fk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `role_permission_fk_2` FOREIGN KEY (`permission_id`) REFERENCES `permission` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色权限表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of role_permission
--- ----------------------------
-INSERT INTO `role_permission` VALUES (3, 1);
-INSERT INTO `role_permission` VALUES (3, 5);
 
 -- ----------------------------
 -- Table structure for theory_practice
@@ -573,6 +555,10 @@ CREATE TABLE `theory_practice`  (
   `theory_course_id` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `practice_course_id` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   PRIMARY KEY (`theory_course_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Records of theory_practice
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;

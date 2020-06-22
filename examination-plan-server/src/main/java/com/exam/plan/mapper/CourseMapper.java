@@ -1,15 +1,11 @@
 package com.exam.plan.mapper;
 
-import com.exam.plan.entity.Course;
-import com.exam.plan.entity.Role;
-import com.exam.plan.entity.RoleWithResource;
+import com.exam.plan.entity.CourseInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 @Mapper
-public interface CourseMapper extends MyMapper<Course> {
+public interface CourseMapper extends MyMapper<CourseInfo> {
 //  /**
 //   * 获取所有角色以及对应的权限
 //   *

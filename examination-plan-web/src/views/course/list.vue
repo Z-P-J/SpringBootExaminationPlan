@@ -34,13 +34,13 @@
         </template>
       </el-table-column>
       <el-table-column label="课程编码" align="center" prop="courseId" />
-      <el-table-column label="国家课程代码" align="center" prop="courseCode" />
+      <el-table-column label="国家课程代码" align="center" prop="nationalCourseId" />
       <el-table-column label="课程名" align="center" prop="courseName" />
-      <el-table-column label="课程说明" align="center" prop="courseDesc" />
+      <el-table-column label="课程说明" align="center" prop="courseSpecification" />
       <el-table-column label="课程性质" align="center" prop="curriculum" />
-      <!-- <el-table-column label="课程状态" align="center" prop="courseState" /> -->
-      <el-table-column label="课程状态" align="center" prop="courseState">
-        <template slot-scope="scope">{{ scope.row.courseState == '0' ? "正常" : "注销" }}</template>
+      <!-- <el-table-column label="课程状态" align="center" prop="courseStatus" /> -->
+      <el-table-column label="课程状态" align="center" prop="courseStatus">
+        <template slot-scope="scope">{{ scope.row.courseStatus == '0' ? "正常" : "注销" }}</template>
       </el-table-column>
       <!-- <el-table-column label="创建时间" align="center" prop="courseName">
         <template slot-scope="scope">{{ unix2CurrentTime(scope.row.courseName) }}</template>
@@ -137,19 +137,22 @@
           </div>
         </el-form-item>
       </el-form>
+
+
+
       <div slot="footer" class="dialog-footer">
         <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
         <el-button
           v-if="dialogStatus === 'add'"
           type="success"
           :loading="btnLoading"
-          @click.native.prevent="addRole"
+          @click.native.prevent="addCourse"
         >添加</el-button>
         <el-button
           v-if="dialogStatus === 'update'"
           type="primary"
           :loading="btnLoading"
-          @click.native.prevent="updateRole"
+          @click.native.prevent="updateCourse"
         >更新</el-button>
       </div>
     </el-dialog>
@@ -160,8 +163,8 @@ import {
   // listRoleWithPermission,
   list,
   // listResourcePermission,
-  add as addRole,
-  update as updateRole,
+  add as addCourse,
+  update as updateCourse,
   remove
 } from '@/api/course'
 import { unix2CurrentTime } from '@/utils'
@@ -210,6 +213,24 @@ export default {
         id: '',
         name: '',
         permissionIdList: []
+      },
+      tempCourse: {
+        courseId: '',
+        nationalCourseId: '',
+        courseName: '',
+        courseSpecification: '无',
+        testSource: '全国命题',
+        courseStatus: '0',
+        credit: 3,
+        qualifiedScore: 60,
+        scoreScale: '100分制',
+        subjectiveScore: 40,
+        objectiveScore: 60,
+        totalScore: 100,
+        examDuration: 120,
+        isProcedural: 0,
+        courseProperty: '理论',
+        notes: '无'
       },
       createRules: {
         name: [{ required: true, trigger: 'blur', validator: validateRoleName }]
@@ -274,6 +295,29 @@ export default {
      * 显示新增角色对话框
      */
     showAddRoleDialog() {
+      addCourse({
+        courseId: '00005',
+        nationalCourseId: '00005',
+        courseName: '数学',
+        courseSpecification: '数学课程',
+        testSource: '全国命题',
+        courseStatus: '0',
+        credit: 3,
+        qualifiedScore: 60,
+        scoreScale: '100分制',
+        subjectiveScore: 40,
+        objectiveScore: 60,
+        totalScore: 100,
+        examDuration: 120,
+        isProcedural: 0,
+        courseProperty: '理论',
+        notes: '无'
+      }).then(() => {
+        this.$message.success('添加成功')
+        this.getRoleList()
+      }).catch(res => {
+        this.$message.error('添加角色失败')
+      })
       this.dialogFormVisible = true
       this.dialogStatus = 'add'
       this.tempRole.name = ''
@@ -327,14 +371,14 @@ export default {
     /**
      * 添加新角色
      */
-    addRole() {
+    addCourse() {
       this.$refs.tempRole.validate(valid => {
         if (
           valid &&
           this.isRoleNameUnique(this.tempRole.id, this.tempRole.name)
         ) {
           this.btnLoading = true
-          addRole(this.tempRole).then(() => {
+          addCourse(this.tempRole).then(() => {
             this.$message.success('添加成功')
             this.getRoleList()
             this.dialogFormVisible = false
@@ -350,14 +394,14 @@ export default {
     /**
      * 修改角色
      */
-    updateRole() {
+    updateCourse() {
       this.$refs.tempRole.validate(valid => {
         if (
           valid &&
           this.isRoleNameUnique(this.tempRole.id, this.tempRole.name)
         ) {
           this.btnLoading = true
-          updateRole(this.tempRole).then(() => {
+          updateCourse(this.tempRole).then(() => {
             this.$message.success('更新成功')
             this.getRoleList()
             this.dialogFormVisible = false

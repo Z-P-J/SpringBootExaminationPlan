@@ -1,13 +1,9 @@
 package com.exam.plan.service;
 
-import com.exam.plan.entity.Course;
-import com.exam.plan.entity.Role;
+import com.exam.plan.entity.CourseInfo;
 import com.exam.plan.entity.RoleWithPermission;
-import com.exam.plan.entity.RoleWithResource;
 
-import java.util.List;
-
-public interface ICourseService extends Service<Course> {
+public interface ICourseService extends Service<CourseInfo> {
 
 //  /**
 //   * 新建角色

@@ -24,25 +24,25 @@ export function list(params) {
 //   })
 // }
 
-export function add(roleForm) {
+export function add(courseForm) {
   return request({
     url: '/course',
     method: 'post',
-    data: roleForm
+    data: courseForm
   })
 }
 
-export function update(roleForm) {
+export function update(courseForm) {
   return request({
     url: '/course',
     method: 'put',
-    data: roleForm
+    data: courseForm
   })
 }
 
-export function remove(roleId) {
+export function remove(courseId) {
   return request({
-    url: '/course/' + roleId,
+    url: '/course/' + courseId,
     method: 'delete'
   })
 }

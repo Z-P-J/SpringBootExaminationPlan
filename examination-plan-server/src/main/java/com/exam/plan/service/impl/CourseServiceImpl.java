@@ -1,22 +1,19 @@
 package com.exam.plan.service.impl;
 
-import com.exam.plan.entity.*;
+import com.exam.plan.entity.CourseInfo;
+import com.exam.plan.entity.RolePermission;
+import com.exam.plan.entity.RoleWithPermission;
 import com.exam.plan.mapper.CourseMapper;
-import com.exam.plan.mapper.PermissionMapper;
-import com.exam.plan.mapper.RoleMapper;
-import com.exam.plan.mapper.RolePermissionMapper;
 import com.exam.plan.service.ICourseService;
-import com.exam.plan.service.IRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class CourseServiceImpl extends AbstractService<Course> implements ICourseService {
+public class CourseServiceImpl extends AbstractService<CourseInfo> implements ICourseService {
   @Resource
   private CourseMapper courseMapper;
 
@@ -30,7 +27,7 @@ public class CourseServiceImpl extends AbstractService<Course> implements ICours
 //  }
 
   @Override
-  public void save(Course entity) {
+  public void save(CourseInfo entity) {
 
     this.courseMapper.insert(entity);
   }
