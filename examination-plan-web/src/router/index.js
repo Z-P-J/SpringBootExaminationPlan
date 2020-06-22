@@ -80,5 +80,162 @@ export const asyncRouterMap = [
       component: _import('role/list'),
       meta: { permission: ['role:list'] }
     }]
+  },
+  // {
+  //   path: '/role1',
+  //   component: Layout,
+  //   redirect: '/role/list',
+  //   icon: 'role',
+  //   noDropDown: true,
+  //   name: '计划管理',
+  //   children: [
+  //     {
+  //       path: 'list',
+  //       name: '专业计划',
+  //       component: _import('role/list'),
+  //       meta: { permission: ['role:list'] }
+  //     },
+  //     {
+  //       path: 'list',
+  //       name: '专业管理',
+  //       component: _import('role/list'),
+  //       meta: { permission: ['role:list'] }
+  //     },
+  //     {
+  //       path: 'list',
+  //       name: '课程管理',
+  //       component: _import('role/list'),
+  //       meta: { permission: ['role:list'] }
+  //     },
+  //     {
+  //       path: 'list',
+  //       name: '专业课程管理',
+  //       component: _import('role/list'),
+  //       meta: { permission: ['role:list'] }
+  //     },
+  //     {
+  //       path: 'list',
+  //       name: '专业计划统计报表',
+  //       component: _import('role/list'),
+  //       meta: { permission: ['role:list'] }
+  //     }
+  //   ]
+  // },
+  {
+    path: '/role2',
+    component: Layout,
+    redirect: '/role/list',
+    icon: 'role',
+    noDropDown: true,
+    // name: '专业计划',
+    children: [{
+      path: 'list',
+      name: '专业计划',
+      component: _import('role/list'),
+      meta: { permission: ['role:list'] }
+    }]
+  },
+  {
+    path: '/role3',
+    component: Layout,
+    redirect: '/role/list',
+    icon: 'role',
+    noDropDown: true,
+    // name: '专业管理',
+    children: [{
+      path: 'list',
+      name: '专业管理',
+      component: _import('role/list'),
+      meta: { permission: ['role:list'] }
+    }]
+  },
+  {
+    path: '/role4',
+    component: Layout,
+    redirect: '/role/list',
+    icon: 'role',
+    noDropDown: true,
+    // name: '考次管理',
+    children: [{
+      path: 'list',
+      name: '考次管理',
+      component: _import('role/list'),
+      meta: { permission: ['role:list'] }
+    }]
+  },
+  {
+    path: '/course',
+    component: Layout,
+    redirect: '/course/list',
+    icon: 'role',
+    noDropDown: true,
+    // name: '课程管理',
+    children: [{
+      path: 'list',
+      name: '课程管理',
+      component: _import('course/list')
+      // meta: { permission: ['role:list'] }
+    }, {
+      path: 'detail',
+      name: '课程详情',
+      component: _import('course/detail')
+      // meta: { permission: ['role:list'] }
+    }]
+  },
+  {
+    path: '/role6',
+    component: Layout,
+    redirect: '/role/list',
+    icon: 'role',
+    noDropDown: true,
+    // name: '专业课程',
+    children: [{
+      path: 'list',
+      name: '专业课程',
+      component: _import('role/list'),
+      meta: { permission: ['role:list'] }
+    }]
+  },
+  {
+    path: '/role7',
+    component: Layout,
+    redirect: '/role/list',
+    icon: 'role',
+    noDropDown: true,
+    // name: '考试计划',
+    children: [{
+      path: 'list',
+      name: '考试计划',
+      component: _import('role/list'),
+      meta: { permission: ['role:list'] }
+    }]
+  },
+  {
+    path: '/role8',
+    component: Layout,
+    redirect: '/role/list',
+    icon: 'role',
+    noDropDown: true,
+    // name: '专业申报',
+    children: [{
+      path: 'list',
+      name: '专业申报',
+      component: _import('role/list'),
+      meta: { permission: ['role:list'] }
+    }]
+  },
+  {
+    path: '/role9',
+    component: Layout,
+    redirect: '/role/list',
+    icon: 'role',
+    noDropDown: true,
+    // name: '助学管理',
+    children: [{
+      path: 'list',
+      name: '助学管理',
+      component: _import('role/list'),
+      meta: { permission: ['role:list'] }
+    }]
   }
 ]
