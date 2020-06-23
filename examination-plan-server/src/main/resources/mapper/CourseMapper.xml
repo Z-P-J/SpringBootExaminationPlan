@@ -21,10 +21,17 @@
 <!--        </collection>-->
 <!--    </resultMap>-->
 
-<!--    <select id="listRoles" resultMap="RoleWithResourceMap">-->
-<!--        SELECT r.*-->
-<!--        FROM role r-->
-<!--        ORDER BY r.id-->
+<!--    <resultMap id="CourseTextBookInfo" type="com.exam.plan.entity.CourseTextBookInfo">-->
+<!--        <id column="course_id" jdbcType="BIGINT" property="courseId"/>-->
+<!--        <result column="name" jdbcType="VARCHAR" property="name"/>-->
+<!--        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>-->
+<!--        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>-->
+<!--    </resultMap>-->
+
+<!--    <select id="listTextbook" parameterType="java.lang.Integer" resultType="com.exam.plan.entity.CourseTextBookInfo">-->
+<!--        SELECT *-->
+<!--        FROM course_textbook_info r-->
+<!--        ORDER BY r.course_id-->
 <!--    </select>-->
 
     <update id="updateTimeById">
