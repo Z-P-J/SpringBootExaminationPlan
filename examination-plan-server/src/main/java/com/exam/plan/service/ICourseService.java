@@ -1,8 +1,6 @@
 package com.exam.plan.service;
 
-import com.exam.plan.entity.CourseInfo;
-import com.exam.plan.entity.CourseTextBookInfo;
-import com.exam.plan.entity.RoleWithPermission;
+import com.exam.plan.entity.*;
 
 import java.util.List;
 
@@ -38,5 +36,14 @@ public interface ICourseService extends Service<CourseInfo> {
   void updateTextbook(CourseTextBookInfo info);
 
   void saveTextbook(CourseTextBookInfo info);
+
+
+  List<CourseCharge> listCharge();
+
+  CourseCharge getChargeById(Object id);
+
+  List<CourseNational> listNationalCourse();
+
+  CourseNational getNationalCourseById(Object id);
 
 }

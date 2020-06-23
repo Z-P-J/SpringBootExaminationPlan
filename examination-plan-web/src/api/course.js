@@ -8,7 +8,7 @@ import request from '@/utils/request'
 //   })
 // }
 
-export function list(params) {
+export function listCourse(params) {
   return request({
     url: '/course',
     method: 'get',

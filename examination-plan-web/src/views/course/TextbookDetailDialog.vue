@@ -111,14 +111,26 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="开始使用考次">
+      <el-form-item label="开始使用日期">
         <el-col :span="12">
-          <el-input v-model="value.data.textbookStartExamId" />
+          <!-- <el-input v-model="value.data.textbookStartTime" /> -->
+          <el-date-picker
+            v-model="value.data.textbookStartTime"
+            type="date"
+            clearable="false"
+            placeholder="选择日期">
+          </el-date-picker>
         </el-col>
       </el-form-item>
-      <el-form-item label="结束使用考次">
+      <el-form-item label="结束使用日期">
         <el-col :span="12">
-          <el-input v-model="value.data.textbookEndExamId" />
+          <!-- <el-input v-model="value.data.textbookEndTime" /> -->
+          <el-date-picker
+            v-model="value.data.textbookEndTime"
+            type="date"
+            clearable="false"
+            placeholder="选择日期">
+          </el-date-picker>
         </el-col>
       </el-form-item>
 
@@ -212,6 +224,7 @@ export default {
             this.btnLoading = false
           })
         } else {
+          this.$message.error('输入内容有误')
           console.log('表单无效')
         }
       })

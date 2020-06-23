@@ -37,7 +37,7 @@
       <el-table-column label="国家课程代码" align="center" prop="nationalCourseId" />
       <el-table-column label="课程名" align="center" prop="courseName" />
       <el-table-column label="课程说明" align="center" prop="courseSpecification" />
-      <el-table-column label="课程性质" align="center" prop="curriculum" />
+      <el-table-column label="课程性质" align="center" prop="courseProperty" />
       <el-table-column label="课程状态" align="center" prop="courseStatus">
         <template slot-scope="scope">{{ scope.row.courseStatus == '0' ? "正常" : "注销" }}</template>
       </el-table-column>
@@ -74,7 +74,7 @@
 </template>
 <script>
 import {
-  list,
+  listCourse,
   removeCourse
 } from '@/api/course'
 import { unix2CurrentTime } from '@/utils'
@@ -193,7 +193,7 @@ export default {
      */
     getCourseList() {
       this.listLoading = true
-      list(this.listQuery).then(response => {
+      listCourse(this.listQuery).then(response => {
         console.log('data=' + JSON.stringify(response.data))
         this.roleList = response.data.list
         this.total = response.data.total

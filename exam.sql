@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 23/06/2020 18:29:20
+ Date: 24/06/2020 01:46:50
 */
 
 SET NAMES utf8mb4;
@@ -89,6 +89,12 @@ CREATE TABLE `course_charge`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of course_charge
+-- ----------------------------
+INSERT INTO `course_charge` VALUES ('00001', '1', 100);
+INSERT INTO `course_charge` VALUES ('00002', '2', 1000);
+
+-- ----------------------------
 -- Table structure for course_info
 -- ----------------------------
 DROP TABLE IF EXISTS `course_info`;
@@ -115,7 +121,7 @@ CREATE TABLE `course_info`  (
 -- ----------------------------
 -- Records of course_info
 -- ----------------------------
-INSERT INTO `course_info` VALUES ('00001', '00001', '英语', '英语课程', '全国命题', '0', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
+INSERT INTO `course_info` VALUES ('00001', '00001', '英语', '英语课程', '全国命题', '0', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '');
 INSERT INTO `course_info` VALUES ('00002', '00002', '英语2', '英语课程2', '全国命题', '0', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
 INSERT INTO `course_info` VALUES ('00003', '00003', '英语3', '英语课程3', '全国命题', '0', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
 INSERT INTO `course_info` VALUES ('00004', '00004', '数学', '数学课程', '全国命题', '0', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
@@ -142,16 +148,16 @@ CREATE TABLE `course_textbook_info`  (
   `textbook_select_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
   `syllabus` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
   `textbook_use_status` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
-  `textbook_start_exam_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
-  `textbook_end_exam_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_czech_ci NULL DEFAULT NULL,
+  `textbook_start_time` date NULL DEFAULT NULL,
+  `textbook_end_time` date NULL DEFAULT NULL,
   PRIMARY KEY (`course_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_czech_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of course_textbook_info
 -- ----------------------------
-INSERT INTO `course_textbook_info` VALUES ('00001', '英语', '000000001', '英语', '12345678', '教材', '张三', '张三', '出版社', '1.0', '2020-06-23', 100, '国家统编', '教材大纲', '在用', '教材开始使用考次', '教材结束使用考次');
-INSERT INTO `course_textbook_info` VALUES ('00002', '数学', '000000002', '数学', '12345', '教材', '未知', '未知', '未知', '1.0', '2020-01-01', 50, '国家统编', 'sedrfhgtjghnvk', '在用', '', '');
+INSERT INTO `course_textbook_info` VALUES ('00001', '英语', '000000001', '英语', '12345678', '教材', '张三', '张三', '出版社', '1.0', '2020-06-23', 100, '国家统编', '教材大纲', '在用', '2020-01-02', '2020-12-01');
+INSERT INTO `course_textbook_info` VALUES ('00002', '数学', '000000002', '数学', '12345', '教材', '未知', '未知', '未知', '1.0', '2020-01-01', 50, '国家统编', 'sedrfhgtjghnvk', '在用', '2020-01-01', '2020-12-01');
 
 -- ----------------------------
 -- Table structure for detail_of_student_service

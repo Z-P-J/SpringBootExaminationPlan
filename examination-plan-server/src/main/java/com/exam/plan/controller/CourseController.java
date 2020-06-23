@@ -106,4 +106,34 @@ public class CourseController {
         return ResultGenerator.genOkResult();
     }
 
+    @GetMapping("/charge")
+    @ResponseBody
+    public Result listCourseCharge(@RequestParam(defaultValue = "0") final Integer page,
+                                   @RequestParam(defaultValue = "0") final Integer size) {
+        PageHelper.startPage(page, size);
+        final PageInfo<CourseCharge> pageInfo = new PageInfo<>(courseService.listCharge());
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @GetMapping("/charge/{id}")
+    @ResponseBody
+    public Result getCourseCharge(@PathVariable final String id) {
+        return ResultGenerator.genOkResult(courseService.getChargeById(id));
+    }
+
+    @GetMapping("/national")
+    @ResponseBody
+    public Result listNationalCourse(@RequestParam(defaultValue = "0") final Integer page,
+                                   @RequestParam(defaultValue = "0") final Integer size) {
+        PageHelper.startPage(page, size);
+        final PageInfo<CourseNational> pageInfo = new PageInfo<>(courseService.listNationalCourse());
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @GetMapping("/national/{id}")
+    @ResponseBody
+    public Result getNationalCourse(@PathVariable final String id) {
+        return ResultGenerator.genOkResult(courseService.getChargeById(id));
+    }
+
 }

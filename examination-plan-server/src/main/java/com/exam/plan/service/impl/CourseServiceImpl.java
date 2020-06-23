@@ -1,11 +1,10 @@
 package com.exam.plan.service.impl;
 
-import com.exam.plan.entity.CourseInfo;
-import com.exam.plan.entity.CourseTextBookInfo;
-import com.exam.plan.entity.RolePermission;
-import com.exam.plan.entity.RoleWithPermission;
+import com.exam.plan.entity.*;
 import com.exam.plan.exception.ResourcesNotFoundException;
+import com.exam.plan.mapper.CourseChargeMapper;
 import com.exam.plan.mapper.CourseMapper;
+import com.exam.plan.mapper.CourseNationalMapper;
 import com.exam.plan.mapper.CourseTextbookMapper;
 import com.exam.plan.service.ICourseService;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,10 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   private CourseMapper courseMapper;
   @Resource
   private CourseTextbookMapper courseTextbookMapper;
+  @Resource
+  private CourseChargeMapper courseChargeMapper;
+  @Resource
+  private CourseNationalMapper courseNationalMapper;
 
 //  @Override
 //  public List<RoleWithResource> listRoleWithPermission() {
@@ -80,5 +83,25 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   @Override
   public void saveTextbook(CourseTextBookInfo info) {
     assertSave(this.courseTextbookMapper.insertSelective(info) == 1);
+  }
+
+  @Override
+  public List<CourseCharge> listCharge() {
+    return courseChargeMapper.selectAll();
+  }
+
+  @Override
+  public CourseCharge getChargeById(Object id) {
+    return courseChargeMapper.selectByPrimaryKey(id);
+  }
+
+  @Override
+  public List<CourseNational> listNationalCourse() {
+    return courseNationalMapper.selectAll();
+  }
+
+  @Override
+  public CourseNational getNationalCourseById(Object id) {
+    return courseNationalMapper.selectByPrimaryKey(id);
   }
 }

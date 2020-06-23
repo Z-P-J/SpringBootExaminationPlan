@@ -145,8 +145,8 @@ export default {
         textbookSelectType: '国家统编',
         syllabus: '',
         textbookUseStatus: '在用',
-        textbookStartExamId: '',
-        textbookEndExamId: ''
+        textbookStartTime: '2020-01-01',
+        textbookEndTime: '2020-12-01'
       },
       textbookDialog: {
         data: {},

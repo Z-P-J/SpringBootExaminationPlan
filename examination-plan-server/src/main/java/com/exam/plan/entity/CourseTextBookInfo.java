@@ -63,10 +63,10 @@ public class CourseTextBookInfo {
     @Column(name = "textbook_use_status")
     private String textbookUseStatus;
 
-    @Column(name = "textbook_start_exam_id")
-    private String textbookStartExamId;
+    @Column(name = "textbook_start_time")
+    private Date textbookStartTime;
 
-    @Column(name = "textbook_end_exam_id")
-    private String textbookEndExamId;
+    @Column(name = "textbook_end_time")
+    private Date textbookEndTime;
 
 }

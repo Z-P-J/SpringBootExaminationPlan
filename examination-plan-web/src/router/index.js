@@ -174,12 +174,10 @@ export const asyncRouterMap = [
       path: 'list',
       name: '全部课程',
       component: _import('course/list')
-      // meta: { permission: ['role:list'] }
     }, {
       path: 'textbook',
       name: '课程教材',
       component: _import('course/textbook')
-      // meta: { permission: ['role:list'] }
     }]
   },
   {

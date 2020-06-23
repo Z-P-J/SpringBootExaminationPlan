@@ -30,26 +30,26 @@
     </el-col>
   </el-form-item>
 
-      <el-row :gutter="18">
-        <el-col :span="6">
+      <el-row :gutter="24">
+        <el-col :span="8">
           <el-form-item label="学分："><span>{{ value.data.credit }}</span></el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="合格线："><span>{{ value.data.qualifiedScore }}</span></el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="记分制："><span>{{ value.data.scoreScale }}</span></el-form-item>
         </el-col>
       </el-row>
 
-      <el-row :gutter="18">
-        <el-col :span="6">
+      <el-row :gutter="24">
+        <el-col :span="8">
           <el-form-item label="总分："><span>{{ value.data.totalScore }}</span></el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="主观题分数："><span>{{ value.data.subjectiveScore }}</span></el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="8">
           <el-form-item label="客观题分数："><span>{{ value.data.objectiveScore }}</span></el-form-item>
         </el-col>
       </el-row>
@@ -92,7 +92,10 @@
       </el-row>
       <el-row :gutter="18">
         <el-col :span="18">
-          <el-form-item label="备注："><span>{{ value.data.notes == null ? '无' : value.data.notes }}</span></el-form-item>
+          <el-form-item label="备注：">
+            <!-- <span>{{ value.data.notes == null ? '无' : value.data.notes }}</span> -->
+            <el-input type="textarea" v-model="value.data.notes"></el-input>
+          </el-form-item>
         </el-col>
       </el-row>
 
@@ -117,7 +120,7 @@
 
 <script>
 import { unix2CurrentTime } from '@/utils'
-import { isValidateEmail } from '@/utils/validate'
+// import { isValidateEmail } from '@/utils/validate'
 import {
   addCourse,
   updateCourse
@@ -147,17 +150,9 @@ export default {
         callback(new Error('课程编码必须由5位数字组成'))
       }
     }
-    const validateName = (rule, value, callback) => {
-      console.log('validateName value=' + value)
-      if (value.length < 3) {
-        callback(new Error('账户名长度必须在3或以上'))
-      } else {
-        callback()
-      }
-    }
-    const validateEmail = (rule, value, callback) => {
-      if (!isValidateEmail(value)) {
-        callback(new Error('邮箱格式错误'))
+    const validateEmpty = (rule, value, callback) => {
+      if (value === null || value.length === 0) {
+        callback(new Error('请输入内容'))
       } else {
         callback()
       }
@@ -167,8 +162,7 @@ export default {
       btnLoading: false,
       toUpdate: false,
       courseDetailRules: {
-        courseName: [{ required: true, trigger: 'blur', validator: validateName }],
-        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
+        courseName: [{ required: true, trigger: 'blur', validator: validateEmpty }],
         courseId: [{ required: true, trigger: 'blur', validator: validateCourseId }]
       },
       // courseData: {},
@@ -208,6 +202,7 @@ export default {
             this.btnLoading = false
           })
         } else {
+          this.$message.error('输入内容有误')
           console.log('表单无效')
         }
       })
