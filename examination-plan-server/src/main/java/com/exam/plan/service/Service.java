@@ -142,7 +142,7 @@ public interface Service<T> {
 //   * @param condition 条件
 //   * @return 实体列表
 //   */
-//  List<T> listByCondition(Condition condition);
+  List<T> listByCondition(Condition condition);
 
   /**
    * 获取所有实体

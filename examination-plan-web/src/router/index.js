@@ -136,18 +136,31 @@ export const asyncRouterMap = [
     }]
   },
   {
-    path: '/role3',
+    path: '/major',
     component: Layout,
-    redirect: '/role/list',
+    redirect: '/major/list',
     icon: 'role',
     noDropDown: true,
-    // name: '专业管理',
     children: [{
       path: 'list',
       name: '专业管理',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
-    }]
+      component: _import('major/list')
+    }, {
+      path: 'detail',
+      name: '专业详情',
+      component: _import('major/detail')
+    },
+    {
+      path: 'category',
+      name: '专业大类',
+      component: _import('major/category')
+    },
+    {
+      path: 'school',
+      name: '主考院校',
+      component: _import('major/school')
+    }
+    ]
   },
   {
     path: '/role4',
