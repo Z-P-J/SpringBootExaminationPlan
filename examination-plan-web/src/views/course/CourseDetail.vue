@@ -26,12 +26,12 @@
           </el-col>
         </el-row>
       </el-form-item> -->
-    <el-form-item label="活动名称">
+    <el-form-item label="活动名称" prop="name">
     <el-col :span="6">
       <el-input v-model="courseData.courseName" />
     </el-col>
   </el-form-item>
-  <el-form-item label="课程编码"><span>{{ courseData.courseId }}</span></el-form-item>
+  <el-form-item label="课程编码" prop="courseId"><span>{{ courseData.courseId }}</span></el-form-item>
   <el-form-item label="国家课程代码"><span>{{ courseData.nationalCourseId }}</span></el-form-item>
       <!-- <el-row :gutter="18">
         <el-col :span="6">
@@ -128,11 +128,8 @@
 </template>
 
 <script>
-// import store from '@/store'
 import { unix2CurrentTime } from '@/utils'
 import { isValidateEmail } from '@/utils/validate'
-// import { setToken } from '@/utils/token'
-// import { mapState } from 'vuex'
 
 export default {
   created() {
@@ -142,6 +139,13 @@ export default {
     this.courseData = this.$route.query.data
   },
   data() {
+    const validateCourseId = (rule, value, callback) => {
+      if (value.match(/^[0-9]{5}$/)) {
+        callback()
+      } else {
+        callback(new Error('课程编码必须由5位数字组成'))
+      }
+    }
     const validateName = (rule, value, callback) => {
       if (value.length < 3) {
         callback(new Error('账户名长度必须在3或以上'))
@@ -162,9 +166,28 @@ export default {
       toUpdate: false,
       courseDetailRules: {
         name: [{ required: true, trigger: 'blur', validator: validateName }],
-        email: [{ required: true, trigger: 'blur', validator: validateEmail }]
+        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
+        courseId: [{ required: true, trigger: 'blur', validator: validateCourseId }]
       },
-      courseData: {}
+      courseData: {},
+      tempCourse: {
+        courseId: '',
+        nationalCourseId: '',
+        courseName: '',
+        courseSpecification: '无',
+        testSource: '全国命题',
+        courseStatus: '0',
+        credit: 3,
+        qualifiedScore: 60,
+        scoreScale: '100分制',
+        subjectiveScore: 40,
+        objectiveScore: 60,
+        totalScore: 100,
+        examDuration: 120,
+        isProcedural: 0,
+        courseProperty: '理论',
+        notes: '无'
+      }
     }
   },
   // computed: {

@@ -168,17 +168,17 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/course/list',
     icon: 'role',
-    noDropDown: true,
-    // name: '课程管理',
+    noDropDown: false,
+    name: '课程管理',
     children: [{
       path: 'list',
-      name: '课程管理',
+      name: '全部课程',
       component: _import('course/list')
       // meta: { permission: ['role:list'] }
     }, {
-      path: 'detail',
-      name: '课程详情',
-      component: _import('course/detail')
+      path: 'textbook',
+      name: '课程教材',
+      component: _import('course/textbook')
       // meta: { permission: ['role:list'] }
     }]
   },
