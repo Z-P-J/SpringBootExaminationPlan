@@ -42,7 +42,7 @@
             <el-button type="primary" :loading="btnLoading" @click.native.prevent="updateDetail">确认修改</el-button>
             <el-button type="warning" @click.native.prevent="toUpdate = !toUpdate">取消修改</el-button>
           </el-col>
-          
+
           <el-col :span="6">
             <el-button type="danger" @click.native.prevent="showUpdatePasswordDialog">修改密码</el-button>
           </el-col>
