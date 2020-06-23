@@ -23,3 +23,9 @@
 2. VS Code打开项目examination-plan-web，控制台运行npm install 和 npm run dev
 3. IDEA打开项目examination-plan-server，运行
 4. 浏览器输入http://localhost:9999/ 打开网页
+
+### 三、参考项目
+
+- https://github.com/Zoctan/spring-boot-vue-admin
+- https://github.com/PanJiaChen/vue-element-admin
+- https://github.com/Zoctan/spring-boot-api-seedling
