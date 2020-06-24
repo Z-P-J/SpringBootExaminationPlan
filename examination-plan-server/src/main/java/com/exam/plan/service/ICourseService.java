@@ -46,4 +46,8 @@ public interface ICourseService extends Service<CourseInfo> {
 
   CourseNational getNationalCourseById(Object id);
 
+  void disableCourse(List<String> courseIdList);
+
+  void enableCourse(List<String> courseIdList);
+
 }

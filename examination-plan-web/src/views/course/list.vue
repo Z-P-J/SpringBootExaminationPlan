@@ -17,17 +17,42 @@
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >添加课程</el-button>
+          <el-select v-model="courseFilter" placeholder="过滤课程" :value="courseFilter" @change="onChange">
+            <el-option label="全部" value="all"></el-option>
+            <el-option label="已启用" value="enable"></el-option>
+            <el-option label="已停用" value="disable"></el-option>
+          </el-select>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            :disabled="isDisabled('正常')"
+            @click.native.prevent="disableCourse"
+          >停用</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            :disabled="isDisabled('注销')"
+            @click.native.prevent="enableCourse"
+          >启用</el-button>
         </el-form-item>
       </el-form>
     </div>
     <el-table
+      ref="multipleTable"
       :data="roleList"
       v-loading.body="listLoading"
       element-loading-text="loading"
+      @selection-change="handleSelectionChange"
       border
       fit
       highlight-current-row
     >
+    <el-table-column
+      type="selection"
+      width="40">
+    </el-table-column>
       <el-table-column label="#" align="center" width="40">
         <template slot-scope="scope">
           <span v-text="getTableIndex(scope.$index)"></span>
@@ -38,8 +63,11 @@
       <el-table-column label="课程名" align="center" prop="courseName" />
       <el-table-column label="课程说明" align="center" prop="courseSpecification" />
       <el-table-column label="课程性质" align="center" prop="courseProperty" />
-      <el-table-column label="课程状态" align="center" prop="courseStatus">
-        <template slot-scope="scope">{{ scope.row.courseStatus == '0' ? "正常" : "注销" }}</template>
+      <el-table-column label="课程状态" align="center" prop="courseStatus"
+        :filters="[{ text: '正常', value: '0' }, { text: '注销', value: '1' }]"
+        :filter-method="filterTag"
+        filter-placement="bottom-end">
+        <template slot-scope="scope">{{ scope.row.courseStatus }}</template>
       </el-table-column>
       <el-table-column
         label="管理"
@@ -75,7 +103,9 @@
 <script>
 import {
   listCourse,
-  removeCourse
+  removeCourse,
+  disableCourse,
+  enableCourse
 } from '@/api/course'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
@@ -108,13 +138,16 @@ export default {
       }
     }
     return {
+      courseFilter: 'all',
+      multipleSelection: [],
       roleList: [],
       permissionList: [],
       listLoading: false,
       total: 0,
       listQuery: {
         page: 1,
-        size: 9
+        size: 9,
+        filter: 'all'
       },
       dialogFormVisible: false,
       textMap: {
@@ -133,7 +166,7 @@ export default {
         courseName: '',
         courseSpecification: '无',
         testSource: '全国命题',
-        courseStatus: '0',
+        courseStatus: '正常',
         credit: 3,
         qualifiedScore: 60,
         scoreScale: '100分制',
@@ -146,24 +179,7 @@ export default {
         notes: '无'
       },
       courseDialog: {
-        data: {
-          courseId: '00005',
-          nationalCourseId: '00005',
-          courseName: '数学',
-          courseSpecification: '数学课程',
-          testSource: '全国命题',
-          courseStatus: '0',
-          credit: 3,
-          qualifiedScore: 60,
-          scoreScale: '100分制',
-          subjectiveScore: 40,
-          objectiveScore: 60,
-          totalScore: 100,
-          examDuration: 120,
-          isProcedural: 0,
-          courseProperty: '理论',
-          notes: '无'
-        },
+        data: {},
         show: false,
         type: 'add',
         callback: this
@@ -188,11 +204,62 @@ export default {
     //     this.$message.error('加载权限列表失败')
     //   })
     // },
+    filterTag(value, row) {
+      // console.log('filterTag value=' + value)
+      return row.courseStatus === value
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    onChange(value) {
+      console.log('value=' + value)
+      this.getCourseList()
+    },
+    isDisabled(flag) {
+      return this.multipleSelection.length === 0 || this.multipleSelection.filter(v => {
+        return v.courseStatus === flag
+      }).length === 0
+    },
+    disableCourse() {
+      console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
+      this.listLoading = true
+      const ids = this.multipleSelection.map(v => {
+        return v.courseId
+      })
+      disableCourse(ids).then(response => {
+        console.log('data=' + JSON.stringify(response.data))
+        this.$refs.multipleTable.clearSelection()
+        this.roleList = response.data.list
+        this.total = response.data.total
+        this.listLoading = false
+      }).error(res => {
+        this.listLoading = false
+        this.$message.error('课程停用失败')
+      })
+    },
+    enableCourse() {
+      console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
+      this.listLoading = true
+      const ids = this.multipleSelection.map(v => {
+        return v.courseId
+      })
+      enableCourse(ids).then(response => {
+        console.log('data=' + JSON.stringify(response.data))
+        this.$refs.multipleTable.clearSelection()
+        this.roleList = response.data.list
+        this.total = response.data.total
+        this.listLoading = false
+      }).error(res => {
+        this.listLoading = false
+        this.$message.error('课程停用失败')
+      })
+    },
     /**
      * 获取课程列表
      */
     getCourseList() {
       this.listLoading = true
+      this.listQuery.filter = this.courseFilter
       listCourse(this.listQuery).then(response => {
         console.log('data=' + JSON.stringify(response.data))
         this.roleList = response.data.list

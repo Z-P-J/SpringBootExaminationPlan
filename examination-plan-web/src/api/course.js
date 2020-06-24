@@ -47,6 +47,22 @@ export function removeCourse(courseId) {
   })
 }
 
+export function disableCourse(params) {
+  return request({
+    url: '/course/disable',
+    method: 'post',
+    data: params
+  })
+}
+
+export function enableCourse(params) {
+  return request({
+    url: '/course/enable',
+    method: 'post',
+    data: params
+  })
+}
+
 export function listTextbook(params) {
   return request({
     url: '/course/textbook',

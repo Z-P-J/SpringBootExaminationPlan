@@ -136,13 +136,13 @@ public interface Service<T> {
    */
   List<T> listByIds(String ids);
 
-//  /**
-//   * 按条件查找
-//   *
-//   * @param condition 条件
-//   * @return 实体列表
-//   */
-//  List<T> listByCondition(Condition condition);
+  /**
+   * 按条件查找
+   *
+   * @param condition 条件
+   * @return 实体列表
+   */
+  List<T> listByCondition(Condition condition);
 
   /**
    * 获取所有实体

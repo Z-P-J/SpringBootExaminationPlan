@@ -104,4 +104,14 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   public CourseNational getNationalCourseById(Object id) {
     return courseNationalMapper.selectByPrimaryKey(id);
   }
+
+  @Override
+  public void disableCourse(List<String> courseIdList) {
+    courseMapper.disableCourse(courseIdList);
+  }
+
+  @Override
+  public void enableCourse(List<String> courseIdList) {
+    courseMapper.enableCourse(courseIdList);
+  }
 }

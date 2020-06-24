@@ -24,4 +24,9 @@ public interface CourseMapper extends MyMapper<CourseInfo> {
    * @param id 角色Id
    */
   void updateTimeById(@Param("id") Long id);
+
+  void disableCourse(@Param("courseIdList") List<String> courseIdList);
+
+  void enableCourse(@Param("courseIdList") List<String> courseIdList);
+
 }
