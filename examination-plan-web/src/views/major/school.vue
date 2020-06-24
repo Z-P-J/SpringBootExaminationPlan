@@ -17,16 +17,6 @@
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >添加院校</el-button>
-          <router-link
-            class="inlineBlock"
-            :to="{ path:'/major/category/'}">
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-plus"
-              v-if="hasPermission('role:add')"
-            >专业大类</el-button>
-          </router-link>
         </el-form-item>
 
         <span v-if="hasPermission('role:search')">

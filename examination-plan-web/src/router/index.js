@@ -140,12 +140,14 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/major/list',
     icon: 'role',
-    noDropDown: true,
+    name: '专业管理',
+    noDropDown: false,
     children: [{
       path: 'list',
-      name: '专业管理',
+      name: '专业信息维护',
       component: _import('major/list')
     }, {
+      hidden: true,
       path: 'detail',
       name: '专业详情',
       component: _import('major/detail')
@@ -156,6 +158,7 @@ export const asyncRouterMap = [
       component: _import('major/category')
     },
     {
+      hidden: true,
       path: 'school',
       name: '主考院校',
       component: _import('major/school')
