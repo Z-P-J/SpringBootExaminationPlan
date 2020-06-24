@@ -8,14 +8,14 @@
             size="mini"
             icon="el-icon-refresh"
             v-if="hasPermission('role:list')"
-            @click.native.prevent="getRoleList"
+            @click.native.prevent="getCourseList"
           >刷新</el-button>
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
-            @click.native.prevent="showAddRoleDialog"
+            @click.native.prevent="showAddDialog"
           >添加课程</el-button>
         </el-form-item>
       </el-form>
@@ -37,44 +37,20 @@
       <el-table-column label="国家课程代码" align="center" prop="nationalCourseId" />
       <el-table-column label="课程名" align="center" prop="courseName" />
       <el-table-column label="课程说明" align="center" prop="courseSpecification" />
-      <el-table-column label="课程性质" align="center" prop="curriculum" />
-      <!-- <el-table-column label="课程状态" align="center" prop="courseStatus" /> -->
+      <el-table-column label="课程性质" align="center" prop="courseProperty" />
       <el-table-column label="课程状态" align="center" prop="courseStatus">
         <template slot-scope="scope">{{ scope.row.courseStatus == '0' ? "正常" : "注销" }}</template>
       </el-table-column>
-      <!-- <el-table-column label="创建时间" align="center" prop="courseName">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.courseName) }}</template>
-      </el-table-column>
-      <el-table-column label="修改时间" align="center" prop="updateTime">
-        <template slot-scope="scope">{{ unix2CurrentTime(scope.row.updateTime) }}</template>
-      </el-table-column> -->
       <el-table-column
         label="管理"
         align="center"
-        v-if="hasPermission('role:detail') || hasPermission('role:update') || hasPermission('role:delete')"
       >
         <template slot-scope="scope">
-          <!-- /course/detail -->
-          <!-- query:{ courseId:scope.row.courseId } -->
-          <!-- :to="{ path:'/course/detail/1', params: { data:scope.row, courseId:scope.row.courseId } }" -->
-          <router-link
-          class="inlineBlock"
-          :to="{ path:'/course/detail/', query: { courseId:scope.row.courseId, data:scope.row  } }">
-          <el-button
+        <el-button
             type="info"
             size="mini"
-            v-if="hasPermission('role:detail')"
-
+            @click.native.prevent="showDetail(scope.$index)"
           >查看</el-button>
-        </router-link>
-        <!-- @click.native.prevent="showRoleDialog(scope.$index)" -->
-
-          <!-- <el-button
-            type="warning"
-            size="mini"
-            v-if="hasPermission('role:update') && scope.row.name !== '超级管理员'"
-            @click.native.prevent="showUpdateRoleDialog(scope.$index)"
-          >修改</el-button> -->
           <el-button
             type="danger"
             size="mini"
@@ -93,90 +69,28 @@
       :page-sizes="[9, 18, 36, 72]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        status-icon
-        class="small-space"
-        label-position="left"
-        label-width="100px"
-        style="width: 500px; margin-left:50px;"
-        :model="tempRole"
-        :rules="createRules"
-        ref="tempRole"
-      >
-        <el-form-item label="角色名" prop="name" required>
-          <el-input
-            :disabled="dialogStatus === 'show'"
-            type="text"
-            prefix-icon="el-icon-edit"
-            auto-complete="off"
-            v-model="tempRole.name"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="权限" required>
-          <div v-for="(permission, index) in permissionList" :key="index">
-            <el-button
-              :disabled="dialogStatus === 'show'"
-              size="mini"
-              :type="isMenuNone(index) ? '' : (isMenuAll(index) ? 'success' : 'primary')"
-              @click.native.prevent="checkAll(index)"
-            >{{ permission.resource }}</el-button>
-            <!-- https://element.eleme.cn/#/zh-CN/component/checkbox#indeterminate-zhuang-tai -->
-            <el-checkbox-group v-model="tempRole.permissionIdList">
-              <el-checkbox
-                :disabled="dialogStatus === 'show'"
-                v-for="item in permission.handleList"
-                :key="item.id"
-                :label="item.id"
-                @change="handleChecked(item, _index)"
-              >
-                <span>{{ item.handle }}</span>
-              </el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </el-form-item>
-      </el-form>
-
-
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
-        <el-button
-          v-if="dialogStatus === 'add'"
-          type="success"
-          :loading="btnLoading"
-          @click.native.prevent="addCourse"
-        >添加</el-button>
-        <el-button
-          v-if="dialogStatus === 'update'"
-          type="primary"
-          :loading="btnLoading"
-          @click.native.prevent="updateCourse"
-        >更新</el-button>
-      </div>
-    </el-dialog>
+    <course-detail-dialog v-model="courseDialog"></course-detail-dialog>
   </div>
 </template>
 <script>
 import {
-  // listRoleWithPermission,
-  list,
-  // listResourcePermission,
-  add as addCourse,
-  update as updateCourse,
-  remove
+  listCourse,
+  removeCourse
 } from '@/api/course'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
+import CourseDetailDialog from './CourseDetailDialog'
 
 export default {
+  components: {
+    CourseDetailDialog
+  },
   created() {
     // if (this.hasPermission('role:update')) {
     //   this.getPermissionList()
     // }
     if (this.hasPermission('role:list')) {
-      this.getRoleList()
+      this.getCourseList()
     }
   },
   data() {
@@ -202,7 +116,6 @@ export default {
         page: 1,
         size: 9
       },
-      dialogStatus: 'add',
       dialogFormVisible: false,
       textMap: {
         update: '修改角色',
@@ -232,6 +145,29 @@ export default {
         courseProperty: '理论',
         notes: '无'
       },
+      courseDialog: {
+        data: {
+          courseId: '00005',
+          nationalCourseId: '00005',
+          courseName: '数学',
+          courseSpecification: '数学课程',
+          testSource: '全国命题',
+          courseStatus: '0',
+          credit: 3,
+          qualifiedScore: 60,
+          scoreScale: '100分制',
+          subjectiveScore: 40,
+          objectiveScore: 60,
+          totalScore: 100,
+          examDuration: 120,
+          isProcedural: 0,
+          courseProperty: '理论',
+          notes: '无'
+        },
+        show: false,
+        type: 'add',
+        callback: this
+      },
       createRules: {
         name: [{ required: true, trigger: 'blur', validator: validateRoleName }]
       }
@@ -253,11 +189,11 @@ export default {
     //   })
     // },
     /**
-     * 获取角色列表
+     * 获取课程列表
      */
-    getRoleList() {
+    getCourseList() {
       this.listLoading = true
-      list(this.listQuery).then(response => {
+      listCourse(this.listQuery).then(response => {
         console.log('data=' + JSON.stringify(response.data))
         this.roleList = response.data.list
         this.total = response.data.total
@@ -273,7 +209,7 @@ export default {
     handleSizeChange(size) {
       this.listQuery.page = 1
       this.listQuery.size = size
-      this.getRoleList()
+      this.getCourseList()
     },
     /**
      * 改变页码
@@ -281,7 +217,7 @@ export default {
      */
     handleCurrentChange(page) {
       this.listQuery.page = page
-      this.getRoleList()
+      this.getCourseList()
     },
     /**
      * 表格序号
@@ -294,125 +230,16 @@ export default {
     /**
      * 显示新增角色对话框
      */
-    showAddRoleDialog() {
-      addCourse({
-        courseId: '00005',
-        nationalCourseId: '00005',
-        courseName: '数学',
-        courseSpecification: '数学课程',
-        testSource: '全国命题',
-        courseStatus: '0',
-        credit: 3,
-        qualifiedScore: 60,
-        scoreScale: '100分制',
-        subjectiveScore: 40,
-        objectiveScore: 60,
-        totalScore: 100,
-        examDuration: 120,
-        isProcedural: 0,
-        courseProperty: '理论',
-        notes: '无'
-      }).then(() => {
-        this.$message.success('添加成功')
-        this.getRoleList()
-      }).catch(res => {
-        this.$message.error('添加角色失败')
-      })
-      this.dialogFormVisible = true
-      this.dialogStatus = 'add'
-      this.tempRole.name = ''
-      this.tempRole.id = ''
-      this.tempRole.permissionIdList = []
+    showAddDialog() {
+      this.courseDialog.data = this.tempCourse
+      this.courseDialog.type = 'add'
+      this.courseDialog.show = true
     },
-    /**
-     * 显示更新角色的对话框
-     * @param index 角色下标
-     */
-    showUpdateRoleDialog(index) {
-      this.dialogFormVisible = true
-      this.dialogStatus = 'update'
-      const role = this.roleList[index]
-      this.tempRole.name = role.name
-      this.tempRole.id = role.id
-      this.tempRole.permissionIdList = []
-      for (let i = 0; i < role.resourceList.length; i++) {
-        const handleList = role.resourceList[i].handleList
-        for (let j = 0; j < handleList.length; j++) {
-          const handle = handleList[j]
-          this.tempRole.permissionIdList.push(handle.id)
-        }
-      }
-    },
-    /**
-     * 显示角色权限的对话框
-     * @param index 角色下标
-     */
-    showRoleDialog(index) {
-      this.dialogFormVisible = true
-      this.dialogStatus = 'show'
-      const role = this.roleList[index]
-      this.tempRole.name = role.name
-      this.tempRole.id = role.id
-      this.tempRole.permissionIdList = []
-      let resourceList = []
-      if (role.name === '超级管理员') {
-        resourceList = this.permissionList
-      } else {
-        resourceList = role.resourceList
-      }
-      for (let i = 0; i < resourceList.length; i++) {
-        const handleList = resourceList[i].handleList
-        for (let j = 0; j < handleList.length; j++) {
-          const handle = handleList[j]
-          this.tempRole.permissionIdList.push(handle.id)
-        }
-      }
-    },
-    /**
-     * 添加新角色
-     */
-    addCourse() {
-      this.$refs.tempRole.validate(valid => {
-        if (
-          valid &&
-          this.isRoleNameUnique(this.tempRole.id, this.tempRole.name)
-        ) {
-          this.btnLoading = true
-          addCourse(this.tempRole).then(() => {
-            this.$message.success('添加成功')
-            this.getRoleList()
-            this.dialogFormVisible = false
-            this.btnLoading = false
-          }).catch(res => {
-            this.$message.error('添加角色失败')
-          })
-        } else {
-          console.log('表单无效')
-        }
-      })
-    },
-    /**
-     * 修改角色
-     */
-    updateCourse() {
-      this.$refs.tempRole.validate(valid => {
-        if (
-          valid &&
-          this.isRoleNameUnique(this.tempRole.id, this.tempRole.name)
-        ) {
-          this.btnLoading = true
-          updateCourse(this.tempRole).then(() => {
-            this.$message.success('更新成功')
-            this.getRoleList()
-            this.dialogFormVisible = false
-            this.btnLoading = false
-          }).catch(res => {
-            this.$message.error('更新角色失败')
-          })
-        } else {
-          console.log('表单无效')
-        }
-      })
+    showDetail(index) {
+      const course = this.roleList[index]
+      this.courseDialog.data = course
+      this.courseDialog.type = 'update'
+      this.courseDialog.show = true
     },
     /**
      * 校验角色名是否已经存在
@@ -441,9 +268,9 @@ export default {
         type: 'warning'
       }).then(() => {
         const courseId = this.roleList[index].courseId
-        remove(courseId).then(() => {
+        removeCourse(courseId).then(() => {
           this.$message.success('删除成功')
-          this.getRoleList()
+          this.getCourseList()
         }).catch(() => {
           this.$message.error('删除失败')
         })

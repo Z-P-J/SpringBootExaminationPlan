@@ -35,15 +35,15 @@ public abstract class AbstractService<T> implements Service<T> {
         this.entityClass = (Class<T>) pt.getActualTypeArguments()[0];
     }
 
-    private void assertSave(final boolean statement) {
+    protected void assertSave(final boolean statement) {
         asserts(statement, ResultCode.SAVE_FAILED);
     }
 
-    private void assertDelete(final boolean statement) {
+    protected void assertDelete(final boolean statement) {
         asserts(statement, ResultCode.DELETE_FAILED);
     }
 
-    private void assertUpdate(final boolean statement) {
+    protected void assertUpdate(final boolean statement) {
         asserts(statement, ResultCode.UPDATE_FAILED);
     }
 

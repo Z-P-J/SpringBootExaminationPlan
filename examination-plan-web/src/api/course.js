@@ -8,7 +8,7 @@ import request from '@/utils/request'
 //   })
 // }
 
-export function list(params) {
+export function listCourse(params) {
   return request({
     url: '/course',
     method: 'get',
@@ -24,7 +24,7 @@ export function list(params) {
 //   })
 // }
 
-export function add(courseForm) {
+export function addCourse(courseForm) {
   return request({
     url: '/course',
     method: 'post',
@@ -32,7 +32,7 @@ export function add(courseForm) {
   })
 }
 
-export function update(courseForm) {
+export function updateCourse(courseForm) {
   return request({
     url: '/course',
     method: 'put',
@@ -40,17 +40,40 @@ export function update(courseForm) {
   })
 }
 
-export function remove(courseId) {
+export function removeCourse(courseId) {
   return request({
     url: '/course/' + courseId,
     method: 'delete'
   })
 }
 
-// export function updateAccountRole(account) {
-//   return request({
-//     url: '/account/role',
-//     method: 'put',
-//     data: account
-//   })
-// }
+export function listTextbook(params) {
+  return request({
+    url: '/course/textbook',
+    method: 'get',
+    params
+  })
+}
+
+export function addTextbook(form) {
+  return request({
+    url: '/course/textbook',
+    method: 'post',
+    data: form
+  })
+}
+
+export function updateTextbook(form) {
+  return request({
+    url: '/course/textbook',
+    method: 'put',
+    data: form
+  })
+}
+
+export function removeTextbook(courseId) {
+  return request({
+    url: '/course/textbook/' + courseId,
+    method: 'delete'
+  })
+}

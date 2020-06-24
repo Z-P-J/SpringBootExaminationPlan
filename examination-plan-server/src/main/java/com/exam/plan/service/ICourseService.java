@@ -1,7 +1,8 @@
 package com.exam.plan.service;
 
-import com.exam.plan.entity.CourseInfo;
-import com.exam.plan.entity.RoleWithPermission;
+import com.exam.plan.entity.*;
+
+import java.util.List;
 
 public interface ICourseService extends Service<CourseInfo> {
 
@@ -25,4 +26,24 @@ public interface ICourseService extends Service<CourseInfo> {
 //   * @return 角色可控资源列表
 //   */
 //  List<RoleWithResource> listRoleWithPermission();
+
+  List<CourseTextBookInfo> listTextbook();
+
+  CourseTextBookInfo getTextbookById(Object id);
+
+  void deleteTextbookById(Object id);
+
+  void updateTextbook(CourseTextBookInfo info);
+
+  void saveTextbook(CourseTextBookInfo info);
+
+
+  List<CourseCharge> listCharge();
+
+  CourseCharge getChargeById(Object id);
+
+  List<CourseNational> listNationalCourse();
+
+  CourseNational getNationalCourseById(Object id);
+
 }

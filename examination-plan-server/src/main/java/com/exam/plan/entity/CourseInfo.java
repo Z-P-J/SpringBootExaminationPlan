@@ -35,7 +35,7 @@ public class CourseInfo {
     @Column(name = "course_status")
     private String courseStatus;
 
-    //    @Column(name = "credit")
+    @Column(name = "credit")
     private int credit;
 
     @Column(name = "qualified_score")

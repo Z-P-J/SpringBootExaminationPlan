@@ -122,16 +122,16 @@ export const asyncRouterMap = [
   //   ]
   // },
   {
-    path: '/role2',
+    path: '/major-plan',
     component: Layout,
-    redirect: '/role/list',
-    icon: 'role',
+    redirect: '/major-plan/list',
+    icon: 'icon',
     noDropDown: true,
     // name: '专业计划',
     children: [{
       path: 'list',
       name: '专业计划',
-      component: _import('role/list'),
+      component: _import('major-plan/list'),
       meta: { permission: ['role:list'] }
     }]
   },
@@ -181,18 +181,16 @@ export const asyncRouterMap = [
     component: Layout,
     redirect: '/course/list',
     icon: 'role',
-    noDropDown: true,
-    // name: '课程管理',
+    noDropDown: false,
+    name: '课程管理',
     children: [{
       path: 'list',
-      name: '课程管理',
+      name: '全部课程',
       component: _import('course/list')
-      // meta: { permission: ['role:list'] }
     }, {
-      path: 'detail',
-      name: '课程详情',
-      component: _import('course/detail')
-      // meta: { permission: ['role:list'] }
+      path: 'textbook',
+      name: '课程教材',
+      component: _import('course/textbook')
     }]
   },
   {
