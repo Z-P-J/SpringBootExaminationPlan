@@ -10,17 +10,13 @@
             v-if="hasPermission('role:list')"
             @click.native.prevent="getDataList"
           >刷新</el-button>
-          <router-link
-            class="inlineBlock"
-            :to="{ path:'/major/detail/', query: { Id:0, data:tmpData, 
-            actionStatus:'add'  } }">
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-refresh"
-              v-if="hasPermission('role:add')"
-            >添加专业</el-button>
-          </router-link>
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            v-if="hasPermission('role:add')"
+            @click.native.prevent="showAddDialog"
+          >添加大类专业</el-button>
           <router-link
             class="inlineBlock"
             :to="{ path:'/major/category/'}">
@@ -56,9 +52,9 @@
           </el-form-item>
           <el-form-item>
             <el-select v-model="search.fieldSelect" placeholder="字段名">
-              <el-option label="专业编码" value="major_id"></el-option>
-              <el-option label="名称" value="major_name"></el-option>
-              <el-option label="状态" value="major_status"></el-option>
+              <el-option label="专业大类编码" value="major_category_code"></el-option>
+              <el-option label="名称" value="major_category_name"></el-option>
+              <el-option label="学科等级" value="major_category_level"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -80,23 +76,18 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="专业编码" align="center" prop="major_id" width="180" />
-      <el-table-column label="国家专业编码" align="center" prop="national_major_code" width="200" />
-      <el-table-column label="专业名称" align="center" prop="major_name" width="200" />
-      <el-table-column label="专业状态" align="center" prop="major_status" width="120" />
+      <el-table-column label="专业大类编码" align="center" prop="major_category_code" width="180" />
+      <el-table-column label="名称" align="center" prop="major_category_name" width="200" />
+      <el-table-column label="学科等级" align="center" prop="major_category_level" width="200" />
       <el-table-column label="管理" align="center"
-        v-if="hasPermission('role:update') || hasPermission('role:update') || hasPermission('role:delete')">
+        v-if="hasPermission('role:update') || hasPermission('role:add') || hasPermission('role:delete')">
         <template slot-scope="scope">
-          <router-link
-            class="inlineBlock"
-            :to="{ path:'/major/detail/', query: { Id:scope.row.major_id, data:scope.row, 
-            actionStatus:'update'  } }">
-            <el-button
-              type="info"
-              size="mini"
-              v-if="hasPermission('role:detail')">查看
-              </el-button>
-          </router-link>
+          <el-button
+            type="warning"
+            size="mini"
+            v-if="hasPermission('role:update')"
+            @click.native.prevent="showUpdateDialog(scope.$index)"
+          >详情</el-button>
           <el-button
             type="danger"
             size="mini"
@@ -115,11 +106,68 @@
       :page-sizes="[9, 18, 36, 72]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form
+        status-icon
+        class="small-space"
+        label-position="left"
+        label-width="75px"
+        style="width: 300px; margin-left:50px;"
+        :model="tmpData"
+        ref="tmpData"
+      >
+        <el-form-item label="专业大类编码" prop="major_category_code" required>
+          <el-input
+            type="text"
+            auto-complete="off"
+            v-model="tmpData.major_category_code"
+          />
+        </el-form-item>
+        <el-form-item label="名称" prop="major_category_name" required>
+          <el-input
+            type="text"
+            auto-complete="off"
+            v-model="tmpData.major_category_name"
+          />
+        </el-form-item>
+         <el-form-item label="学科等级" prop="major_category_level">
+            <el-select v-model="tmpData.major_category_level" placeholder="字段名">
+              <el-option label="一级学科" value="一级学科"></el-option>
+              <el-option label="二级学科" value="二级学科"></el-option>
+            </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
+        <el-button
+          type="danger"
+          v-if="dialogStatus === 'add'"
+          @click.native.prevent="$refs['tmpData'].resetFields()"
+        >重置</el-button>
+        <el-button
+          type="success"
+          v-if="dialogStatus === 'add'"
+          :loading="btnLoading"
+          @click.native.prevent="addAccount"
+        >添加</el-button>
+        <el-button
+          type="primary"
+          v-if="dialogStatus === 'update'"
+          :loading="btnLoading"
+          @click.native.prevent="updateAccount"
+        >更新资料</el-button>
+        <el-button
+          type="primary"
+          v-if="dialogStatus === 'updateRole'"
+          :loading="btnLoading"
+          @click.native.prevent="updateAccountRole"
+        >更新角色</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { list, search, remove } from '@/api/major'
+import { categoryList as list, categorySearch as search, categoryRemove as remove, categoryAdd as add, categoryUpdate as update } from '@/api/major'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
 
@@ -138,34 +186,17 @@ export default {
         page: 1, // 页码
         size: 9 // 每页数量
       },
-
+      dialogStatus: 'add',
+      dialogFormVisible: false,
       btnLoading: false, // 按钮等待动画
+      textMap: {
+        update: '修改大类专业',
+        add: '添加大类专业'
+      },
       tmpData: {
-        major_id: 'A100000',
-        national_major_code: 'D000',
-        major_name: '测试专业',
-        major_brief_introduction: '后续补充介绍',
-        major_type: '本科段',
-        education_level: '本科',
-        exam_type: '面向高校',
-        main_target_school: '四川大学',
-        first_exam_id: '001',
-        approve_num: 'BS001',
-        stop_freshman_registration_exam_id: '000',
-        stop_registration_num: '000',
-        stop_apply_exam_id: '000',
-        stop_apply_num: '000',
-        stop_diploma_date: '2022-12-31',
-        stop_diploma_num: '000',
-        major_status: '正常',
-        total_credit: 200,
-        graduation_credit: 110,
-        total_course_number: 55,
-        whether_divide_direction: 1,
-        major_category_code: '1',
-        apply_condition: '暂无',
-        graduation_condition: '暂无',
-        notes: '暂无'
+        major_category_code: '2',
+        major_category_level: '一级学科',
+        major_category_name: '社会学'
       },
       search: {
         page: null,
@@ -235,6 +266,54 @@ export default {
       return (this.listQuery.page - 1) * this.listQuery.size + index + 1
     },
     /**
+     * 显示添加对话框
+     */
+    showAddDialog() {
+      // 显示新增对话框
+      this.dialogFormVisible = true
+      this.dialogStatus = 'add'
+      this.tmpData.major_category_code = '2'
+      this.tmpData.major_category_level = '一级学科'
+      this.tmpData.major_category_name = '社会学'
+    },
+    /**
+     * 添加用户
+     */
+    addAccount() {
+      this.btnLoading = true
+      add(this.tmpData).then(() => {
+        this.$message.success('添加成功')
+        this.getDataList()
+        this.dialogFormVisible = false
+        this.btnLoading = false
+      }).catch(res => {
+        this.$message.error('添加失败')
+        this.btnLoading = false
+      })
+    },
+    /**
+     * 显示修改用户对话框
+     * @param index 用户下标
+     */
+    showUpdateDialog(index) {
+      this.dialogFormVisible = true
+      this.dialogStatus = 'update'
+      console.log(this.dataList[index])
+      this.tmpData = this.dataList[index]
+    },
+    /**
+     * 更新用户
+     */
+    updateAccount() {
+      update(this.tmpData).then(() => {
+        this.$message.success('更新成功')
+        this.getDataList()
+        this.dialogFormVisible = false
+      }).catch(res => {
+        this.$message.error('更新失败')
+      })
+    },
+    /**
      * 删除用户
      * @param index 用户下标
     */
@@ -244,7 +323,7 @@ export default {
         cancelButtonText: '否',
         type: 'warning'
       }).then(() => {
-        const id = this.dataList[index].major_id
+        const id = this.dataList[index].major_category_code
         remove(id).then(() => {
           this.$message.success('删除成功')
           this.getDataList()

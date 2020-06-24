@@ -1,41 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.exam.plan.mapper.MajorCategoryMapper">
-    <select id="listAllWithCategory" resultMap="MajorCategoryMap">
-        SELECT *
-        FROM major_info a
-              LEFT JOIN major_categories b ON a.major_category_code = b.major_category_code
-    </select>
-
-    <resultMap type="com.exam.plan.entity.MajorCategory" id="MajorCategoryMap">
-        <result property="major_category_code" column="major_category_code"/>
-        <result property="major_category_level" column="major_category_level"/>
-        <result property="major_category_name" column="major_category_name"/>
-        <result property="major_id" column="major_id"/>
-        <result property="national_major_code" column="national_major_code"/>
-        <result property="major_name" column="major_name"/>
-        <result property="major_brief_introduction" column="major_brief_introduction"/>
-        <result property="major_type" column="major_type"/>
-        <result property="education_level" column="education_level"/>
-        <result property="exam_type" column="exam_type"/>
-        <result property="main_target_school" column="main_target_school"/>
-        <result property="first_exam_id" column="first_exam_id"/>
-        <result property="approve_num" column="approve_num"/>
-        <result property="stop_freshman_registration_exam_id" column="stop_freshman_registration_exam_id"/>
-        <result property="stop_registration_num" column="stop_registration_num"/>
-        <result property="stop_apply_exam_id" column="stop_apply_exam_id"/>
-        <result property="stop_apply_num" column="stop_apply_num"/>
-        <result property="stop_diploma_date" column="stop_diploma_date"/>
-        <result property="stop_diploma_num" column="stop_diploma_num"/>
-        <result property="major_status" column="major_status"/>
-        <result property="total_credit" column="total_credit"/>
-        <result property="graduation_credit" column="graduation_credit"/>
-        <result property="total_course_number" column="total_course_number"/>
-        <result property="whether_divide_direction" column="whether_divide_direction"/>
-        <result property="major_category_code" column="major_category_code"/>
-        <result property="apply_condition" column="apply_condition"/>
-        <result property="graduation_condition" column="graduation_condition"/>
-        <result property="notes" column="notes"/>
-    </resultMap>
-
 </mapper>

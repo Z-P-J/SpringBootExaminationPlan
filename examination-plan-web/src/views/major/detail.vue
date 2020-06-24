@@ -26,7 +26,7 @@
 	</el-col>
 </el-row>
 <el-row :gutter="18">
-<el-col :span="12">
+<el-col :span="8">
   <el-form-item label="专业类型">
     <el-select v-model="Data.major_type" placeholder="请选择专业类型" :value="Data.major_type">
       <el-option label="基础科段" value="基础科段"></el-option>
@@ -36,7 +36,7 @@
     </el-select>
   </el-form-item>
 </el-col>
-<el-col :span="12">
+<el-col :span="8">
   <el-form-item label="学历层次">
     <el-select v-model="Data.education_level" placeholder="请选择学历层次" :value="Data.education_level">
       <el-option label="专科" value="专科"></el-option>
@@ -44,10 +44,7 @@
     </el-select>
   </el-form-item>
 </el-col>
-</el-row>
-
-<el-row :gutter="18">
-<el-col :span="12">
+<el-col :span="8">
   <el-form-item label="开考形式">
     <el-select v-model="Data.exam_type" placeholder="请选择开考形式" :value="Data.exam_type">
       <el-option label="面向高校" value="面向高校"></el-option>
@@ -55,8 +52,12 @@
     </el-select>
   </el-form-item>
 </el-col>
-<el-col :span="12"><el-form-item label="主考院校"><el-input v-model="Data.main_target_school" /></el-form-item></el-col>
 </el-row>
+
+<!-- <el-row :gutter="18">
+
+<el-col :span="12"><el-form-item label="主考院校"><el-input v-model="Data.main_target_school" /></el-form-item></el-col>
+</el-row> -->
 
 <el-row :gutter="18">
 <el-col :span="12"><el-form-item label="首次开考考次"><el-input v-model="Data.first_exam_id" /></el-form-item></el-col>

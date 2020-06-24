@@ -2,6 +2,7 @@ package com.exam.plan.service.impl;
 
 import com.exam.plan.entity.Major;
 import com.exam.plan.entity.MajorCategory;
+import com.exam.plan.entity.MajorWithCategory;
 import com.exam.plan.mapper.MajorCategoryMapper;
 import com.exam.plan.mapper.MajorMapper;
 import com.exam.plan.service.IMajorCategoryService;
@@ -17,12 +18,6 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class MajorCategoryServiceImpl implements IMajorCategoryService {
-  @Resource
-  public MajorCategoryMapper majorCategoryMapper;
+public class MajorCategoryServiceImpl extends AbstractService<MajorCategory> implements IMajorCategoryService {
 
-  @Override
-  public List<MajorCategory> listAllWithCategory(){
-    return this.majorCategoryMapper.listAllWithCategory();
-  };
 }

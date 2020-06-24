@@ -94,7 +94,17 @@
             <el-button
               type="info"
               size="mini"
-              v-if="hasPermission('role:detail')">查看
+              v-if="hasPermission('role:detail')">详情
+              </el-button>
+          </router-link>
+          <router-link
+            class="inlineBlock"
+            :to="{ path:'/major/school', query: { Id:scope.row.major_id, data:scope.row, 
+            actionStatus:'add'  } }">
+            <el-button
+              type="info"
+              size="mini"
+              v-if="hasPermission('role:list')">主考院校
               </el-button>
           </router-link>
           <el-button
