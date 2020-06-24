@@ -93,3 +93,34 @@ export function removeTextbook(courseId) {
     method: 'delete'
   })
 }
+
+export function listNationalCourse(params) {
+  return request({
+    url: '/course/national',
+    method: 'get',
+    params
+  })
+}
+
+export function addNationalCourse(form) {
+  return request({
+    url: '/course/national',
+    method: 'post',
+    data: form
+  })
+}
+
+export function updateNationalCourse(form) {
+  return request({
+    url: '/course/national',
+    method: 'put',
+    data: form
+  })
+}
+
+export function removeNationalCourse(courseId) {
+  return request({
+    url: '/course/national/' + courseId,
+    method: 'delete'
+  })
+}

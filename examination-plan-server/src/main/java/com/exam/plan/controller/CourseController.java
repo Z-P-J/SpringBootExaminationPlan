@@ -176,7 +176,33 @@ public class CourseController {
     @GetMapping("/national/{id}")
     @ResponseBody
     public Result getNationalCourse(@PathVariable final String id) {
-        return ResultGenerator.genOkResult(courseService.getChargeById(id));
+        return ResultGenerator.genOkResult(courseService.getNationalCourseById(id));
+    }
+
+    @DeleteMapping("/national/{id}")
+    @ResponseBody
+    public Result deleteNationalCourse(@PathVariable final String id) {
+        final CourseNational dbRole = this.courseService.getNationalCourseById(id);
+        if (dbRole == null) {
+            return ResultGenerator.genFailedResult("国家课程不存在");
+        }
+        this.courseService.deleteNationalCourse(id);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PutMapping("/national")
+    @ResponseBody
+    public Result updateNationalCourse(@RequestBody final CourseNational info) {
+        courseService.updateNationalCourse(info);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PostMapping("/national")
+    @ResponseBody
+    public Result addNationalCourse(@RequestBody final CourseNational info) {
+        System.out.println("addTextbook info=" + info);
+        courseService.saveNationalCourse(info);
+        return ResultGenerator.genOkResult();
     }
 
 }

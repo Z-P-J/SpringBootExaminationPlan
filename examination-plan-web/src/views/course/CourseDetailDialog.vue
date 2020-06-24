@@ -165,7 +165,6 @@ export default {
         courseName: [{ required: true, trigger: 'blur', validator: validateEmpty }],
         courseId: [{ required: true, trigger: 'blur', validator: validateCourseId }]
       },
-      // courseData: {},
       tempCourse: {
         courseId: '',
         nationalCourseId: '',
@@ -194,7 +193,7 @@ export default {
           this.btnLoading = true
           addCourse(this.value.data).then(() => {
             this.$message.success('添加成功')
-            this.value.callback.getCourseList()
+            this.value.callback.getList()
             this.value.show = false
             this.btnLoading = false
           }).catch(res => {
@@ -216,7 +215,7 @@ export default {
           this.btnLoading = true
           updateCourse(this.value.data).then(() => {
             this.$message.success('更新成功')
-            this.value.callback.getCourseList()
+            this.value.callback.getList()
             this.value.show = false
             this.btnLoading = false
           }).catch(res => {

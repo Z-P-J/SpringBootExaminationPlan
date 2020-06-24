@@ -8,7 +8,7 @@
             size="mini"
             icon="el-icon-refresh"
             v-if="hasPermission('role:list')"
-            @click.native.prevent="getCourseList"
+            @click.native.prevent="getList"
           >刷新</el-button>
           <el-button
             type="primary"
@@ -74,6 +74,11 @@
         align="center"
       >
         <template slot-scope="scope">
+          <!-- <el-button
+            type="danger"
+            size="mini"
+            @click.native.prevent="setCourseTextbook(scope.$index)"
+          >教材</el-button> -->
         <el-button
             type="info"
             size="mini"
@@ -120,7 +125,7 @@ export default {
     //   this.getPermissionList()
     // }
     if (this.hasPermission('role:list')) {
-      this.getCourseList()
+      this.getList()
     }
   },
   data() {
@@ -150,10 +155,6 @@ export default {
         filter: 'all'
       },
       dialogFormVisible: false,
-      textMap: {
-        update: '修改角色',
-        add: '添加角色'
-      },
       btnLoading: false,
       tempRole: {
         id: '',
@@ -213,7 +214,7 @@ export default {
     },
     onChange(value) {
       console.log('value=' + value)
-      this.getCourseList()
+      this.getList()
     },
     isDisabled(flag) {
       return this.multipleSelection.length === 0 || this.multipleSelection.filter(v => {
@@ -257,7 +258,7 @@ export default {
     /**
      * 获取课程列表
      */
-    getCourseList() {
+    getList() {
       this.listLoading = true
       this.listQuery.filter = this.courseFilter
       listCourse(this.listQuery).then(response => {
@@ -276,7 +277,7 @@ export default {
     handleSizeChange(size) {
       this.listQuery.page = 1
       this.listQuery.size = size
-      this.getCourseList()
+      this.getList()
     },
     /**
      * 改变页码
@@ -284,7 +285,7 @@ export default {
      */
     handleCurrentChange(page) {
       this.listQuery.page = page
-      this.getCourseList()
+      this.getList()
     },
     /**
      * 表格序号
@@ -309,21 +310,6 @@ export default {
       this.courseDialog.show = true
     },
     /**
-     * 校验角色名是否已经存在
-     * @param id 角色id
-     * @param name 角色名
-     * @returns {boolean}
-     */
-    isRoleNameUnique(id, name) {
-      for (let i = 0; i < this.roleList.length; i++) {
-        if (this.roleList[i].id !== id && this.roleList[i].name === name) {
-          this.$message.error('角色名已存在')
-          return false
-        }
-      }
-      return true
-    },
-    /**
      * 移除角色
      * @param index 角色下标
      * @returns {boolean}
@@ -337,114 +323,13 @@ export default {
         const courseId = this.roleList[index].courseId
         removeCourse(courseId).then(() => {
           this.$message.success('删除成功')
-          this.getCourseList()
+          this.getList()
         }).catch(() => {
           this.$message.error('删除失败')
         })
       }).catch(() => {
         this.$message.info('已取消删除')
       })
-    },
-    /**
-     * 判断角色菜单内的权限是否一个都没选
-     * @param index 下标
-     * @returns {boolean}
-     */
-    isMenuNone(index) {
-      const handleList = this.permissionList[index].handleList
-      for (let i = 0; i < handleList.length; i++) {
-        if (this.tempRole.permissionIdList.indexOf(handleList[i].id) > -1) {
-          return false
-        }
-      }
-      return true
-    },
-    /**
-     * 判断角色菜单内的权限是否全选了
-     * @param index 下标
-     * @returns {boolean}
-     */
-    isMenuAll(index) {
-      const handleList = this.permissionList[index].handleList
-      for (let i = 0; i < handleList.length; i++) {
-        if (this.tempRole.permissionIdList.indexOf(handleList[i].id) < 0) {
-          return false
-        }
-      }
-      return true
-    },
-    /**
-     * 根据菜单状态check所有checkbox
-     * @param index 下标
-     */
-    checkAll(index) {
-      if (this.isMenuAll(index)) {
-        // 如果已经全选了,则全部取消
-        this.cancelAll(index)
-      } else {
-        // 如果尚未全选,则全选
-        this.selectAll(index)
-      }
-    },
-    /**
-     * checkbox全部选中
-     * @param index 下标
-     */
-    selectAll(index) {
-      const handleList = this.permissionList[index].handleList
-      for (let i = 0; i < handleList.length; i++) {
-        this.addUnique(handleList[i].id, this.tempRole.permissionIdList)
-      }
-    },
-    /**
-     * checkbox全部取消选中
-     * @param index 下标
-     */
-    cancelAll(index) {
-      const handleList = this.permissionList[index].handleList
-      for (let i = 0; i < handleList.length; i++) {
-        const idIndex = this.tempRole.permissionIdList.indexOf(handleList[i].id)
-        if (idIndex > -1) {
-          this.tempRole.permissionIdList.splice(idIndex, 1)
-        }
-      }
-    },
-    /**
-     * 本方法会在勾选状态改变之后触发
-     * @param item 选项
-     * @param index 对应下标
-     */
-    handleChecked(item, index) {
-      if (this.tempRole.permissionIdList.indexOf(item.id) > -1) {
-        // 选中事件
-        // 如果之前未勾选本权限,现在勾选完之后,tempRole里就会包含本id
-        // 那么就要将必选的权限勾上
-        this.makePermissionChecked(index)
-      } else {
-        // 取消选中事件
-        this.cancelAll(index)
-      }
-    },
-    /**
-     * 将角色菜单必选的权限勾上（这里并没有做必选的数据库字段）
-     * @param index 权限对应下标
-     */
-    makePermissionChecked(index) {
-      const handleList = this.permissionList[index].handleList
-      for (let i = 0; i < handleList.length; i++) {
-        this.addUnique(handleList[i].id, this.tempRole.permissionIdList)
-      }
-    },
-    /**
-     * 数组内防重复地添加元素
-     * @param val 值
-     * @param arr 数组
-     */
-    addUnique(val, arr) {
-      const _index = arr.indexOf(val)
-      if (_index < 0) {
-        arr.push(val)
-      }
     }
   }
 }
