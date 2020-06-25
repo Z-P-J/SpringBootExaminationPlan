@@ -60,6 +60,7 @@
       </el-table-column>
       <el-table-column label="专业全国编码" align="center" prop="national_major_code" width="180" />
       <el-table-column label="名称" align="center" prop="major_name" width="200" />
+      <!-- <el-table-column label="简称" align="center" prop="major_abbr" width="200" /> -->
       <el-table-column label="学历层次" align="center" prop="education_level" width="200" />
       <el-table-column label="学分" align="center" prop="credit" width="200" />
       <el-table-column label="管理" align="center"
@@ -111,6 +112,13 @@
             type="text"
             auto-complete="off"
             v-model="tmpData.major_name"
+          />
+        </el-form-item>
+        <el-form-item label="简称" prop="major_abbr">
+          <el-input
+            type="text"
+            auto-complete="off"
+            v-model="tmpData.major_abbr"
           />
         </el-form-item>
          <el-form-item label="学历层次" prop="education_level">
@@ -181,6 +189,7 @@ export default {
         national_major_code: '2',
         education_level: '本科',
         major_name: '社会学',
+        major_abbr: '社会学',
         credit: 2
       },
       search: {
@@ -260,6 +269,7 @@ export default {
       this.tmpData.national_major_code = '00001'
       this.tmpData.education_level = '本科'
       this.tmpData.major_name = '社会学'
+      this.tmpData.major_abbr = '社会学'
       this.tmpData.credit = 2
     },
     /**

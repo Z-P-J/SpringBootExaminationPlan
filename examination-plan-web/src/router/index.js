@@ -139,7 +139,7 @@ export const asyncRouterMap = [
     path: '/major',
     component: Layout,
     redirect: '/major/list',
-    icon: 'role',
+    icon: 'drag',
     name: '专业管理',
     noDropDown: false,
     children: [{
@@ -174,7 +174,7 @@ export const asyncRouterMap = [
     path: '/exam-set',
     component: Layout,
     redirect: '/exam-set/list',
-    icon: 'role',
+    icon: 'chart',
     noDropDown: false,
     name: '考次管理',
     children: [{

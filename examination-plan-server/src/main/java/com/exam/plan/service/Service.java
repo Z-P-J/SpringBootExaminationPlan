@@ -111,6 +111,14 @@ public interface Service<T> {
   void updateByCondition(T entity, Condition condition);
 
   /**
+   * 通过 ids查找批量更新
+   *
+   * @param count
+   * @return 实体
+   */
+  void updateByConditionBatch(Integer count, T entity, Condition condition);
+
+  /**
    * 通过 id 查找
    *
    * @param id id

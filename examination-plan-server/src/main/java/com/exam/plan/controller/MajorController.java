@@ -96,6 +96,25 @@ public class MajorController {
         return ResultGenerator.genOkResult();
     }
 
+    @DeleteMapping("/batch/{ids}")
+    @ResponseBody
+    public Result deleteByBatch(@PathVariable final String ids, final Principal principal) {
+        System.out.println("delMajor majorids=" + ids);
+        this.majorService.deleteByIds(ids);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PutMapping("/batch/{ids}")
+    @ResponseBody
+    public Result updateByBatch(
+            @PathVariable final String ids, @RequestBody final Major major, final Principal principal) {
+
+        Condition condition=new Condition(Major.class);
+        condition.createCriteria().andCondition( "major_id in (" +ids+")");
+
+        this.majorService.updateByConditionBatch(ids.split(",").length,major,condition);
+        return ResultGenerator.genOkResult();
+    }
 
     /*··········································专业大类···································*/
 

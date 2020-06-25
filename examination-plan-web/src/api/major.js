@@ -46,6 +46,21 @@ export function update(Form) {
   })
 }
 
+export function removeByBatch(Ids) {
+  return request({
+    url: '/major/batch/' + Ids,
+    method: 'delete'
+  })
+}
+
+export function updateByBatch(Form, Ids) {
+  return request({
+    url: '/major/batch/' + Ids,
+    method: 'put',
+    data: Form
+  })
+}
+
 // 专业大类
 export function categoryList(params) {
   return request({

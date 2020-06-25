@@ -135,6 +135,10 @@ public abstract class AbstractService<T> implements Service<T> {
     }
 
     @Override
+    public void updateByConditionBatch(final Integer count,final T entity, final Condition condition) {
+        this.assertUpdate(this.mapper.updateByConditionSelective(entity, condition) == count);
+    }
+    @Override
     public T getById(final Object id) {
         return this.mapper.selectByPrimaryKey(id);
     }
