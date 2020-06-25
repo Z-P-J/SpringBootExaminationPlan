@@ -16,7 +16,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
-          >添加统考考次</el-button>
+          >添加全国专业</el-button>
           
           <el-button
             type="primary"
@@ -25,13 +25,6 @@
             v-if="hasPermission('role:update')"
             
           >批量操作</el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            v-if="hasPermission('role:update')"
-            
-          >批量导入</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('role:search')">
@@ -40,9 +33,10 @@
           </el-form-item>
           <el-form-item>
             <el-select v-model="search.fieldSelect" placeholder="字段名">
-              <el-option label="考次编码" value="exam_id"></el-option>
-              <el-option label="课程编码" value="course_id"></el-option>
-              <el-option label="时间编码" value="time_id"></el-option>
+              <el-option label="专业全国编码" value="national_major_code"></el-option>
+              <el-option label="名称" value="major_name"></el-option>
+              <el-option label="学历层次" value="education_level"></el-option>
+              <el-option label="学分" value="credit"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -64,9 +58,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="考次编码" align="center" prop="exam_id" width="180" />
-      <el-table-column label="课程编码" align="center" prop="course_id" width="200" />
-      <el-table-column label="时间编码" align="center" prop="time_id" width="200" />
+      <el-table-column label="专业全国编码" align="center" prop="national_major_code" width="180" />
+      <el-table-column label="名称" align="center" prop="major_name" width="200" />
+      <el-table-column label="学历层次" align="center" prop="education_level" width="200" />
+      <el-table-column label="学分" align="center" prop="credit" width="200" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('role:add') || hasPermission('role:delete')">
         <template slot-scope="scope">
@@ -104,26 +99,32 @@
         :model="tmpData"
         ref="tmpData"
       >
-        <el-form-item label="考次编码" prop="exam_id" required>
+        <el-form-item label="专业全国编码" prop="national_major_code" required>
           <el-input
             type="text"
             auto-complete="off"
-            v-model="tmpData.exam_id"
+            v-model="tmpData.national_major_code"
           />
         </el-form-item>
-        <el-form-item label="课程编码" prop="course_id" required>
+        <el-form-item label="名称" prop="major_name" required>
           <el-input
             type="text"
             auto-complete="off"
-            v-model="tmpData.course_id"
+            v-model="tmpData.major_name"
           />
         </el-form-item>
-        <el-form-item label="时间编码" prop="time_id">
-            <el-input
-              type="text"
-              auto-complete="off"
-              v-model="tmpData.time_id"
-            />
+         <el-form-item label="学历层次" prop="education_level">
+            <el-select v-model="tmpData.education_level" placeholder="选项">
+              <el-option label="专科" value="专科"></el-option>
+              <el-option label="本科" value="本科"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="学分" prop="credit" required>
+          <el-input
+            type="num"
+            auto-complete="off"
+            v-model="tmpData.credit"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -144,19 +145,13 @@
           v-if="dialogStatus === 'update'"
           :loading="btnLoading"
           @click.native.prevent="updateAccount"
-        >更新资料</el-button>
-        <el-button
-          type="primary"
-          v-if="dialogStatus === 'updateRole'"
-          :loading="btnLoading"
-          @click.native.prevent="updateAccountRole"
-        >更新角色</el-button>
+        >更新</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { courseList as list, courseSearch as search, courseRemove as remove, courseAdd as add, courseUpdate as update } from '@/api/exam-set'
+import { nationList as list, nationSearch as search, nationRemove as remove, nationAdd as add, nationUpdate as update } from '@/api/major'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
 
@@ -179,13 +174,14 @@ export default {
       dialogFormVisible: false,
       btnLoading: false, // 按钮等待动画
       textMap: {
-        update: '修改统考考次',
-        add: '添加统考考次'
+        update: '修改全国专业',
+        add: '添加全国专业'
       },
       tmpData: {
-        exam_id: '',
-        course_id: '',
-        time_id: ''
+        national_major_code: '2',
+        education_level: '本科',
+        major_name: '社会学',
+        credit: 2
       },
       search: {
         page: null,
@@ -261,9 +257,10 @@ export default {
       // 显示新增对话框
       this.dialogFormVisible = true
       this.dialogStatus = 'add'
-      this.tmpData.exam_id = '201'
-      this.tmpData.course_id = '00001'
-      this.tmpData.time_id = '7A'
+      this.tmpData.national_major_code = '00001'
+      this.tmpData.education_level = '本科'
+      this.tmpData.major_name = '社会学'
+      this.tmpData.credit = 2
     },
     /**
      * 添加用户
@@ -312,7 +309,7 @@ export default {
         cancelButtonText: '否',
         type: 'warning'
       }).then(() => {
-        const id = this.dataList[index].id
+        const id = this.dataList[index].national_major_code
         remove(id).then(() => {
           this.$message.success('删除成功')
           this.getDataList()

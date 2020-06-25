@@ -125,3 +125,43 @@ export function schoolUpdate(Form) {
     data: Form
   })
 }
+
+// 专业大类
+export function nationList(params) {
+  return request({
+    url: '/major/nation',
+    method: 'get',
+    params
+  })
+}
+
+export function nationAdd(Form) {
+  return request({
+    url: '/major/nation',
+    method: 'post',
+    data: Form
+  })
+}
+
+export function nationRemove(Id) {
+  return request({
+    url: '/major/nation/' + Id,
+    method: 'delete'
+  })
+}
+
+export function nationSearch(Form) {
+  return request({
+    url: '/major/nation/search',
+    method: 'post',
+    data: Form
+  })
+}
+
+export function nationUpdate(Form) {
+  return request({
+    url: '/major/nation/' + Form.national_major_code,
+    method: 'put',
+    data: Form
+  })
+}

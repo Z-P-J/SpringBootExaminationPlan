@@ -31,6 +31,9 @@ public class MajorController {
     //主考院校
     @Resource
     private IMajorSchoolService majorSchoolService;
+    //全国专业
+    @Resource
+    private IMajorNationalService majorNationalService;
 
     /*··········································专业信息···································*/
     @GetMapping()
@@ -155,6 +158,65 @@ public class MajorController {
     }
 
     /*··········································全国专业···································*/
+
+    @GetMapping("/nation")
+    @ResponseBody
+    public Result nationList(
+            @RequestParam(defaultValue = "0") final Integer page,
+            @RequestParam(defaultValue = "0") final Integer size) {
+        PageHelper.startPage(page, size);
+        final List<MajorNational> list = this.majorNationalService.listAll();
+        final PageInfo<MajorNational> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
+
+    }
+
+    @PostMapping("/nation/search")
+    @ResponseBody
+    public Result nationSearch(@RequestBody final Map<String, Object> param) {
+        System.out.println("search param=" + param);
+        PageHelper.startPage((Integer) param.get("page"), (Integer) param.get("size"));
+
+        Condition condition=new Condition(MajorNational.class);
+        condition.createCriteria().andCondition( param.get("fieldSelect")+" like '%" +param.get("fieldVal")+"%'");
+
+        final List<MajorNational> list = this.majorNationalService.listByCondition(condition);
+        final PageInfo<MajorNational> pageInfo = new PageInfo<>(list);
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @PostMapping("/nation")
+    @ResponseBody
+    public Result nationAdd(@RequestBody final MajorNational major) {
+        System.out.println("addMajorNational major=" + major);
+        majorNationalService.save(major);
+        return ResultGenerator.genOkResult();
+    }
+    @DeleteMapping("/nation/{id}")
+    @ResponseBody
+    public Result nationDelete(@PathVariable final String id, final Principal principal) {
+        System.out.println("delMajorNational id=" + id);
+        final MajorNational major = this.majorNationalService.getById(id);
+        if (major == null) {
+            return ResultGenerator.genFailedResult("数据不存在");
+        }
+        this.majorNationalService.deleteById(id);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PutMapping("/nation/{id}")
+    @ResponseBody
+    public Result nationUpdate(
+            @PathVariable final String id, @RequestBody final MajorNational major, final Principal principal) {
+        final MajorNational dbMajor = this.majorNationalService.getById(id);
+        if (dbMajor == null) {
+            return ResultGenerator.genFailedResult("不存在");
+        }
+        this.majorNationalService.update(major);
+        return ResultGenerator.genOkResult();
+    }
+
+
     /*··········································主考院校···································*/
 
     @GetMapping("/school/{id}")

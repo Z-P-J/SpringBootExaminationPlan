@@ -158,6 +158,11 @@ export const asyncRouterMap = [
       component: _import('major/category')
     },
     {
+      path: 'nation',
+      name: '全国专业',
+      component: _import('major/nation')
+    },
+    {
       hidden: true,
       path: 'school',
       name: '主考院校',

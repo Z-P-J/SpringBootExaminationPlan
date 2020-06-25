@@ -39,3 +39,42 @@ export function update(Form) {
   })
 }
 
+// 统考课表
+export function courseList(params) {
+  return request({
+    url: '/exam-set/course',
+    method: 'get',
+    params
+  })
+}
+
+export function courseAdd(Form) {
+  return request({
+    url: '/exam-set/course',
+    method: 'post',
+    data: Form
+  })
+}
+
+export function courseRemove(Id) {
+  return request({
+    url: '/exam-set/course/' + Id,
+    method: 'delete'
+  })
+}
+
+export function courseSearch(Form) {
+  return request({
+    url: '/exam-set/course/search',
+    method: 'post',
+    data: Form
+  })
+}
+
+export function courseUpdate(Form) {
+  return request({
+    url: '/exam-set/course/' + Form.id,
+    method: 'put',
+    data: Form
+  })
+}
