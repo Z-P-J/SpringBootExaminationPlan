@@ -166,18 +166,23 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/role4',
+    path: '/exam-set',
     component: Layout,
-    redirect: '/role/list',
+    redirect: '/exam-set/list',
     icon: 'role',
-    noDropDown: true,
-    // name: '考次管理',
+    noDropDown: false,
+    name: '考次管理',
     children: [{
       path: 'list',
       name: '考次管理',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
-    }]
+      component: _import('exam-set/list')
+    },
+    {
+      path: 'course',
+      name: '统考课表',
+      component: _import('exam-set/course')
+    }
+    ]
   },
   {
     path: '/course',
