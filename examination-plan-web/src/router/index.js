@@ -196,6 +196,10 @@ export const asyncRouterMap = [
       name: '全部课程',
       component: _import('course/list')
     }, {
+      path: 'national',
+      name: '全国课程',
+      component: _import('course/national')
+    }, {
       path: 'textbook',
       name: '课程教材',
       component: _import('course/textbook')

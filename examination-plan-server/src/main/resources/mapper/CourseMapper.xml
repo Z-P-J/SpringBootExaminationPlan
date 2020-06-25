@@ -40,4 +40,22 @@
         WHERE id = #{id}
     </update>
 
+    <update id="disableCourse" parameterType="java.util.List">
+        UPDATE course_info
+        SET course_status = '注销'
+        WHERE course_id in
+        <foreach collection="courseIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="enableCourse" parameterType="java.util.List">
+        UPDATE course_info
+        SET course_status = '正常'
+        WHERE course_id in
+        <foreach collection="courseIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>

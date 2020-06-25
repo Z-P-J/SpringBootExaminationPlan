@@ -154,6 +154,7 @@ public abstract class AbstractService<T> implements Service<T> {
         return this.mapper.selectByIds(ids);
     }
 
+    @Override
     public List<T> listByCondition(final Condition condition) {
         return this.mapper.selectByCondition(condition);
     }

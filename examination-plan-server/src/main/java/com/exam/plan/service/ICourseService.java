@@ -46,4 +46,14 @@ public interface ICourseService extends Service<CourseInfo> {
 
   CourseNational getNationalCourseById(Object id);
 
+  void deleteNationalCourse(Object id);
+
+  void updateNationalCourse(CourseNational info);
+
+  void saveNationalCourse(CourseNational info);
+
+  void disableCourse(List<String> courseIdList);
+
+  void enableCourse(List<String> courseIdList);
+
 }

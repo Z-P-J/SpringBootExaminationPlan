@@ -84,8 +84,8 @@
         <el-col :span="18">
           <el-form-item label="课程状态：">
             <el-select v-model="value.data.courseStatus" placeholder="请选择课程状态" :value="value.data.courseStatus">
-              <el-option label="正常" value="0"></el-option>
-              <el-option label="注销" value="1"></el-option>
+              <el-option label="正常" value="正常"></el-option>
+              <el-option label="注销" value="注销"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -165,7 +165,6 @@ export default {
         courseName: [{ required: true, trigger: 'blur', validator: validateEmpty }],
         courseId: [{ required: true, trigger: 'blur', validator: validateCourseId }]
       },
-      // courseData: {},
       tempCourse: {
         courseId: '',
         nationalCourseId: '',
@@ -194,7 +193,7 @@ export default {
           this.btnLoading = true
           addCourse(this.value.data).then(() => {
             this.$message.success('添加成功')
-            this.value.callback.getCourseList()
+            this.value.callback.getList()
             this.value.show = false
             this.btnLoading = false
           }).catch(res => {
@@ -216,7 +215,7 @@ export default {
           this.btnLoading = true
           updateCourse(this.value.data).then(() => {
             this.$message.success('更新成功')
-            this.value.callback.getCourseList()
+            this.value.callback.getList()
             this.value.show = false
             this.btnLoading = false
           }).catch(res => {

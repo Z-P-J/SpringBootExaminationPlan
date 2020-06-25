@@ -47,6 +47,22 @@ export function removeCourse(courseId) {
   })
 }
 
+export function disableCourse(params) {
+  return request({
+    url: '/course/disable',
+    method: 'post',
+    data: params
+  })
+}
+
+export function enableCourse(params) {
+  return request({
+    url: '/course/enable',
+    method: 'post',
+    data: params
+  })
+}
+
 export function listTextbook(params) {
   return request({
     url: '/course/textbook',
@@ -74,6 +90,37 @@ export function updateTextbook(form) {
 export function removeTextbook(courseId) {
   return request({
     url: '/course/textbook/' + courseId,
+    method: 'delete'
+  })
+}
+
+export function listNationalCourse(params) {
+  return request({
+    url: '/course/national',
+    method: 'get',
+    params
+  })
+}
+
+export function addNationalCourse(form) {
+  return request({
+    url: '/course/national',
+    method: 'post',
+    data: form
+  })
+}
+
+export function updateNationalCourse(form) {
+  return request({
+    url: '/course/national',
+    method: 'put',
+    data: form
+  })
+}
+
+export function removeNationalCourse(courseId) {
+  return request({
+    url: '/course/national/' + courseId,
     method: 'delete'
   })
 }

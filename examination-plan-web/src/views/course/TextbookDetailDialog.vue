@@ -12,11 +12,6 @@
       <el-input v-model="value.data.textbookName" />
     </el-col>
   </el-form-item>
-  <!-- <el-form-item label="教材编码" prop="textbookCode">
-    <el-col :span="6">
-      <el-input v-model="value.data.textbookCode" />
-    </el-col>
-  </el-form-item> -->
   <el-form-item label="课程名称" prop="courseName">
     <el-col :span="6">
       <el-input v-model="value.data.courseName" />

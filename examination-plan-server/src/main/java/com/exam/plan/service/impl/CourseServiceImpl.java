@@ -104,4 +104,31 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   public CourseNational getNationalCourseById(Object id) {
     return courseNationalMapper.selectByPrimaryKey(id);
   }
+
+  @Override
+  public void deleteNationalCourse(Object id) {
+    Optional.ofNullable(this.courseNationalMapper.selectByPrimaryKey(id))
+            .orElseThrow(ResourcesNotFoundException::new);
+    assertDelete(this.courseNationalMapper.deleteByPrimaryKey(id) == 1);
+  }
+
+  @Override
+  public void updateNationalCourse(CourseNational info) {
+    assertUpdate(this.courseNationalMapper.updateByPrimaryKeySelective(info) == 1);
+  }
+
+  @Override
+  public void saveNationalCourse(CourseNational info) {
+    assertSave(this.courseNationalMapper.insertSelective(info) == 1);
+  }
+
+  @Override
+  public void disableCourse(List<String> courseIdList) {
+    courseMapper.disableCourse(courseIdList);
+  }
+
+  @Override
+  public void enableCourse(List<String> courseIdList) {
+    courseMapper.enableCourse(courseIdList);
+  }
 }
