@@ -14,20 +14,15 @@
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >添加院校</el-button>
-          <el-button
-            type="primary"
-            icon="el-icon-plus"
-            v-if="hasPermission('role:add')"
-            @click.native.prevent="showAddDialogBatch"
-          >批量修改</el-button>
-          <!-- <router-link
+          <router-link
             class="inlineBlock"
             :to="{ path:'/major/schoolupdate/', query: { data:majorData,} }">
             <el-button
-              type="primary"
-              v-if="hasPermission('role:detail')">批量修改
+              type="warning"
+              size="mini"
+              v-if="hasPermission('role:add')">批量修改
               </el-button>
-          </router-link> -->
+          </router-link>
         </el-form-item>
 
         <span v-if="hasPermission('role:search')">
@@ -89,7 +84,7 @@
       :page-sizes="[9, 18, 36, 72]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" v-if="operationStatus === 'single'">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         status-icon
         class="small-space"
@@ -133,42 +128,20 @@
           type="success"
           v-if="dialogStatus === 'add'"
           :loading="btnLoading"
-          @click.native.prevent="addData"
+          @click.native.prevent="addAccount"
         >添加</el-button>
         <el-button
           type="primary"
           v-if="dialogStatus === 'update'"
           :loading="btnLoading"
-          @click.native.prevent="updateData"
-        >更新</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" v-if="operationStatus === 'batch'">
-      <el-transfer
-        filter-placeholder="请输入专业"
-        v-model="majorDataList"
-        :data="majorDataList">
-      </el-transfer>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
-        <el-button
-          type="danger"
-          v-if="dialogStatus === 'add'"
-          @click.native.prevent="$refs['tmpData'].resetFields()"
-        >重置</el-button>
-        <el-button
-          type="primary"
-          v-if="dialogStatus === 'update'"
-          :loading="btnLoading"
-          @click.native.prevent="updateData"
+          @click.native.prevent="updateAccount"
         >更新</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { schoolList as list, schoolSearch as search, schoolRemove as remove, schoolAdd as add, schoolUpdate as update,
-  list as majorlist, schoolUpdateByBatch as updateByBatch } from '@/api/major'
+import { schoolList as list, schoolSearch as search, schoolRemove as remove, schoolAdd as add, schoolUpdate as update } from '@/api/major'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
 
@@ -207,10 +180,7 @@ export default {
         fieldVal: '',
         fieldSelect: null
       },
-      majorData: {},
-      majorDataList: [],
-      operationStatus: 'single',
-      multipleSelection: []
+      majorData: {}
     }
   },
   computed: {
@@ -286,7 +256,7 @@ export default {
     /**
      * 添加
      */
-    addData() {
+    addAccount() {
       this.btnLoading = true
       add(this.tmpData).then(() => {
         this.$message.success('添加成功')
@@ -311,7 +281,7 @@ export default {
     /**
      * 更新
      */
-    updateData() {
+    updateAccount() {
       update(this.tmpData).then(() => {
         this.$message.success('更新成功')
         this.getDataList()
@@ -338,63 +308,6 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
-    },
-    showAddDialogBatch() {
-      // 显示新增对话框
-      this.dialogFormVisible = true
-      this.dialogStatus = 'update'
-      this.operationStatus = 'batch'
-      this.getMajorList()
-    },
-    /**
-     * 批量更新
-     */
-    updateDataByBatch() {
-      var ids = this.multipleSelection.map((item) => {
-        return ("'" + item.major_id + "'")
-      })
-      this.btnLoading = true
-      this.$refs.tmpData.validate((valid) => {
-        if (valid) {
-          updateByBatch(this.tmpData, ids).then(() => {
-            this.$message.success('批量更新成功')
-            this.getDataList()
-            this.dialogFormVisible = false
-            this.btnLoading = false
-            this.operationStatus = 'single'
-          }).catch(res => {
-            this.btnLoading = false
-            this.$message.error('批量更新失败')
-          })
-        } else {
-          this.$message.error('请检查输入格式')
-          this.btnLoading = false
-          this.operationStatus = 'single'
-          return false
-        }
-      })
-    },
-    getMajorList() {
-      var me = this
-      // console.log('this.listQuery' + JSON.stringify(this.listQuery))
-      majorlist(this.listQuery).then(response => {
-        var data = response.data.list
-        // console.log('data' + JSON.stringify(data))
-        data.forEach((item, index) => {
-          console.log('index' + index)
-          console.log('item.major_name' + item.major_name)
-          me.majorDataList.push({
-            label: item.major_name,
-            key: index
-          })
-        })
-        console.log('me.majorDataList' + me.majorDataList)
-      }).catch(res => {
-        this.$message.error('加载专业列表失败')
-      })
-    },
-    filterMethod(query, item) {
-      // return item.pinyin.indexOf(query) > -1;
     }
   }
 }

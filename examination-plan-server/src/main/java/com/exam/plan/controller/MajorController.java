@@ -293,6 +293,21 @@ public class MajorController {
         return ResultGenerator.genOkResult();
     }
 
+    @PutMapping("/school/batch/{id}")
+    @ResponseBody
+    public Result schoolUpdateByBatch(
+            @PathVariable final String id, @RequestBody final List<MajorSchool> major, final Principal principal) {
+        for(MajorSchool item:major){
+            System.out.println("schoolUpdateByBatch: "+item);
+        }
+//        final MajorSchool dbMajor = this.majorSchoolService.getById(id);
+//        if (dbMajor == null) {
+//            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
+//        }
+//        this.majorSchoolService.update(major);
+        return ResultGenerator.genOkResult();
+    }
+
     @PutMapping("/school/{id}")
     @ResponseBody
     public Result schoolUpdate(
@@ -304,7 +319,6 @@ public class MajorController {
         this.majorSchoolService.update(major);
         return ResultGenerator.genOkResult();
     }
-
 }
 
 

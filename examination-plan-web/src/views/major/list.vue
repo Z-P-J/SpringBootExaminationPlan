@@ -124,7 +124,7 @@
             type="danger"
             size="mini"
             v-if="scope.row.major_status == '正常'"
-            disabled=true
+            disabled:true
             @click.native.prevent="removeData(scope.$index)"
           >删除</el-button>
            <el-button
