@@ -5,10 +5,9 @@
         <el-form-item>
           <el-button
             type="success"
-            icon="el-icon-refresh"
-            v-if="hasPermission('role:list')"
-            @click.native.prevent="getDataList"
-          >刷新</el-button>
+            icon="el-icon-back"
+            @click.native.prevent="$router.back(-1)"
+          >返回</el-button>
           <el-button
             type="primary"
             icon="el-icon-plus"

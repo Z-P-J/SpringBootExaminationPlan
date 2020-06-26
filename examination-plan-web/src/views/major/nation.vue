@@ -214,6 +214,7 @@ export default {
         this.total = response.data.total
         this.listLoading = false
       }).catch(res => {
+        this.listLoading = false
         this.$message.error('加载列表失败')
       })
     },
@@ -228,6 +229,8 @@ export default {
         this.listLoading = false
         this.btnLoading = false
       }).catch(res => {
+        this.listLoading = false
+        this.btnLoading = false
         this.$message.error('搜索失败')
       })
     },
@@ -288,6 +291,7 @@ export default {
             this.btnLoading = false
           })
         } else {
+          this.$message.error('请检查输入格式')
           this.btnLoading = false
           return false
         }

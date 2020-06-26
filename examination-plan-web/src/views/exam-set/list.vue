@@ -10,14 +10,12 @@
             @click.native.prevent="getDataList"
           >刷新</el-button>
           <el-button
-            type="primary"
-            icon="el-icon-plus"
+            icon="el-icon-setting"
             v-if="operationStatus === 'single' "
             @click.native.prevent="toggleOperation"
           >批量操作</el-button>
            <el-button
-            type="primary"
-            icon="el-icon-plus"
+            icon="el-icon-setting"
             v-if="operationStatus === 'batch'"
             @click.native.prevent="toggleOperation"
           >基本操作</el-button>
@@ -29,13 +27,13 @@
           >添加考试</el-button>
           <el-button
             type="primary"
-            icon="el-icon-plus"
+            icon="el-icon-delete"
             v-if="operationStatus === 'batch' "
             @click.native.prevent="removeDataByBatch"
           >批量删除</el-button>
           <el-button
             type="primary"
-            icon="el-icon-plus"
+            icon="el-icon-edit"
             v-if="hasPermission('role:search') && operationStatus === 'batch'"
             @click.native.prevent="TogglebatchDialogStatus"
           >批量修改</el-button>
@@ -105,7 +103,7 @@
       :current-page="listQuery.page"
       :page-size="listQuery.size"
       :total="total"
-      :page-sizes="[9, 18, 36, 72]"
+      :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
@@ -200,16 +198,6 @@
               v-model="tmpData.time_id"
             />
         </el-form-item>
-         <el-form-item label="开始时间" prop="start_time" v-if="operationStatus === 'batch'">
-          <el-time-picker
-            value-format='HH:mm:ss'
-            v-model="tmpData.start_time"
-            :picker-options="{
-              selectableRange: '6:00:00 - 22:00:00'
-            }"
-            placeholder="开始时间">
-          </el-time-picker>
-        </el-form-item>
         <el-form-item label="开始时间" prop="start_time" v-if="operationStatus === 'batch'">
           <el-time-picker
             value-format='HH:mm:ss'
@@ -253,14 +241,14 @@
         
         <el-form-item label="统考课程默认收费" prop="default_charge">
           <el-input
-            type="num"
+            type="number"
             auto-complete="off"
             v-model="tmpData.default_charge"
           />
         </el-form-item>
         <el-form-item label="照相收费" prop="photo_charge">
           <el-input
-            type="num"
+            type="number"
             auto-complete="off"
             v-model="tmpData.photo_charge"
           />
@@ -289,9 +277,9 @@
         >添加</el-button>
         <el-button
           type="primary"
-          v-if="dialogStatus === 'update'"
+          v-if="dialogStatus === 'update' && operationStatus === 'single'"
           :loading="btnLoading"
-          @click.native.prevent="updateAccount && operationStatus == 'single'"
+          @click.native.prevent="updateData"
         >更新</el-button>
         <el-button
           type="primary"
@@ -352,8 +340,10 @@ export default {
       },
       rules: {
         exams_id: [
-          { required: true, message: '请输入考次编码', trigger: 'blur' },
           { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
+        ],
+        time_id: [
+          { min: 2, max: 2, message: '2 位编码（例：7A-周日上午）', trigger: 'blur' }
         ]
       },
       operationStatus: 'single',
@@ -376,6 +366,7 @@ export default {
         this.total = response.data.total
         this.listLoading = false
       }).catch(res => {
+        this.listLoading = false
         this.$message.error('加载列表失败')
       })
     },
@@ -389,7 +380,10 @@ export default {
         this.total = response.data.total
         this.listLoading = false
         this.btnLoading = false
+        this.$message.error('搜索成功')
       }).catch(res => {
+        this.listLoading = false
+        this.btnLoading = false
         this.$message.error('搜索失败')
       })
     },
@@ -476,7 +470,7 @@ export default {
     /**
      * 更新用户
      */
-    updateAccount() {
+    updateData() {
       this.$refs.tmpData.validate((valid) => {
         if (valid) {
           update(this.tmpData).then(() => {
@@ -484,6 +478,7 @@ export default {
             this.getDataList()
             this.dialogFormVisible = false
           }).catch(res => {
+            this.btnLoading = false
             this.$message.error('更新失败')
           })
         } else {
@@ -571,6 +566,7 @@ export default {
             this.getDataList()
             this.dialogFormVisible = false
           }).catch(res => {
+            this.btnLoading = false
             this.$message.error('批量更新失败')
           })
         } else {

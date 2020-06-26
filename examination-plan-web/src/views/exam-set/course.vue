@@ -56,7 +56,7 @@
       </el-table-column>
       <el-table-column label="考次编码" align="center" prop="exam_id" width="180" />
       <el-table-column label="课程编码" align="center" prop="course_id" width="200" />
-      <el-table-column label="时间编码" align="center" prop="time_id" width="200" />
+      <el-table-column sortable label="时间编码" align="center" prop="time_id" width="200" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('role:add') || hasPermission('role:delete')">
         <template slot-scope="scope">
@@ -89,9 +89,10 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="75px"
-        style="width: 300px; margin-left:50px;"
+        label-width="150px"
+        style="width: 400px; margin-left:50px;"
         :model="tmpData"
+        :rules="rules"
         ref="tmpData"
       >
         <el-form-item label="考次编码" prop="exam_id" required>
@@ -108,7 +109,7 @@
             v-model="tmpData.course_id"
           />
         </el-form-item>
-        <el-form-item label="时间编码" prop="time_id">
+        <el-form-item label="时间编码" prop="time_id" required>
             <el-input
               type="text"
               auto-complete="off"
@@ -127,20 +128,14 @@
           type="success"
           v-if="dialogStatus === 'add'"
           :loading="btnLoading"
-          @click.native.prevent="addAccount"
+          @click.native.prevent="addData"
         >添加</el-button>
         <el-button
           type="primary"
           v-if="dialogStatus === 'update'"
           :loading="btnLoading"
-          @click.native.prevent="updateAccount"
+          @click.native.prevent="updateData"
         >更新资料</el-button>
-        <el-button
-          type="primary"
-          v-if="dialogStatus === 'updateRole'"
-          :loading="btnLoading"
-          @click.native.prevent="updateAccountRole"
-        >更新角色</el-button>
       </div>
     </el-dialog>
   </div>
@@ -182,6 +177,17 @@ export default {
         size: null,
         fieldVal: '',
         fieldSelect: null
+      },
+      rules: {
+        exam_id: [
+          { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
+        ],
+        course_id: [
+          { min: 5, max: 5, message: '5 位数字课程码', trigger: 'blur' }
+        ],
+        time_id: [
+          { min: 2, max: 2, message: '2 位编码（例：7A-周日上午）', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -258,16 +264,24 @@ export default {
     /**
      * 添加用户
      */
-    addAccount() {
+    addData() {
       this.btnLoading = true
-      add(this.tmpData).then(() => {
-        this.$message.success('添加成功')
-        this.getDataList()
-        this.dialogFormVisible = false
-        this.btnLoading = false
-      }).catch(res => {
-        this.$message.error('添加失败')
-        this.btnLoading = false
+      this.$refs.tmpData.validate((valid) => {
+        if (valid) {
+          add(this.tmpData).then(() => {
+            this.$message.success('添加成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+            this.btnLoading = false
+          }).catch(res => {
+            this.$message.error('添加失败')
+            this.btnLoading = false
+          })
+        } else {
+          this.$message.error('请检查输入格式')
+          this.btnLoading = false
+          return false
+        }
       })
     },
     /**
@@ -283,13 +297,22 @@ export default {
     /**
      * 更新用户
      */
-    updateAccount() {
-      update(this.tmpData).then(() => {
-        this.$message.success('更新成功')
-        this.getDataList()
-        this.dialogFormVisible = false
-      }).catch(res => {
-        this.$message.error('更新失败')
+    updateData() {
+      this.$refs.tmpData.validate((valid) => {
+        if (valid) {
+          update(this.tmpData).then(() => {
+            this.$message.success('更新成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+          }).catch(res => {
+            this.btnLoading = false
+            this.$message.error('更新失败')
+          })
+        } else {
+          this.$message.error('请检查输入格式')
+          this.btnLoading = false
+          return false
+        }
       })
     },
     /**

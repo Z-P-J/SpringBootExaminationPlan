@@ -203,6 +203,7 @@ export default {
         this.total = response.data.total
         this.listLoading = false
       }).catch(res => {
+        this.listLoading = false
         this.$message.error('加载列表失败')
       })
     },
@@ -217,6 +218,8 @@ export default {
         this.listLoading = false
         this.btnLoading = false
       }).catch(res => {
+        this.listLoading = false
+        this.btnLoading = false
         this.$message.error('搜索失败')
       })
     },
@@ -275,6 +278,7 @@ export default {
             this.btnLoading = false
           })
         } else {
+          this.$message.error('请检查输入格式')
           this.btnLoading = false
           return false
         }
@@ -300,11 +304,14 @@ export default {
           update(this.tmpData).then(() => {
             this.$message.success('更新成功')
             this.getDataList()
+            this.btnLoading = false
             this.dialogFormVisible = false
           }).catch(res => {
+            this.btnLoading = false
             this.$message.error('更新失败')
           })
         } else {
+          this.$message.error('请检查输入格式')
           this.btnLoading = false
           return false
         }

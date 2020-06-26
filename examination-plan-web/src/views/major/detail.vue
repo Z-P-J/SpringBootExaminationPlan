@@ -56,17 +56,17 @@
 </el-row>
 
 <el-row :gutter="18">
-<el-col :span="12"><el-form-item label="首次开考考次"><el-input v-model="Data.first_exam_id" /></el-form-item></el-col>
+<el-col :span="12"><el-form-item label="首次开考考次" prop="first_exam_id"><el-input v-model="Data.first_exam_id" /></el-form-item></el-col>
 <el-col :span="12"><el-form-item label="批准文号"><el-input v-model="Data.approve_num" /></el-form-item></el-col>
 </el-row>
 
 <el-row :gutter="18">
-<el-col :span="12"><el-form-item label="停止新生注册考次"><el-input v-model="Data.stop_freshman_registration_exam_id"/></el-form-item></el-col>
+<el-col :span="12"><el-form-item label="停止新生注册考次" prop="stop_freshman_registration_exam_id"><el-input v-model="Data.stop_freshman_registration_exam_id"/></el-form-item></el-col>
 <el-col :span="12"><el-form-item label="停止注册文号"><el-input v-model="Data.stop_registration_num" /></el-form-item></el-col>
 </el-row>
 
 <el-row :gutter="18">
-<el-col :span="12"><el-form-item label="停止报考考次"><el-input v-model="Data.stop_apply_exam_id" /></el-form-item></el-col>
+<el-col :span="12"><el-form-item label="停止报考考次" prop="stop_apply_exam_id"><el-input v-model="Data.stop_apply_exam_id" /></el-form-item></el-col>
 <el-col :span="12"><el-form-item label="停止报考文号"><el-input v-model="Data.stop_apply_num" /></el-form-item></el-col>
 </el-row>
 
@@ -91,12 +91,12 @@
     </el-select>
   </el-form-item>
 </el-col>
-<el-col :span="12"><el-form-item label="总学分"><el-input v-model="Data.total_credit" /></el-form-item></el-col>
+<el-col :span="12"><el-form-item label="总学分"><el-input v-model="Data.total_credit"  type="number"/></el-form-item></el-col>
 </el-row>
 
 <el-row :gutter="18">
-<el-col :span="12"><el-form-item label="毕业学分"><el-input v-model="Data.graduation_credit" /></el-form-item></el-col>
-<el-col :span="12"><el-form-item label="总课程数"><el-input v-model="Data.total_course_number" /></el-form-item></el-col>
+<el-col :span="12"><el-form-item label="毕业学分"><el-input v-model="Data.graduation_credit"  type="number"/></el-form-item></el-col>
+<el-col :span="12"><el-form-item label="总课程数"><el-input v-model="Data.total_course_number" type="number"/></el-form-item></el-col>
 </el-row>
 
 <el-row :gutter="18">
@@ -190,6 +190,18 @@ export default {
         major_category_code: [
           { required: true, message: '请输入大类专业编码', trigger: 'blur' },
           { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ],
+        first_exam_id: [
+          { required: true, message: '请输入大类专业编码', trigger: 'blur' },
+          { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
+        ],
+        stop_freshman_registration_exam_id: [
+          { required: true, message: '请输入大类专业编码', trigger: 'blur' },
+          { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
+        ],
+        stop_apply_exam_id: [
+          { required: true, message: '请输入大类专业编码', trigger: 'blur' },
+          { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
         ]
       }
     }
@@ -225,7 +237,7 @@ export default {
       this.Data.graduation_credit = 110
       this.Data.total_course_number = 55
       this.Data.whether_divide_direction = 1
-      this.Data.major_category_code = '1'
+      this.Data.major_category_code = 'A100000'
       this.Data.apply_condition = '暂无'
       this.Data.graduation_condition = '暂无'
       this.Data.notes = '暂无'
@@ -236,10 +248,12 @@ export default {
         if (valid) {
           update(this.Data).then(() => {
             this.$message.success('更新成功')
+            this.btnLoading = false
           }).catch(res => {
             this.$message.error('更新失败')
           })
         } else {
+          this.$message.error('请检查输入格式')
           this.btnLoading = false
           return false
         }
@@ -257,6 +271,7 @@ export default {
             this.btnLoading = false
           })
         } else {
+          this.$message.error('请检查输入格式')
           this.btnLoading = false
           return false
         }

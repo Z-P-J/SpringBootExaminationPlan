@@ -10,14 +10,12 @@
             @click.native.prevent="getDataList"
           >刷新</el-button>
           <el-button
-            type="primary"
-            icon="el-icon-plus"
+            icon="el-icon-setting"
             v-if="operationStatus === 'single' "
             @click.native.prevent="toggleOperation"
           >批量操作</el-button>
            <el-button
-            type="primary"
-            icon="el-icon-plus"
+            icon="el-icon-setting"
             v-if="operationStatus === 'batch'"
             @click.native.prevent="toggleOperation"
           >基本操作</el-button>
@@ -27,19 +25,19 @@
             actionStatus:'add'  } }">
             <el-button
               type="primary"
-              icon="el-icon-refresh"
+              icon="el-icon-plus"
               v-if="hasPermission('role:add') && operationStatus === 'single'"
             >添加专业</el-button>
           </router-link>
           <el-button
+            icon="el-icon-delete"
             type="primary"
-            icon="el-icon-plus"
             v-if="operationStatus === 'batch' "
             @click.native.prevent="removeDataByBatch"
           >批量删除</el-button>
           <el-button
+            icon="el-icon-edit"
             type="primary"
-            icon="el-icon-plus"
             v-if="hasPermission('role:search') && operationStatus === 'batch'"
             @click.native.prevent="TogglebatchDialogStatus"
           >批量修改</el-button>
@@ -81,9 +79,10 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="专业编码" align="center" prop="major_id" width="180" />
-      <el-table-column label="国家专业编码" align="center" prop="national_major_code" width="200" />
-      <el-table-column label="专业名称" align="center" prop="major_name" width="200" />
+      <el-table-column label="专业编码" align="center" prop="major_id" width="150" />
+      <el-table-column label="大类专业编码" align="center" prop="major_category_code" width="150" />
+      <el-table-column label="国家专业编码" align="center" prop="national_major_code" width="150" />
+      <el-table-column label="专业名称" align="center" prop="major_name" width="150" />
       <el-table-column
         sortable
         prop="major_status"
@@ -124,7 +123,14 @@
           <el-button
             type="danger"
             size="mini"
-            v-if="hasPermission('role:delete')"
+            v-if="scope.row.major_status == '正常'"
+            disabled=true
+            @click.native.prevent="removeData(scope.$index)"
+          >删除</el-button>
+           <el-button
+            type="danger"
+            size="mini"
+            v-else-if="hasPermission('role:delete')"
             @click.native.prevent="removeData(scope.$index)"
           >删除</el-button>
         </template>
@@ -139,18 +145,18 @@
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <el-dialog :visible.sync="batchDialogStatus">
+    <el-dialog :visible.sync="dialogFormVisible">
       <el-form
         status-icon
         class="small-space"
         label-position="left"
-        label-width="75px"
-        style="width: 300px; margin-left:50px;"
+        label-width="150px"
+        style="width: 500px; margin-left:50px;"
         :model="tmpData"
         :rules="rules"
         ref="tmpData"
       >
-    <el-form-item prop="national_major_code" label="国家专业代码"><el-input v-model="tmpData.national_major_code" /></el-form-item>
+    <el-form-item prop="national_major_code" label="国家专业代码"><el-input v-model="tmpData.national_major_code" placeholder="7 位编码（1 位字符+6 位数字）"/></el-form-item>
   <el-form-item label="专业类型">
     <el-select v-model="tmpData.major_type" placeholder="请选择专业类型" :value="tmpData.major_type">
       <el-option label="基础科段" value="基础科段"></el-option>
@@ -171,11 +177,11 @@
       <el-option label="面向社会" value="面向社会"></el-option>
     </el-select>
   </el-form-item>
-<el-form-item label="首次开考考次"><el-input v-model="tmpData.first_exam_id" /></el-form-item>
+<el-form-item label="首次开考考次" prop="first_exam_id" ><el-input v-model="tmpData.first_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
 <el-form-item label="批准文号"><el-input v-model="tmpData.approve_num" /></el-form-item>
-<el-form-item label="停止新生注册考次"><el-input v-model="tmpData.stop_freshman_registration_exam_id"/></el-form-item>
+<el-form-item label="停止新生注册考次" prop="stop_freshman_registration_exam_id" ><el-input v-model="tmpData.stop_freshman_registration_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
 <el-form-item label="停止注册文号"><el-input v-model="tmpData.stop_registration_num" /></el-form-item>
-<el-form-item label="停止报考考次"><el-input v-model="tmpData.stop_apply_exam_id" /></el-form-item>
+<el-form-item label="停止报考考次" prop="stop_apply_exam_id" ><el-input v-model="tmpData.stop_apply_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
 <el-form-item label="停止报考文号"><el-input v-model="tmpData.stop_apply_num" /></el-form-item>
 <el-form-item label="停止颁发毕业证日期">
   <el-date-picker
@@ -192,10 +198,16 @@
       <el-option label="即将停考" value="即将停考"></el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="总学分"><el-input v-model="tmpData.total_credit" /></el-form-item>
-  <el-form-item label="毕业学分"><el-input v-model="tmpData.graduation_credit" /></el-form-item>
-  <el-form-item label="总课程数"><el-input v-model="tmpData.total_course_number" /></el-form-item>
-  <el-form-item label="是否分方向"><el-input v-model="tmpData.whether_divide_direction" /></el-form-item>
+  <el-form-item label="总学分"><el-input v-model="tmpData.total_credit" type="number"/></el-form-item>
+  <el-form-item label="毕业学分"><el-input v-model="tmpData.graduation_credit"  type="number"/></el-form-item>
+  <el-form-item label="总课程数"><el-input v-model="tmpData.total_course_number"  type="number"/></el-form-item>
+  <el-form-item label="是否分方向"><el-col :span="12">
+  <!-- <el-input v-model="Data.whether_divide_direction" /> -->
+  <el-select v-model="tmpData.whether_divide_direction">
+      <el-option label="是" value="1"></el-option>
+      <el-option label="不分方向" value="0"></el-option>
+    </el-select>
+  </el-col></el-form-item>
   <el-form-item prop="major_category_code" label="专业大类代码"><el-input v-model="tmpData.major_category_code" /></el-form-item>
   <el-form-item label="报考条件说明">
   <el-input
@@ -220,7 +232,7 @@
 </el-input></el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click.native.prevent="batchDialogStatus = false">取消</el-button>
+        <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
         <el-button
           type="primary"
           :loading="btnLoading"
@@ -290,10 +302,19 @@ export default {
         ],
         major_category_code: [
           { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ],
+        first_exam_id: [
+          { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
+        ],
+        stop_freshman_registration_exam_id: [
+          { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
+        ],
+        stop_apply_exam_id: [
+          { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
         ]
       },
       operationStatus: 'single',
-      batchDialogStatus: false, // 批量修改选项状态
+      dialogFormVisible: false, // 批量修改选项状态
       multipleSelection: []
     }
   },
@@ -327,6 +348,8 @@ export default {
         this.btnLoading = false
       }).catch(res => {
         this.$message.error('搜索失败')
+        this.listLoading = false
+        this.btnLoading = false
       })
     },
     /**
@@ -393,7 +416,7 @@ export default {
       for (var item in this.tmpData) {
         this.tmpData[item] = null
       }
-      this.batchDialogStatus = true
+      this.dialogFormVisible = true
     },
     /**
      * 删除用户
@@ -425,16 +448,20 @@ export default {
       var ids = this.multipleSelection.map((item) => {
         return ("'" + item.major_id + "'")
       })
+      this.btnLoading = true
       this.$refs.tmpData.validate((valid) => {
         if (valid) {
           updateByBatch(this.tmpData, ids).then(() => {
             this.$message.success('批量更新成功')
             this.getDataList()
             this.dialogFormVisible = false
+            this.btnLoading = false
           }).catch(res => {
+            this.btnLoading = false
             this.$message.error('批量更新失败')
           })
         } else {
+          this.$message.error('请检查输入格式')
           this.btnLoading = false
           return false
         }
