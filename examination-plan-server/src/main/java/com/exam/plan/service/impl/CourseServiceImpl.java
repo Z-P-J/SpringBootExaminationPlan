@@ -131,4 +131,9 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   public void enableCourse(List<String> courseIdList) {
     courseMapper.enableCourse(courseIdList);
   }
+
+  @Override
+  public void deleteCourse(List<String> courseIdList) {
+    courseMapper.deleteCourse(courseIdList);
+  }
 }

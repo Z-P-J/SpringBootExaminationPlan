@@ -63,6 +63,14 @@ export function enableCourse(params) {
   })
 }
 
+export function deleteCourse(params) {
+  return request({
+    url: '/course/delete',
+    method: 'post',
+    data: params
+  })
+}
+
 export function listTextbook(params) {
   return request({
     url: '/course/textbook',

@@ -56,4 +56,6 @@ public interface ICourseService extends Service<CourseInfo> {
 
   void enableCourse(List<String> courseIdList);
 
+  void deleteCourse(List<String> courseIdList);
+
 }
