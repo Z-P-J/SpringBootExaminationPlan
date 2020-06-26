@@ -211,17 +211,37 @@ export const asyncRouterMap = [
     }]
   },
   {
-    path: '/role8',
+    path: '/approve',
     component: Layout,
-    redirect: '/role/list',
+    redirect: '/approve/list',
     icon: 'role',
     noDropDown: true,
-    // name: '专业申报',
+    name: '专业申报',
     children: [{
       path: 'list',
       name: '专业申报',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
+      component: _import('approve/list')
+      // meta: { permission: ['role:list'] }
+    }, {
+      path: 'detail',
+      name: '申请表详情',
+      component: _import('approve/detail')
+    }, {
+      path: 'check',
+      name: '审核表',
+      component: _import('approve/check')
+    }, {
+      path: 'add_list',
+      name: '专业列表',
+      component: _import('approve/add_list')
+    }, {
+      path: 'add_new',
+      name: '新专业',
+      component: _import('approve/add_new')
+    }, {
+      path: 'add_courselist',
+      name: '调整专业课程',
+      component: _import('approve/add_courselist')
     }]
   },
   {

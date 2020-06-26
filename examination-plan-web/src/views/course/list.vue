@@ -59,7 +59,7 @@
           <!-- :to="{ path:'/course/detail/1', params: { data:scope.row, courseId:scope.row.courseId } }" -->
           <router-link
           class="inlineBlock"
-          :to="{ path:'/course/detail/', query: { courseId:scope.row.courseId, data:scope.row  } }">
+          :to="{ path:'/course/detail/', query: { courseId:scope.row.course_id, data:scope.row  } }">
           <el-button
             type="info"
             size="mini"

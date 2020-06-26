@@ -1,13 +1,5 @@
 import request from '@/utils/request'
 
-// export function listRoleWithPermission(params) {
-//   return request({
-//     url: '/role/permission',
-//     method: 'get',
-//     params
-//   })
-// }
-
 export function list(params) {
   return request({
     url: '/course',
@@ -15,14 +7,6 @@ export function list(params) {
     params
   })
 }
-
-// export function listResourcePermission(params) {
-//   return request({
-//     url: '/permission',
-//     method: 'get',
-//     params
-//   })
-// }
 
 export function add(courseForm) {
   return request({
@@ -46,11 +30,3 @@ export function remove(courseId) {
     method: 'delete'
   })
 }
-
-// export function updateAccountRole(account) {
-//   return request({
-//     url: '/account/role',
-//     method: 'put',
-//     data: account
-//   })
-// }
