@@ -4,17 +4,18 @@
       v-loading.body="loading"
       :model="Data"
       ref="Data"
+      :rules="rules"
       label-width="115px"
     >
-    <el-row :gutter="18">
+<el-row :gutter="18">
 	<el-col :span="12">
-	<el-form-item label="专业编码">
+	<el-form-item label="专业编码" prop="major_id">
     <el-input v-model="Data.major_id" v-if="actionStatus === 'add'"/>
     <el-input v-model="Data.major_id" v-else="" :disabled="true"/>
     </el-form-item>
 	</el-col>
 	<el-col :span="12">
-	<el-form-item label="国家专业代码"><el-input v-model="Data.national_major_code" /></el-form-item>
+	<el-form-item label="国家专业代码"  prop="national_major_code"><el-input v-model="Data.national_major_code" /></el-form-item>
 	</el-col>
 </el-row>
 <el-row :gutter="18">
@@ -53,11 +54,6 @@
   </el-form-item>
 </el-col>
 </el-row>
-
-<!-- <el-row :gutter="18">
-
-<el-col :span="12"><el-form-item label="主考院校"><el-input v-model="Data.main_target_school" /></el-form-item></el-col>
-</el-row> -->
 
 <el-row :gutter="18">
 <el-col :span="12"><el-form-item label="首次开考考次"><el-input v-model="Data.first_exam_id" /></el-form-item></el-col>
@@ -104,12 +100,18 @@
 </el-row>
 
 <el-row :gutter="18">
-<el-col :span="12"><el-form-item label="是否分方向"><el-input v-model="Data.whether_divide_direction" /></el-form-item></el-col>
+<el-col :span="12"><el-form-item label="是否分方向">
+  <!-- <el-input v-model="Data.whether_divide_direction" /> -->
+  <el-select v-model="Data.whether_divide_direction">
+      <el-option label="是" value="1"></el-option>
+      <el-option label="不分方向" value="0"></el-option>
+    </el-select>
+</el-form-item></el-col>
 <el-col :span="12"><el-form-item label="专业大类级别"><el-input v-model="Data.major_category_level" :disabled="true"/></el-form-item></el-col>
 </el-row>
 
 <el-row :gutter="18">
-<el-col :span="12"><el-form-item label="专业大类代码"><el-input v-model="Data.major_category_code" /></el-form-item></el-col>
+<el-col :span="12"><el-form-item label="专业大类代码" prop="major_category_code"><el-input v-model="Data.major_category_code" /></el-form-item></el-col>
 <el-col :span="12"><el-form-item label="专业大类名称"><el-input v-model="Data.major_category_name" :disabled="true"/></el-form-item></el-col>
 </el-row>
 
@@ -166,16 +168,30 @@ import { unix2CurrentTime } from '@/utils'
 import { add, update } from '@/api/major'
 export default {
   created() {
-    console.log('Id=' + this.$route.query.Id)
+    // console.log('Id=' + this.$route.query.Id)
     this.Data = this.$route.query.data
     this.actionStatus = this.$route.query.actionStatus
+    this.dataCheck()
   },
   data() {
     return {
       loading: false,
       btnLoading: false,
-      Data: {},
-      actionStatus: 'add'
+      Data: { whether_divide_direction: 1 },
+      actionStatus: 'add',
+      rules: {
+        major_id: [
+          { required: true, message: '请输入专业编码', trigger: 'blur' },
+          { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ],
+        national_major_code: [
+          { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ],
+        major_category_code: [
+          { required: true, message: '请输入大类专业编码', trigger: 'blur' },
+          { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
@@ -183,6 +199,37 @@ export default {
     /**
      * 更新用户资料
      */
+    dataCheck() {
+      // console.log('this.Data.major_id', this.Data.major_id)
+      if (this.Data.major_id != null & this.Data.major_id !== '') {
+        return
+      }
+      this.Data.major_id = 'A100000'
+      this.Data.national_major_code = 'A100000'
+      this.Data.major_name = '测试专业'
+      this.Data.major_brief_introduction = '后续补充介绍'
+      this.Data.major_type = '本科段'
+      this.Data.education_level = '本科'
+      this.Data.exam_type = '面向高校'
+      this.Data.main_target_school = '四川大学'
+      this.Data.first_exam_id = '001'
+      this.Data.approve_num = 'BS001'
+      this.Data.stop_freshman_registration_exam_id = '000'
+      this.Data.stop_registration_num = '000'
+      this.Data.stop_apply_exam_id = '000'
+      this.Data.stop_apply_num = '000'
+      this.Data.stop_diploma_date = '2022-12-31'
+      this.Data.stop_diploma_num = '000'
+      this.Data.major_status = '正常'
+      this.Data.total_credit = 200
+      this.Data.graduation_credit = 110
+      this.Data.total_course_number = 55
+      this.Data.whether_divide_direction = 1
+      this.Data.major_category_code = '1'
+      this.Data.apply_condition = '暂无'
+      this.Data.graduation_condition = '暂无'
+      this.Data.notes = '暂无'
+    },
     updateData() {
       this.btnLoading = true
       update(this.Data).then(() => {
@@ -193,12 +240,19 @@ export default {
     },
     addData() {
       this.btnLoading = true
-      add(this.Data).then(() => {
-        this.$message.success('添加成功')
-        this.btnLoading = false
-      }).catch(res => {
-        this.$message.error('添加失败')
-        this.btnLoading = false
+      this.$refs.Data.validate((valid) => {
+        if (valid) {
+          add(this.Data).then(() => {
+            this.$message.success('添加成功')
+            this.btnLoading = false
+          }).catch(res => {
+            this.$message.error('添加失败')
+            this.btnLoading = false
+          })
+        } else {
+          this.btnLoading = false
+          return false
+        }
       })
     },
     back() {

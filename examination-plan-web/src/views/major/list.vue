@@ -90,7 +90,6 @@
         label="专业状态"
         width="100" align="center"
       >
-      
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.major_status === '正常' ? 'success' 
@@ -107,7 +106,7 @@
             :to="{ path:'/major/detail/', query: { Id:scope.row.major_id, data:scope.row, 
             actionStatus:'update'  } }">
             <el-button
-              type="info"
+              type="warning"
               size="mini"
               v-if="hasPermission('role:detail')">详情
               </el-button>
@@ -137,7 +136,7 @@
       :current-page="listQuery.page"
       :page-size="listQuery.size"
       :total="total"
-      :page-sizes="[9, 18, 36, 72]"
+      :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
     <el-dialog :visible.sync="batchDialogStatus">
@@ -150,7 +149,7 @@
         :model="tmpData"
         ref="tmpData"
       >
-
+    <el-form-item label="国家专业代码"><el-input v-model="tmpData.national_major_code" /></el-form-item>
   <el-form-item label="专业类型">
     <el-select v-model="tmpData.major_type" placeholder="请选择专业类型" :value="tmpData.major_type">
       <el-option label="基础科段" value="基础科段"></el-option>
@@ -251,34 +250,32 @@ export default {
       },
       listLoading: false, // 数据加载等待动画
       btnLoading: false, // 按钮等待动画
-      operationStatus: 'single',
-      batchDialogStatus: false, // 批量修改选项状态
       tmpData: {
-        major_id: 'A100000',
-        national_major_code: 'D000',
-        major_name: '测试专业',
-        major_brief_introduction: '后续补充介绍',
-        major_type: '本科段',
-        education_level: '本科',
-        exam_type: '面向高校',
-        main_target_school: '四川大学',
-        first_exam_id: '001',
-        approve_num: 'BS001',
-        stop_freshman_registration_exam_id: '000',
-        stop_registration_num: '000',
-        stop_apply_exam_id: '000',
-        stop_apply_num: '000',
-        stop_diploma_date: '2022-12-31',
-        stop_diploma_num: '000',
-        major_status: '正常',
-        total_credit: 200,
-        graduation_credit: 110,
-        total_course_number: 55,
-        whether_divide_direction: 1,
-        major_category_code: '1',
-        apply_condition: '暂无',
-        graduation_condition: '暂无',
-        notes: '暂无'
+        major_id: '',
+        national_major_code: '',
+        major_name: '',
+        major_brief_introduction: '',
+        major_type: '',
+        education_level: '',
+        exam_type: '',
+        main_target_school: '',
+        first_exam_id: '',
+        approve_num: '',
+        stop_freshman_registration_exam_id: '',
+        stop_registration_num: '',
+        stop_apply_exam_id: '',
+        stop_apply_num: '',
+        stop_diploma_date: '',
+        stop_diploma_num: '',
+        major_status: '',
+        total_credit: null,
+        graduation_credit: null,
+        total_course_number: null,
+        whether_divide_direction: null,
+        major_category_code: null,
+        apply_condition: '',
+        graduation_condition: '',
+        notes: ''
       },
       search: {
         page: null,
@@ -286,6 +283,8 @@ export default {
         fieldVal: '',
         fieldSelect: null
       },
+      operationStatus: 'single',
+      batchDialogStatus: false, // 批量修改选项状态
       multipleSelection: []
     }
   },
@@ -382,31 +381,9 @@ export default {
       }
     },
     TogglebatchDialogStatus() {
-      this.tmpData.major_id = null   
-      this.tmpData.national_major_code = null   
-      this.tmpData.major_name = null       
-      this.tmpData.major_brief_introduction = null         
-      this.tmpData.major_type = null      
-      this.tmpData.education_level = null     
-      this.tmpData.exam_type = null       
-      this.tmpData.main_target_school = null       
-      this.tmpData.first_exam_id = null      
-      this.tmpData.approve_num = null        
-      this.tmpData.stop_freshman_registration_exam_id = null      
-      this.tmpData.stop_registration_num = null      
-      this.tmpData.stop_apply_exam_id = null      
-      this.tmpData.stop_apply_num = null      
-      this.tmpData.stop_diploma_date = null             
-      this.tmpData.stop_diploma_num = null      
-      this.tmpData.major_status = null     
-      this.tmpData.total_credit = null    
-      this.tmpData.graduation_credit = null    
-      this.tmpData.total_course_number = null   
-      this.tmpData.whether_divide_direction = null  
-      this.tmpData.major_category_code = null    
-      this.tmpData.apply_condition = null     
-      this.tmpData.graduation_condition = null     
-      this.tmpData.notes = null 
+      for (var item in this.tmpData) {
+        this.tmpData[item] = null
+      }
       this.batchDialogStatus = true
     },
     /**
@@ -420,7 +397,7 @@ export default {
         cancelButtonText: '否',
         type: 'warning'
       }).then(() => {
-        var ids = me.multipleSelection.map((item)=>{
+        var ids = me.multipleSelection.map((item) => {
           return ("'" + item.major_id + "'")
         })
         console.log('ids:', ids)
@@ -436,7 +413,7 @@ export default {
      * 批量更新
      */
     updateDataByBatch() {
-      var ids = this.multipleSelection.map((item)=>{
+      var ids = this.multipleSelection.map((item) => {
         return ("'" + item.major_id + "'")
       })
       updateByBatch(this.tmpData, ids).then(() => {
