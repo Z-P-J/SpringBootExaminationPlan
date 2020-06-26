@@ -37,7 +37,8 @@ export function addCheck(tmpApprove) {
 //     data: searchForm
 //   })
 // }
-// export function updateApprove(approveForm) {
+
+// export function update(approveForm) {
 //   return request({
 //     url: '/account/' + approveForm.Id,
 //     method: 'put',
@@ -45,7 +46,7 @@ export function addCheck(tmpApprove) {
 //   })
 // }
 
-// export function update(approveForm) {
+// export function updateCheck(approveForm) {
 //   return request({
 //     url: '/approve',
 //     method: 'put',

@@ -46,9 +46,17 @@ public class ApproveController {
         final Approve dbRole = this.approveService.getById(id);
         System.out.println("approve delete reached");
         if (dbRole == null) {
-            return ResultGenerator.genFailedResult("申请表不存在！");
+            return ResultGenerator.genFailedResult("选择的申请表不存在！");
         }
         this.approveService.deleteById(id);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PostMapping
+    @ResponseBody
+    public Result add(@RequestBody final Approve approve, final BindingResult bindingResult) {
+        System.out.println("approve=" + approve);
+        this.approveService.save(approve);
         return ResultGenerator.genOkResult();
     }
 
@@ -57,8 +65,10 @@ public class ApproveController {
     public Result addCheck(@RequestBody final Approve approve, final BindingResult bindingResult) {
         System.out.println("approve=" + approve);
         this.approveService.save(approve);
-        return this.getToken(approve.getApprove_comment());
+        return ResultGenerator.genOkResult();
     }
+
+
 
 
 }
