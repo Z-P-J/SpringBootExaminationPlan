@@ -5,27 +5,43 @@
         <el-form-item>
           <el-button
             type="success"
-            size="mini"
             icon="el-icon-refresh"
             v-if="hasPermission('role:list')"
             @click.native.prevent="getDataList"
           >刷新</el-button>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-plus"
-            v-if="hasPermission('role:add')"
+            v-if="operationStatus === 'single' "
+            @click.native.prevent="toggleOperation"
+          >批量操作</el-button>
+           <el-button
+            type="primary"
+            icon="el-icon-plus"
+            v-if="operationStatus === 'batch'"
+            @click.native.prevent="toggleOperation"
+          >基本操作</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            v-if="hasPermission('role:add') && operationStatus === 'single'"
             @click.native.prevent="showAddDialog"
           >添加考试</el-button>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-plus"
-            v-if="hasPermission('role:update')"
-          >批量操作</el-button>
+            v-if="operationStatus === 'batch' "
+            @click.native.prevent="removeDataByBatch"
+          >批量删除</el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            v-if="hasPermission('role:search') && operationStatus === 'batch'"
+            @click.native.prevent="TogglebatchDialogStatus"
+          >批量修改</el-button>
         </el-form-item>
 
-        <span v-if="hasPermission('role:search')">
+        <span v-if="hasPermission('role:search') && operationStatus === 'single'">
           <el-form-item>
             <el-input v-model="search.fieldVal" placeholder="字段值"></el-input>
           </el-form-item>
@@ -48,28 +64,23 @@
       border
       fit
       highlight-current-row
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        v-if="operationStatus === 'batch'"
+        type="selection"
+        width="40">
+      </el-table-column>
       <el-table-column label="#" align="center" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <!-- exams_id: '',
-      time_id: '',
-      exams_type: '',
-      jihua_exams_status: '',
-      kaowu_exams_status: '',
-      kaoji_exams_status: '',
-      exam_date: '',
-      start_time: '',
-      end_time: '',
-      default_charge: '',
-      photo_charge: '',
-      notes: '' -->
       <el-table-column label="考次" align="center" prop="exams_id" width="180" />
-      <el-table-column label="考试日期" align="center" prop="exam_date" width="200" />
-      <el-table-column label="开始时间" align="center" prop="start_time" width="200" />
-      <el-table-column label="结束时间" align="center" prop="end_time" width="120" />
+      <el-table-column sortable label="考试日期" align="center" prop="exam_date" width="200" />
+      <el-table-column sortable label="开始时间" align="center" prop="start_time" width="200" />
+      <el-table-column sortable label="结束时间" align="center" prop="end_time" width="120" />
+      <el-table-column sortable label="考试类型" align="center" prop="exams_type" width="120" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('role:update') || hasPermission('role:delete')">
         <template slot-scope="scope">
@@ -103,9 +114,10 @@
         class="small-space"
         label-position="left"
         label-width="120px"
-        style="width: 300px; margin-left:50px;"
+        style="width: 400px; margin-left:50px;"
         :model="tmpData"
         ref="tmpData"
+        :rules="rules"
       >
       <!-- exams_id: '',
       time_id: '',
@@ -119,14 +131,22 @@
       default_charge: '',
       photo_charge: '',
       notes: '' -->
-        <el-form-item label="考次编码" prop="exams_id" required>
-          <el-input
+        <el-form-item label="考次编码" prop="exams_id" required v-if="operationStatus !== 'batch'">
+          <el-input v-model="tmpData.exams_id" v-if="dialogStatus === 'add'"/>
+          <el-input v-model="tmpData.exams_id" v-else="" :disabled="true"/>
+          <!-- <el-input
             type="text"
             auto-complete="off"
             v-model="tmpData.exams_id"
-          />
+          /> -->
         </el-form-item>
-        <el-form-item label="考试类型" prop="exams_type" required>
+        <el-form-item label="考试类型" prop="exams_type" v-if="operationStatus === 'batch'">
+            <el-select v-model="tmpData.exams_type" placeholder="字段名">
+              <el-option label="省考" value="省考"></el-option>
+              <el-option label="统考" value="统考"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="考试类型" prop="exams_type" v-else required>
             <el-select v-model="tmpData.exams_type" placeholder="字段名">
               <el-option label="省考" value="省考"></el-option>
               <el-option label="统考" value="统考"></el-option>
@@ -152,21 +172,35 @@
               <el-option label="冻结" value="冻结"></el-option>
             </el-select>  
         </el-form-item>
-        <el-form-item label="考试日期" prop="exam_date" required>
+        <el-form-item label="考试日期" prop="exam_date" v-if="operationStatus === 'batch'">
           <el-date-picker
             v-model="tmpData.exam_date"
             type="date"
             placeholder="考试日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="时间编码" prop="time_id" required>
+        <el-form-item label="考试日期" prop="exam_date" v-else required>
+          <el-date-picker
+            v-model="tmpData.exam_date"
+            type="date"
+            placeholder="考试日期">
+          </el-date-picker>
+        </el-form-item>
+         <el-form-item label="时间编码" prop="time_id" v-if="operationStatus === 'batch'">
             <el-input
               type="text"
               auto-complete="off"
               v-model="tmpData.time_id"
             />
         </el-form-item>
-        <el-form-item label="开始时间" prop="start_time" required>
+        <el-form-item label="时间编码" prop="time_id" v-else required>
+            <el-input
+              type="text"
+              auto-complete="off"
+              v-model="tmpData.time_id"
+            />
+        </el-form-item>
+         <el-form-item label="开始时间" prop="start_time" v-if="operationStatus === 'batch'">
           <el-time-picker
             value-format='HH:mm:ss'
             v-model="tmpData.start_time"
@@ -176,7 +210,37 @@
             placeholder="开始时间">
           </el-time-picker>
         </el-form-item>
-        <el-form-item label="结束时间" prop="end_time" required>
+        <el-form-item label="开始时间" prop="start_time" v-if="operationStatus === 'batch'">
+          <el-time-picker
+            value-format='HH:mm:ss'
+            v-model="tmpData.start_time"
+            :picker-options="{
+              selectableRange: '6:00:00 - 22:00:00'
+            }"
+            placeholder="开始时间">
+          </el-time-picker>
+        </el-form-item>
+        <el-form-item label="结束时间" prop="end_time" v-else required>
+          <el-time-picker
+            value-format='HH:mm:ss'
+            v-model="tmpData.end_time"
+            :picker-options="{
+              selectableRange: '6:00:00 - 22:00:00'
+            }"
+            placeholder="开始时间">
+          </el-time-picker>
+        </el-form-item>
+        <el-form-item label="结束时间" prop="end_time" v-if="operationStatus === 'batch'">
+          <el-time-picker
+            value-format='HH:mm:ss'
+            v-model="tmpData.end_time"
+            :picker-options="{
+              selectableRange: '6:00:00 - 22:00:00'
+            }"
+            placeholder="开始时间">
+          </el-time-picker>
+        </el-form-item>
+        <el-form-item label="结束时间" prop="end_time" v-else required>
           <el-time-picker
             value-format='HH:mm:ss'
             v-model="tmpData.end_time"
@@ -227,14 +291,20 @@
           type="primary"
           v-if="dialogStatus === 'update'"
           :loading="btnLoading"
-          @click.native.prevent="updateAccount"
+          @click.native.prevent="updateAccount && operationStatus == 'single'"
         >更新</el-button>
+        <el-button
+          type="primary"
+          v-if="dialogStatus === 'update' && operationStatus === 'batch'"
+          :loading="btnLoading"
+          @click.native.prevent="updateDataByBatch"
+        >批量更新</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { list, search, remove, add, update } from '@/api/exam-set'
+import { list, search, remove, add, update, removeByBatch, updateByBatch } from '@/api/exam-set'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
 
@@ -279,7 +349,16 @@ export default {
         size: null,
         fieldVal: '',
         fieldSelect: null
-      }
+      },
+      rules: {
+        exams_id: [
+          { required: true, message: '请输入考次编码', trigger: 'blur' },
+          { min: 3, max: 3, message: '3 位数字编码（例：171-17 年 4 月考试）', trigger: 'blur' }
+        ]
+      },
+      operationStatus: 'single',
+      // dialogStatus: false, // 批量修改选项状态
+      multipleSelection: []
     }
   },
   computed: {
@@ -365,15 +444,23 @@ export default {
      * 添加用户
      */
     addAccount() {
-      this.btnLoading = true
-      add(this.tmpData).then(() => {
-        this.$message.success('添加成功')
-        this.getDataList()
-        this.dialogFormVisible = false
-        this.btnLoading = false
-      }).catch(res => {
-        this.$message.error('添加失败')
-        this.btnLoading = false
+      this.$refs.tmpData.validate((valid) => {
+        this.btnLoading = true
+        if (valid) {
+          add(this.tmpData).then(() => {
+            this.$message.success('添加成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+            this.btnLoading = false
+          }).catch(res => {
+            this.$message.error('添加失败')
+            this.btnLoading = false
+          })
+        } else {
+          this.$message.error('请检查输入格式')
+          this.btnLoading = false
+          return false
+        }
       })
     },
     /**
@@ -390,12 +477,20 @@ export default {
      * 更新用户
      */
     updateAccount() {
-      update(this.tmpData).then(() => {
-        this.$message.success('更新成功')
-        this.getDataList()
-        this.dialogFormVisible = false
-      }).catch(res => {
-        this.$message.error('更新失败')
+      this.$refs.tmpData.validate((valid) => {
+        if (valid) {
+          update(this.tmpData).then(() => {
+            this.$message.success('更新成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+          }).catch(res => {
+            this.$message.error('更新失败')
+          })
+        } else {
+          this.$message.error('请检查输入格式')
+          this.btnLoading = false
+          return false
+        }
       })
     },
     /**
@@ -415,6 +510,74 @@ export default {
         })
       }).catch(() => {
         this.$message.info('已取消删除')
+      })
+    },
+    /**
+     * 进行批量操作
+     */
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+      console.log(this.multipleSelection)
+    },
+    toggleOperation() {
+      if (this.operationStatus === 'batch') {
+        this.operationStatus = 'single'
+      } else {
+        this.operationStatus = 'batch'
+      }
+    },
+    TogglebatchDialogStatus() {
+      for (var item in this.tmpData) {
+        this.tmpData[item] = null
+      }
+      this.dialogFormVisible = true
+      this.dialogStatus = 'update'
+    },
+    /**
+     * 删除用户
+     * @param index 用户下标
+    */
+    removeDataByBatch(index) {
+      var me = this
+      this.$confirm('批量删除专业？', '警告', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        var ids = me.multipleSelection.map((item) => {
+          return ("'" + item.exams_id + "'")
+        })
+        console.log('ids:', ids)
+        removeByBatch(ids).then(() => {
+          this.$message.success('删除成功')
+          this.getDataList()
+        })
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
+    /**
+     * 批量更新
+     */
+    updateDataByBatch() {
+      var ids = this.multipleSelection.map((item) => {
+        return ("'" + item.exams_id + "'")
+      })
+      this.$refs.tmpData.validate((valid) => {
+        if (valid) {
+          console.log('ids:', ids)
+          updateByBatch(this.tmpData, ids).then(() => {
+            this.$message.success('批量更新成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+          }).catch(res => {
+            this.$message.error('批量更新失败')
+          })
+        } else {
+          this.$message.error('请检查输入格式')
+          this.btnLoading = false
+          return false
+        }
       })
     }
   }

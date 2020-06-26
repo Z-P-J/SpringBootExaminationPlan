@@ -71,11 +71,11 @@
       highlight-current-row
       @selection-change="handleSelectionChange"
     >
-    <el-table-column
-      v-if="operationStatus === 'batch'"
-      type="selection"
-      width="40">
-    </el-table-column>
+      <el-table-column
+        v-if="operationStatus === 'batch'"
+        type="selection"
+        width="40">
+      </el-table-column>
       <el-table-column label="#" align="center" width="80">
         <template slot-scope="scope">
           <span v-text="getIndex(scope.$index)"></span>
@@ -147,9 +147,10 @@
         label-width="75px"
         style="width: 300px; margin-left:50px;"
         :model="tmpData"
+        :rules="rules"
         ref="tmpData"
       >
-    <el-form-item label="国家专业代码"><el-input v-model="tmpData.national_major_code" /></el-form-item>
+    <el-form-item prop="national_major_code" label="国家专业代码"><el-input v-model="tmpData.national_major_code" /></el-form-item>
   <el-form-item label="专业类型">
     <el-select v-model="tmpData.major_type" placeholder="请选择专业类型" :value="tmpData.major_type">
       <el-option label="基础科段" value="基础科段"></el-option>
@@ -195,7 +196,7 @@
   <el-form-item label="毕业学分"><el-input v-model="tmpData.graduation_credit" /></el-form-item>
   <el-form-item label="总课程数"><el-input v-model="tmpData.total_course_number" /></el-form-item>
   <el-form-item label="是否分方向"><el-input v-model="tmpData.whether_divide_direction" /></el-form-item>
-  <el-form-item label="专业大类代码"><el-input v-model="tmpData.major_category_code" /></el-form-item>
+  <el-form-item prop="major_category_code" label="专业大类代码"><el-input v-model="tmpData.major_category_code" /></el-form-item>
   <el-form-item label="报考条件说明">
   <el-input
   type="textarea"
@@ -282,6 +283,14 @@ export default {
         size: null,
         fieldVal: '',
         fieldSelect: null
+      },
+      rules: {
+        national_major_code: [
+          { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ],
+        major_category_code: [
+          { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ]
       },
       operationStatus: 'single',
       batchDialogStatus: false, // 批量修改选项状态
@@ -416,12 +425,19 @@ export default {
       var ids = this.multipleSelection.map((item) => {
         return ("'" + item.major_id + "'")
       })
-      updateByBatch(this.tmpData, ids).then(() => {
-        this.$message.success('批量更新成功')
-        this.getDataList()
-        this.dialogFormVisible = false
-      }).catch(res => {
-        this.$message.error('批量更新失败')
+      this.$refs.tmpData.validate((valid) => {
+        if (valid) {
+          updateByBatch(this.tmpData, ids).then(() => {
+            this.$message.success('批量更新成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+          }).catch(res => {
+            this.$message.error('批量更新失败')
+          })
+        } else {
+          this.btnLoading = false
+          return false
+        }
       })
     }
   }

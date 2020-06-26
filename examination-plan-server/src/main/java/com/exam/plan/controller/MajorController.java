@@ -72,29 +72,6 @@ public class MajorController {
         majorService.save(major);
         return ResultGenerator.genOkResult();
     }
-    @DeleteMapping("/{id}")
-    @ResponseBody
-    public Result delete(@PathVariable final String id, final Principal principal) {
-        System.out.println("delMajor majorid=" + id);
-        final Major major = this.majorService.getById(id);
-        if (major == null) {
-            return ResultGenerator.genFailedResult("数据不存在");
-        }
-        this.majorService.deleteById(id);
-        return ResultGenerator.genOkResult();
-    }
-
-    @PutMapping("/{id}")
-    @ResponseBody
-    public Result update(
-            @PathVariable final String id, @RequestBody final Major major, final Principal principal) {
-        final Major dbMajor = this.majorService.getById(id);
-        if (dbMajor == null) {
-            return ResultGenerator.genFailedResult("不存在");
-        }
-        this.majorService.update(major);
-        return ResultGenerator.genOkResult();
-    }
 
     @DeleteMapping("/batch/{ids}")
     @ResponseBody
@@ -108,14 +85,40 @@ public class MajorController {
     @ResponseBody
     public Result updateByBatch(
             @PathVariable final String ids, @RequestBody final Major major, final Principal principal) {
-
+        System.out.println("updateMajor majorids=" + ids);
+        if(ids==""||ids==null){
+            return ResultGenerator.genOkResult();
+        }
         Condition condition=new Condition(Major.class);
         condition.createCriteria().andCondition( "major_id in (" +ids+")");
 
         this.majorService.updateByConditionBatch(ids.split(",").length,major,condition);
         return ResultGenerator.genOkResult();
     }
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public Result delete(@PathVariable final String id, final Principal principal) {
+        System.out.println("delMajor majorid=" + id);
+        final Major major = this.majorService.getById(id);
+        if (major == null) {
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
+        }
+        this.majorService.deleteById(id);
+        return ResultGenerator.genOkResult();
+    }
 
+    @PutMapping("/{id}")
+    @ResponseBody
+    public Result update(
+            @PathVariable final String id, @RequestBody final Major major, final Principal principal) {
+        System.out.println("updateMajor majorid=" + id);
+        final Major dbMajor = this.majorService.getById(id);
+        if (dbMajor == null) {
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
+        }
+        this.majorService.update(major);
+        return ResultGenerator.genOkResult();
+    }
     /*··········································专业大类···································*/
 
 
@@ -158,7 +161,7 @@ public class MajorController {
         System.out.println("delMajorCategory id=" + id);
         final MajorCategory major = this.majorCategoryService.getById(id);
         if (major == null) {
-            return ResultGenerator.genFailedResult("数据不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.majorCategoryService.deleteById(id);
         return ResultGenerator.genOkResult();
@@ -170,7 +173,7 @@ public class MajorController {
             @PathVariable final String id, @RequestBody final MajorCategory major, final Principal principal) {
         final MajorCategory dbMajor = this.majorCategoryService.getById(id);
         if (dbMajor == null) {
-            return ResultGenerator.genFailedResult("不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.majorCategoryService.update(major);
         return ResultGenerator.genOkResult();
@@ -217,7 +220,7 @@ public class MajorController {
         System.out.println("delMajorNational id=" + id);
         final MajorNational major = this.majorNationalService.getById(id);
         if (major == null) {
-            return ResultGenerator.genFailedResult("数据不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.majorNationalService.deleteById(id);
         return ResultGenerator.genOkResult();
@@ -229,7 +232,7 @@ public class MajorController {
             @PathVariable final String id, @RequestBody final MajorNational major, final Principal principal) {
         final MajorNational dbMajor = this.majorNationalService.getById(id);
         if (dbMajor == null) {
-            return ResultGenerator.genFailedResult("不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.majorNationalService.update(major);
         return ResultGenerator.genOkResult();
@@ -284,7 +287,7 @@ public class MajorController {
         System.out.println("delMajorShcool id=" + id);
         final MajorSchool major = this.majorSchoolService.getById(id);
         if (major == null) {
-            return ResultGenerator.genFailedResult("数据不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.majorSchoolService.deleteById(id);
         return ResultGenerator.genOkResult();
@@ -296,7 +299,7 @@ public class MajorController {
             @PathVariable final String id, @RequestBody final MajorSchool major, final Principal principal) {
         final MajorSchool dbMajor = this.majorSchoolService.getById(id);
         if (dbMajor == null) {
-            return ResultGenerator.genFailedResult("不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.majorSchoolService.update(major);
         return ResultGenerator.genOkResult();

@@ -232,10 +232,17 @@ export default {
     },
     updateData() {
       this.btnLoading = true
-      update(this.Data).then(() => {
-        this.$message.success('更新成功')
-      }).catch(res => {
-        this.$message.error('更新失败')
+      this.$refs.Data.validate((valid) => {
+        if (valid) {
+          update(this.Data).then(() => {
+            this.$message.success('更新成功')
+          }).catch(res => {
+            this.$message.error('更新失败')
+          })
+        } else {
+          this.btnLoading = false
+          return false
+        }
       })
     },
     addData() {

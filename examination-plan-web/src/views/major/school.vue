@@ -5,14 +5,12 @@
         <el-form-item>
           <el-button
             type="success"
-            size="mini"
             icon="el-icon-refresh"
             v-if="hasPermission('role:list')"
             @click.native.prevent="getDataList"
           >刷新</el-button>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
@@ -50,7 +48,7 @@
       </el-table-column>
       <el-table-column label="专业编码" align="center" prop="major_id" width="180" />
       <el-table-column label="主考院校" align="center" prop="main_target_school" width="200" />
-      <el-table-column label="第N主考院校" align="center" prop="main_target_school_code" width="200" />
+      <el-table-column sortable label="第N主考院校" align="center" prop="main_target_school_code" width="200" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('role:add') || hasPermission('role:delete')">
         <template slot-scope="scope">

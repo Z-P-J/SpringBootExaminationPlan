@@ -5,26 +5,17 @@
         <el-form-item>
           <el-button
             type="success"
-            size="mini"
             icon="el-icon-refresh"
             v-if="hasPermission('role:list')"
             @click.native.prevent="getDataList"
           >刷新</el-button>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >添加大类专业</el-button>
           
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            v-if="hasPermission('role:update')"
-            
-          >批量操作</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('role:search')">
@@ -48,6 +39,7 @@
       :data="dataList"
       v-loading.body="listLoading"
       element-loading-text="loading"
+      :rules="rules"
       border
       fit
       highlight-current-row
@@ -59,7 +51,7 @@
       </el-table-column>
       <el-table-column label="专业大类编码" align="center" prop="major_category_code" width="180" />
       <el-table-column label="名称" align="center" prop="major_category_name" width="200" />
-      <el-table-column label="学科等级" align="center" prop="major_category_level" width="200" />
+      <el-table-column sortable label="学科等级" align="center" prop="major_category_level" width="200" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('role:add') || hasPermission('role:delete')">
         <template slot-scope="scope">
@@ -92,17 +84,20 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="75px"
+        label-width="75x"
         style="width: 300px; margin-left:50px;"
         :model="tmpData"
         ref="tmpData"
+        :rules="rules"
       >
         <el-form-item label="专业大类编码" prop="major_category_code" required>
-          <el-input
+          <!-- <el-input
             type="text"
             auto-complete="off"
             v-model="tmpData.major_category_code"
-          />
+          /> -->
+          <el-input v-model="tmpData.major_category_code" v-if="dialogStatus === 'add'"/>
+          <el-input v-model="tmpData.major_category_code" v-else="" :disabled="true"/>
         </el-form-item>
         <el-form-item label="名称" prop="major_category_name" required>
           <el-input
@@ -175,15 +170,21 @@ export default {
         add: '添加大类专业'
       },
       tmpData: {
-        major_category_code: '2',
-        major_category_level: '一级学科',
-        major_category_name: '社会学'
+        major_category_code: '',
+        major_category_level: '',
+        major_category_name: ''
       },
       search: {
         page: null,
         size: null,
         fieldVal: '',
         fieldSelect: null
+      },
+      rules: {
+        major_category_code: [
+          { required: true, message: '请输入大类专业编码', trigger: 'blur' },
+          { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -253,7 +254,7 @@ export default {
       // 显示新增对话框
       this.dialogFormVisible = true
       this.dialogStatus = 'add'
-      this.tmpData.major_category_code = '2'
+      this.tmpData.major_category_code = 'B000002'
       this.tmpData.major_category_level = '一级学科'
       this.tmpData.major_category_name = '社会学'
     },
@@ -262,14 +263,21 @@ export default {
      */
     addAccount() {
       this.btnLoading = true
-      add(this.tmpData).then(() => {
-        this.$message.success('添加成功')
-        this.getDataList()
-        this.dialogFormVisible = false
-        this.btnLoading = false
-      }).catch(res => {
-        this.$message.error('添加失败')
-        this.btnLoading = false
+      this.$refs.tmpData.validate((valid) => {
+        if (valid) {
+          add(this.tmpData).then(() => {
+            this.$message.success('添加成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+            this.btnLoading = false
+          }).catch(res => {
+            this.$message.error('添加失败')
+            this.btnLoading = false
+          })
+        } else {
+          this.btnLoading = false
+          return false
+        }
       })
     },
     /**
@@ -286,12 +294,20 @@ export default {
      * 更新用户
      */
     updateAccount() {
-      update(this.tmpData).then(() => {
-        this.$message.success('更新成功')
-        this.getDataList()
-        this.dialogFormVisible = false
-      }).catch(res => {
-        this.$message.error('更新失败')
+      this.btnLoading = true
+      this.$refs.tmpData.validate((valid) => {
+        if (valid) {
+          update(this.tmpData).then(() => {
+            this.$message.success('更新成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+          }).catch(res => {
+            this.$message.error('更新失败')
+          })
+        } else {
+          this.btnLoading = false
+          return false
+        }
       })
     },
     /**

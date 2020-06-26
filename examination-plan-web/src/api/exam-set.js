@@ -39,6 +39,20 @@ export function update(Form) {
   })
 }
 
+export function removeByBatch(Ids) {
+  return request({
+    url: '/exam-set/batch/' + Ids,
+    method: 'delete'
+  })
+}
+
+export function updateByBatch(Form, Ids) {
+  return request({
+    url: '/exam-set/batch/' + Ids,
+    method: 'put',
+    data: Form
+  })
+}
 // 统考课表
 export function courseList(params) {
   return request({

@@ -5,26 +5,17 @@
         <el-form-item>
           <el-button
             type="success"
-            size="mini"
             icon="el-icon-refresh"
             v-if="hasPermission('role:list')"
             @click.native.prevent="getDataList"
           >刷新</el-button>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >添加全国专业</el-button>
           
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            v-if="hasPermission('role:update')"
-            
-          >批量操作</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('role:search')">
@@ -62,7 +53,7 @@
       <el-table-column label="名称" align="center" prop="major_name" width="200" />
       <!-- <el-table-column label="简称" align="center" prop="major_abbr" width="200" /> -->
       <el-table-column label="学历层次" align="center" prop="education_level" width="200" />
-      <el-table-column label="学分" align="center" prop="credit" width="200" />
+      <el-table-column sortable label="学分" align="center" prop="credit" width="200" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('role:add') || hasPermission('role:delete')">
         <template slot-scope="scope">
@@ -99,13 +90,16 @@
         style="width: 300px; margin-left:50px;"
         :model="tmpData"
         ref="tmpData"
+        :rules="rules"
       >
         <el-form-item label="专业全国编码" prop="national_major_code" required>
-          <el-input
+          <!-- <el-input
             type="text"
             auto-complete="off"
             v-model="tmpData.national_major_code"
-          />
+          /> -->
+          <el-input v-model="tmpData.national_major_code" v-if="dialogStatus === 'add'"/>
+          <el-input v-model="tmpData.national_major_code" v-else="" :disabled="true"/>
         </el-form-item>
         <el-form-item label="名称" prop="major_name" required>
           <el-input
@@ -129,8 +123,7 @@
         </el-form-item>
         <el-form-item label="学分" prop="credit" required>
           <el-input
-            type="num"
-            auto-complete="off"
+            type="number"
             v-model="tmpData.credit"
           />
         </el-form-item>
@@ -186,10 +179,10 @@ export default {
         add: '添加全国专业'
       },
       tmpData: {
-        national_major_code: '2',
-        education_level: '本科',
-        major_name: '社会学',
-        major_abbr: '社会学',
+        national_major_code: '',
+        education_level: '',
+        major_name: '',
+        major_abbr: '',
         credit: 2
       },
       search: {
@@ -197,6 +190,12 @@ export default {
         size: null,
         fieldVal: '',
         fieldSelect: null
+      },
+      rules: {
+        national_major_code: [
+          { required: true, message: '请输入专业编码', trigger: 'blur' },
+          { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -266,25 +265,32 @@ export default {
       // 显示新增对话框
       this.dialogFormVisible = true
       this.dialogStatus = 'add'
-      this.tmpData.national_major_code = '00001'
+      this.tmpData.national_major_code = 'C100000'
       this.tmpData.education_level = '本科'
       this.tmpData.major_name = '社会学'
       this.tmpData.major_abbr = '社会学'
-      this.tmpData.credit = 2
+      this.tmpData.credit = 3
     },
     /**
      * 添加用户
      */
     addAccount() {
       this.btnLoading = true
-      add(this.tmpData).then(() => {
-        this.$message.success('添加成功')
-        this.getDataList()
-        this.dialogFormVisible = false
-        this.btnLoading = false
-      }).catch(res => {
-        this.$message.error('添加失败')
-        this.btnLoading = false
+      this.$refs.tmpData.validate((valid) => {
+        if (valid) {
+          add(this.tmpData).then(() => {
+            this.$message.success('添加成功')
+            this.getDataList()
+            this.dialogFormVisible = false
+            this.btnLoading = false
+          }).catch(res => {
+            this.$message.error('添加失败')
+            this.btnLoading = false
+          })
+        } else {
+          this.btnLoading = false
+          return false
+        }
       })
     },
     /**

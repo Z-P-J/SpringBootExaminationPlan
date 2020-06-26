@@ -5,33 +5,23 @@
         <el-form-item>
           <el-button
             type="success"
-            size="mini"
             icon="el-icon-refresh"
             v-if="hasPermission('role:list')"
             @click.native.prevent="getDataList"
           >刷新</el-button>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >添加统考考次</el-button>
           
-          <el-button
+          <!-- <el-button
             type="primary"
-            size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('role:update')"
             
-          >批量操作</el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            v-if="hasPermission('role:update')"
-            
-          >批量导入</el-button>
+          >批量导入</el-button> -->
         </el-form-item>
 
         <span v-if="hasPermission('role:search')">

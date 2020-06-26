@@ -66,7 +66,7 @@ public class ExamInfoController {
         System.out.println("delExamInfo id=" + id);
         final ExamInfo examInfo = this.examInfoService.getById(id);
         if (examInfo == null) {
-            return ResultGenerator.genFailedResult("数据不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.examInfoService.deleteById(id);
         return ResultGenerator.genOkResult();
@@ -77,10 +77,34 @@ public class ExamInfoController {
     public Result Update(
             @PathVariable final String id, @RequestBody final ExamInfo examInfo, final Principal principal) {
         final ExamInfo db = this.examInfoService.getById(id);
+        System.out.println("updateExamInfo id=" + id);
         if (db == null) {
-            return ResultGenerator.genFailedResult("不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.examInfoService.update(examInfo);
+        return ResultGenerator.genOkResult();
+    }
+
+    @DeleteMapping("/batch/{ids}")
+    @ResponseBody
+    public Result deleteByBatch(@PathVariable final String ids, final Principal principal) {
+        System.out.println("delexamInfo examinfoids=" + ids);
+        this.examInfoService.deleteByIds(ids);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PutMapping("/batch/{ids}")
+    @ResponseBody
+    public Result updateByBatch(
+            @PathVariable final String ids, @RequestBody final ExamInfo examInfo, final Principal principal) {
+        System.out.println("updateExamInfo id=" + ids);
+        if(ids==""||ids==null){
+            return ResultGenerator.genOkResult();
+        }
+        Condition condition=new Condition(ExamInfo.class);
+        condition.createCriteria().andCondition( "exams_id in (" +ids+")");
+
+        this.examInfoService.updateByConditionBatch(ids.split(",").length,examInfo,condition);
         return ResultGenerator.genOkResult();
     }
 
@@ -124,7 +148,7 @@ public class ExamInfoController {
         System.out.println("delExamCourse id=" + id);
         final ExamCourse course = this.examCourseService.getById(id);
         if (course == null) {
-            return ResultGenerator.genFailedResult("数据不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.examCourseService.deleteById(id);
         return ResultGenerator.genOkResult();
@@ -136,7 +160,7 @@ public class ExamInfoController {
             @PathVariable final String id, @RequestBody final ExamCourse course, final Principal principal) {
         final ExamCourse dbCourse= this.examCourseService.getById(id);
         if (dbCourse == null) {
-            return ResultGenerator.genFailedResult("不存在");
+            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
         }
         this.examCourseService.update(course);
         return ResultGenerator.genOkResult();
