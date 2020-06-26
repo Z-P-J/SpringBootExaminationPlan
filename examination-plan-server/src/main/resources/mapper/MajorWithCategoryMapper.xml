@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.plan.mapper.MajorWithCategoryMapper">
+    <select id="listAllWithCategory" resultMap="MajorCategoryMap">
+        SELECT *
+        FROM major_info a
+              LEFT JOIN major_categories b ON a.major_category_code = b.major_category_code
+    </select>
+
+    <resultMap type="com.exam.plan.entity.MajorWithCategory" id="MajorCategoryMap">
+
+    </resultMap>
+
+</mapper>

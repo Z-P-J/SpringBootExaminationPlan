@@ -111,6 +111,14 @@ public interface Service<T> {
   void updateByCondition(T entity, Condition condition);
 
   /**
+   * 通过 ids查找批量更新
+   *
+   * @param count
+   * @return 实体
+   */
+  void updateByConditionBatch(Integer count, T entity, Condition condition);
+
+  /**
    * 通过 id 查找
    *
    * @param id id
@@ -136,13 +144,13 @@ public interface Service<T> {
    */
   List<T> listByIds(String ids);
 
-//  /**
-//   * 按条件查找
-//   *
-//   * @param condition 条件
-//   * @return 实体列表
-//   */
-//  List<T> listByCondition(Condition condition);
+  /**
+   * 按条件查找
+   *
+   * @param condition 条件
+   * @return 实体列表
+   */
+  List<T> listByCondition(Condition condition);
 
   /**
    * 获取所有实体

@@ -122,64 +122,92 @@ export const asyncRouterMap = [
   //   ]
   // },
   {
-    path: '/role2',
+    path: '/major-plan',
     component: Layout,
-    redirect: '/role/list',
-    icon: 'role',
+    redirect: '/major-plan/list',
+    icon: 'icon',
     noDropDown: true,
     // name: '专业计划',
     children: [{
       path: 'list',
       name: '专业计划',
-      component: _import('role/list'),
+      component: _import('major-plan/list'),
       meta: { permission: ['role:list'] }
     }]
   },
   {
-    path: '/role3',
+    path: '/major',
     component: Layout,
-    redirect: '/role/list',
-    icon: 'role',
-    noDropDown: true,
-    // name: '专业管理',
+    redirect: '/major/list',
+    icon: 'chart',
+    name: '专业管理',
+    noDropDown: false,
     children: [{
       path: 'list',
-      name: '专业管理',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
-    }]
+      name: '专业信息维护',
+      component: _import('major/list')
+    }, {
+      hidden: true,
+      path: 'detail',
+      name: '专业详情',
+      component: _import('major/detail')
+    },
+    {
+      path: 'category',
+      name: '专业大类',
+      component: _import('major/category')
+    },
+    {
+      path: 'nation',
+      name: '全国专业',
+      component: _import('major/nation')
+    },
+    {
+      hidden: true,
+      path: 'school',
+      name: '主考院校',
+      component: _import('major/school')
+    }
+    ]
   },
   {
-    path: '/role4',
+    path: '/exam-set',
     component: Layout,
-    redirect: '/role/list',
-    icon: 'role',
-    noDropDown: true,
-    // name: '考次管理',
+    redirect: '/exam-set/list',
+    icon: 'education',
+    noDropDown: false,
+    name: '考次管理',
     children: [{
       path: 'list',
       name: '考次管理',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
-    }]
+      component: _import('exam-set/list')
+    },
+    {
+      path: 'course',
+      name: '统考课表',
+      component: _import('exam-set/course')
+    }
+    ]
   },
   {
     path: '/course',
     component: Layout,
     redirect: '/course/list',
     icon: 'role',
-    noDropDown: true,
-    // name: '课程管理',
+    noDropDown: false,
+    name: '课程管理',
     children: [{
       path: 'list',
-      name: '课程管理',
+      name: '全部课程',
       component: _import('course/list')
-      // meta: { permission: ['role:list'] }
     }, {
-      path: 'detail',
-      name: '课程详情',
-      component: _import('course/detail')
-      // meta: { permission: ['role:list'] }
+      path: 'national',
+      name: '全国课程',
+      component: _import('course/national')
+    }, {
+      path: 'textbook',
+      name: '课程教材',
+      component: _import('course/textbook')
     }]
   },
   {

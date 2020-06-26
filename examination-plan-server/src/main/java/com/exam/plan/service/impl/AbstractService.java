@@ -35,15 +35,15 @@ public abstract class AbstractService<T> implements Service<T> {
         this.entityClass = (Class<T>) pt.getActualTypeArguments()[0];
     }
 
-    private void assertSave(final boolean statement) {
+    protected void assertSave(final boolean statement) {
         asserts(statement, ResultCode.SAVE_FAILED);
     }
 
-    private void assertDelete(final boolean statement) {
+    protected void assertDelete(final boolean statement) {
         asserts(statement, ResultCode.DELETE_FAILED);
     }
 
-    private void assertUpdate(final boolean statement) {
+    protected void assertUpdate(final boolean statement) {
         asserts(statement, ResultCode.UPDATE_FAILED);
     }
 
@@ -135,6 +135,10 @@ public abstract class AbstractService<T> implements Service<T> {
     }
 
     @Override
+    public void updateByConditionBatch(final Integer count,final T entity, final Condition condition) {
+        this.assertUpdate(this.mapper.updateByConditionSelective(entity, condition) == count);
+    }
+    @Override
     public T getById(final Object id) {
         return this.mapper.selectByPrimaryKey(id);
     }
@@ -154,6 +158,7 @@ public abstract class AbstractService<T> implements Service<T> {
         return this.mapper.selectByIds(ids);
     }
 
+    @Override
     public List<T> listByCondition(final Condition condition) {
         return this.mapper.selectByCondition(condition);
     }
