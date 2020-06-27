@@ -8,10 +8,26 @@ export function list(params) {
   })
 }
 
-export function remove(approveId) {
+export function remove(approve_id) {
   return request({
-    url: '/approve/' + approveId,
+    url: '/approve/' + approve_id,
     method: 'delete'
+  })
+}
+
+export function search(From) {
+  return request({
+    url: '/approve/search',
+    method: 'post',
+    data: From
+  })
+}
+
+export function update(tmpApprove) {
+  return request({
+    url: '/approve/' + tmpApprove.approve_id,
+    method: 'put',
+    data: tmpApprove
   })
 }
 
@@ -22,35 +38,4 @@ export function add(tmpApprove) {
     data: tmpApprove
   })
 }
-
-export function addCheck(tmpApprove) {
-  return request({
-    url: '/approve/addCheck',
-    method: 'post',
-    data: tmpApprove
-  })
-}
-// export function search(searchForm) {
-//   return request({
-//     url: '/approve/search',
-//     method: 'post',
-//     data: searchForm
-//   })
-// }
-
-// export function update(approveForm) {
-//   return request({
-//     url: '/account/' + approveForm.Id,
-//     method: 'put',
-//     data: approveForm
-//   })
-// }
-
-// export function updateCheck(approveForm) {
-//   return request({
-//     url: '/approve',
-//     method: 'put',
-//     data: approveForm
-//   })
-// }
 

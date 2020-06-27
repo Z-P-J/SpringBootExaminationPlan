@@ -3,7 +3,7 @@
    >
     <el-form
       v-loading.body="loading"
-      :model="approveData"
+      :model="dataList"
       :rules="approveDetailRules"
       ref="approveForm"
       label-width="115px"
@@ -17,12 +17,12 @@
       <el-row :gutter="18">
         <el-col :span="9">
           <el-form-item label="申请表编码:" prop="approve_id">
-          <span >{{ approveData.approve_id }}</span>
+          <span >{{ dataList.approve_id }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="9">
           <el-form-item label="申请表名称:" prop="approve_name">
-            <span>{{ approveData.approve_name }}</span>
+            <span>{{ dataList.approve_name }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -30,12 +30,12 @@
       <el-row :gutter="18">
         <el-col :span="9">
           <el-form-item label="申请院校编码:" prop="school_id">
-            <span>{{ approveData.school_id }}</span>
+            <span>{{ dataList.school_id }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="9">
           <el-form-item label="申请院校名称:" prop="school_name">
-            <span >{{ approveData.school_name }}</span>
+            <span >{{ dataList.school_name }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -43,12 +43,12 @@
      <el-row :gutter="18">
         <el-col :span="9">
           <el-form-item label="申请表创建时间:" prop="apply_time">
-            <span >{{ approveData.apply_time }}</span>
+            <span >{{ dataList.apply_time }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="9">
           <el-form-item label="申请表状态:" prop="approve_status">
-            <span >{{ approveData.approve_status }}</span>
+            <span >{{ dataList.approve_status }}</span>
           </el-form-item>
         </el-col>
     </el-row>
@@ -61,7 +61,7 @@
       
       
       <el-row :gutter="18">
-        <el-col :span="18" v-if="approveData.approve_status === '已审批'">
+        <el-col :span="18" v-if="dataList.approve_status === '已审批'">
           <el-form-item label="审核情况如下：" >
           </el-form-item>
         </el-col>
@@ -71,18 +71,18 @@
         </el-col>
       </el-row>
 
-      <el-form-item label="审核意见：" v-if="approveData.approve_status === '已审批'"><span>{{ approveData.approve_comment }}</span></el-form-item>
+      <el-form-item label="审核意见：" v-if="dataList.approve_status === '已审批'"><span>{{ dataList.approve_comment }}</span></el-form-item>
       <el-form-item label="批准文号："  v-if="ShowStatu === 'new'">
-        <span>{{ approveData.approve_num }}</span></el-form-item>
+        <span>{{ dataList.approve_num }}</span></el-form-item>
       <el-row :gutter="18">
         <el-col :span="9">
-          <el-form-item label="审核人:" prop="approver" v-if="approveData.approve_status === '已审批'">
-            <span >{{ approveData.approver }}</span>
+          <el-form-item label="审核人:" prop="approver" v-if="dataList.approve_status === '已审批'">
+            <span >{{ dataList.approver }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="9">
-          <el-form-item label="审核时间:" prop="approve_time" v-if="approveData.approve_status === '已审批'">
-            <span >{{ approveData.approve_time }}</span>
+          <el-form-item label="审核时间:" prop="approve_time" v-if="dataList.approve_status === '已审批'">
+            <span >{{ dataList.approve_time }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -102,11 +102,11 @@ import { isValidateEmail } from '@/utils/validate'
 
 export default {
   created() {
-    console.log('query=' + JSON.stringify(this.$route.query))
-    console.log('params=' + JSON.stringify(this.$route.params))
-    console.log('approveId=' + this.$route.query.approve_id)
-    this.approveData = this.$route.query.data
-    console.log('approveData=' + JSON.stringify(this.approveData))
+    console.log('前端测试query=' + JSON.stringify(this.$route.query))
+    console.log('前端测试params=' + JSON.stringify(this.$route.params))
+    console.log('前端测试approveId=' + this.$route.query.approve_id)
+    this.dataList = this.$route.query.data
+    console.log('前端收到dataList=' + JSON.stringify(this.dataList))
     this.changeShow()
   },
   data() {
@@ -133,7 +133,7 @@ export default {
         name: [{ required: true, trigger: 'blur', validator: validateName }],
         email: [{ required: true, trigger: 'blur', validator: validateEmail }]
       },
-      approveData: {}
+      dataList: {}
     }
   },
 
@@ -141,16 +141,16 @@ export default {
     unix2CurrentTime,
     //根据专业申报表的不同显示不同部分
     changeShow(){
-      if(this.approveData.approve_name === '专业调整'){
+      if(this.dataList.approve_name === '专业调整'){
         this.ShowStute = "adjust";
       }
-      if(this.approveData.approve_name === '续办专业'){
+      if(this.dataList.approve_name === '续办专业'){
        this.ShowStute = "continue";
       }
-      if(this.approveData.approve_name === '扩办专业'){
+      if(this.dataList.approve_name === '扩办专业'){
         this.ShowStute = "extend";
       }
-      if(this.approveData.approve_name === '新专业'){
+      if(this.dataList.approve_name === '新专业'){
         this.ShowStute = "new";
       }
     },

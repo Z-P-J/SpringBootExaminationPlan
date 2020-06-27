@@ -22,20 +22,4 @@ public class ApproveServiceImpl extends AbstractService<Approve> implements IApp
   public List<Approve> listAllWithApprove() {
     return this.ApproveMapper.listAllWithApprove();
   }
-
-  /** 增加申请表 */
-  @Override
-  public void save(final Approve tmpApprove) {
-        final Approve approve = new Approve();
-//        approve.setApprove_id(tmpApprove.approve_id);
-        this.ApproveMapper.insertSelective(approve);
-        System.out.println("Approve=" + approve);
-
-  }
-    public void saveCheck(final Approve tmpApprove){
-        final Approve approve = new Approve();
-//        approve.setApprove_id(tmpApprove.approve_id);
-        this.ApproveMapper.insertSelective(approve);
-        System.out.println("Approve=" + approve);
-    }
 }

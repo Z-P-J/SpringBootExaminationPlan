@@ -259,17 +259,17 @@ export const asyncRouterMap = [
       name: '审核表',
       component: _import('approve/check')
     }, {
-      path: 'add_list',
+      path: 'selectmajor_list',
       name: '专业列表',
-      component: _import('approve/add_list')
+      component: _import('approve/selectmajor_list')
     }, {
       path: 'add_new',
       name: '新专业',
       component: _import('approve/add_new')
     }, {
-      path: 'add_courselist',
+      path: 'selectcourse_list',
       name: '调整专业课程',
-      component: _import('approve/add_courselist')
+      component: _import('approve/selectcourse_list')
     }]
   },
   {

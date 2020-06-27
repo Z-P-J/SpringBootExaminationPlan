@@ -7,64 +7,40 @@
             type="success"
             size="mini"
             icon="el-icon-refresh"
-            v-if="hasPermission('role:list')"
-            @click.native.prevent="getApproveList"
+            @click.native.prevent="getDataList"
           >刷新</el-button>
           <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            v-if="hasPermission('role:add')"
-            @click.native.prevent="showaddApproveDialog"
-          >添加调整专业申请</el-button>
-          <el-button
               type="primary"
               size="mini"
               icon="el-icon-plus"
               v-if="hasPermission('role:add')"
-              @click.native.prevent="showaddApproveDialog"
-          >添加续办专业申请</el-button>
-          <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-plus"
-              v-if="hasPermission('role:add')"
-              @click.native.prevent="showaddApproveDialog"
-          >添加扩办专业申请</el-button>
-         <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            v-if="hasPermission('role:add')"
-            @click.native.prevent="showaddApproveDialog"
-          >添加新专业申请</el-button>
+              @click.native.prevent="showAddDialog"
+          >添加专业申请</el-button>
         </el-form-item>
-      </el-form>
-      
-      <el-form :inline="true" align="center">
         <el-form-item>
-            <span v-if="hasPermission('role:search')">
-                <el-form-item>
-                  <el-input v-model="search.school_name" placeholder="申请院校"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <el-select v-model="search.approve_name" placeholder="申请表名称">
-                    <el-option label="请选择" value />
-                    <div v-for="(approve_name, index) in approveList" :key="index">
-                      <el-option :label="approve_name" :value="approve_name"/>
-                    </div>
-                  </el-select>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" @click="searchBy" :loading="btnLoading">查询</el-button>
-                </el-form-item>
-              </span>
+          <span v-if="hasPermission('role:search')">
+            <el-form-item>
+              <el-input v-model="search.fieldVal" placeholder="字段值"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-select v-model="search.fieldSelect" placeholder="字段名">
+                <el-option label="申请表编码" value="approve_id"></el-option>
+                <el-option label="申请表名称" value="approve_name"></el-option>
+                <el-option label="申请院校" value="school_name"></el-option>
+                <el-option label="状态" value="approve_status"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="searchData" :loading="btnLoading">查询</el-button>
+            </el-form-item>
+          </span>
         </el-form-item>
+      
       </el-form>
     </div>
 
     <el-table
-      :data="approveList"
+      :data="dataList"
       v-loading.body="listLoading"
       element-loading-text="loading"
       border
@@ -79,41 +55,51 @@
       <el-table-column label="申请表编码" align="center" prop="approve_id"  />
       <el-table-column label="申请表名称" align="center" prop="approve_name"  />
       <el-table-column label="申请院校" align="center" prop="school_name" />
-      <el-table-column label="状态" align="center" prop="approve_status" />
+      <el-table-column
+        sortable
+        prop="approve_status"
+        label="申请表状态"
+        width="100" align="center"
+      >
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.approve_status === '已审批' ? 'success' 
+            : scope.row.approve_status === '已申请' ? 'warning' : 'danger'"
+            disable-transitions>{{scope.row.approve_status}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="apply_time" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:detail') || hasPermission('role:update') || hasPermission('role:delete')">
-        <template slot-scope="scope">
-           
-        <router-link
-          class="inlineBlock"
-          :to="{ path:'/approve/detail/', query: { approve_id:scope.row.approve_id, data:scope.row  } }">
-          <el-button
-            type="warning"
-            size="mini"
-            v-if="hasPermission('role:detail') "
-          >查看</el-button>
-        </router-link>
-
-        <router-link
-          class="inlineBlock"
-          :to="{ path:'/approve/check/', query: { approve_id:scope.row.approve_id, data:scope.row  } }">
-          <el-button
-            type="warning"
-            size="mini"
-            v-if="hasPermission('role:detail') "
-          >审核</el-button>
-        </router-link>
-
+        <template slot-scope="scope">  
+          <router-link
+            class="inlineBlock"
+            :to="{ path:'/approve/detail/', query: {data:scope.row  } }">
+            <el-button
+              type="warning"
+              size="mini"
+              v-if="hasPermission('role:detail') "
+            >查看</el-button>
+          </router-link>
+          <router-link
+            class="inlineBlock"
+            :to="{ path:'/approve/check/', query: { data:scope.row  } }">
+            <el-button
+              type="success"
+              size="mini"
+              v-if="hasPermission('role:update') &&  scope.row.approve_status == '已申请'"
+            >审核</el-button>
+          </router-link>
           <el-button
             type="danger"
             size="mini"
-            v-if="hasPermission('role:delete') "
-            @click.native.prevent="removeApprove(scope.$index)"
+            v-if="hasPermission('role:delete') "                      
+            @click.native.prevent="removeData(scope.$index)"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+
     <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -128,197 +114,152 @@
         status-icon
         class="small-space"
         label-position="left"
-        label-width="75px"
-        style="width: 300px; margin-left:50px;"
-        :model="tmpAccount"
-        :rules="createRules"
-        ref="tmpAccount"
+        label-width="120px"
+        style="width: 400px; margin-left:50px;"
+        :model="tmpData"
+        ref="tmpData"
       >
-        <el-form-item label="账户名" prop="name" required>
+        <el-form-item label="院校编码" prop="school_id" required>
           <el-input
             type="text"
-            prefix-icon="el-icon-edit"
             auto-complete="off"
-            :disabled="dialogStatus === 'updateRole'"
-            v-model="tmpAccount.name"
+            v-model="tmpData.school_id"
           />
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
+        <el-form-item label="院校名称" prop="school_name" required>
           <el-input
             type="text"
-            prefix-icon="el-icon-message"
             auto-complete="off"
-            :disabled="dialogStatus === 'updateRole'"
-            v-model="tmpAccount.email"
+            v-model="tmpData.school_name"
           />
-        </el-form-item>
-        <el-form-item label="密码" prop="password" required
-        v-if="dialogStatus !== 'updateRole'">
-          <el-input
-            type="password"
-            prefix-icon="el-icon-edit"
-            auto-complete="off"
-            v-model="tmpAccount.password"
-            v-if="dialogStatus !== 'updateRole'"
-          />
-        </el-form-item>
-        <el-form-item label="角色"
-          v-if="dialogStatus === 'updateRole'">
-          <el-select placeholder="请选择" v-model="tmpAccount.roleId">
-            <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id" />
-          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
-        <el-button
-          type="danger"
-          v-if="dialogStatus === 'add'"
-          @click.native.prevent="$refs['tmpAccount'].resetFields()"
-        >重置</el-button>
-        <el-button
-          type="success"
-          v-if="dialogStatus === 'add'"
-          :loading="btnLoading"
-          @click.native.prevent="addApprove"
-        >添加</el-button>
-        <el-button
-          type="primary"
-          v-if="dialogStatus === 'update'"
-          :loading="btnLoading"
-          @click.native.prevent="updateAccount"
-        >更新资料</el-button>
-        <el-button
-          type="primary"
-          v-if="dialogStatus === 'updateRole'"
-          :loading="btnLoading"
-          @click.native.prevent="updateAccountRole"
-        >更新角色</el-button>
-      </div>
+        <router-link
+            class="inlineBlock"
+            :to="{ path:'/approve/selectmajor_list/' }">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            v-if="hasPermission('role:add')"
+          >专业调整</el-button>
+          </router-link>
+          <router-link
+            class="inlineBlock"
+            :to="{ path:'/approve/selectmajor_list/' }">
+          <el-button
+              type="primary"
+              icon="el-icon-plus"
+              v-if="hasPermission('role:add')"
+          >续办专业</el-button>
+          </router-link>
+          <router-link
+            class="inlineBlock"
+            :to="{ path:'/approve/selectmajor_list/' }">
+          <el-button
+              type="primary"
+              icon="el-icon-plus"
+              v-if="hasPermission('role:add')"
+          >扩办专业</el-button>
+          </router-link>
+          <router-link
+            class="inlineBlock"
+            :to="{ path:'/approve/add_new/' }"> 
+         <el-button
+            type="primary"
+            icon="el-icon-plus"
+            v-if="hasPermission('role:add')"
+          >新专业</el-button> 
+          </router-link> 
+      </div>  
     </el-dialog>
   </div>
 </template>
 <script>
-import { list , remove, update, add as updateApprove } from '@/api/approve'
-import { list as getapprovenameList, updateAccountRole } from '@/api/approve'
-import { isValidateEmail } from '@/utils/validate'
+import { list, remove, search } from '@/api/approve'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
 
 export default {
   created() {
-      this.getApproveList()
+    this.getDataList()
+    console.log('前端收到dataList=' + JSON.stringify(this.dataList))
   },
   data() {
-    const validateEmail = (rule, value, callback) => {
-      if (!isValidateEmail(value)) {
-        callback(new Error('邮箱格式错误'))
-      } else {
-        callback()
-      }
-    }
-    const validateName = (rule, value, callback) => {
-      if (value.length < 3) {
-        callback(new Error('账户名长度必须 ≥ 3'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码长度必须 ≥ 6'))
-      } else {
-        callback()
-      }
-    }
     return {
-      approveList: [], // 申请表列表
-      approvenameList: [], // 全部角色
-      filterRoleNameList: [], // 用于过滤表格角色的列表 http://element-cn.eleme.io/#/zh-CN/component/table#shai-xuan
+      dataList: [], // 申请表列表
+      dialogStatus: 'add',
+      dialogFormVisible: false,
+      textMap: {
+        add: '请先输入院校信息'
+      },
       listLoading: false, // 数据加载等待动画
       total: 0, // 数据总数
       listQuery: {
         page: 1, // 页码
         size: 9 // 每页数量
       },
-      dialogStatus: 'add',
-      dialogFormVisible: false,
-      textMap: {
-        updateRole: '修改账号角色',
-        update: '修改账号',
-        add: '添加账号'
-      },
       btnLoading: false, // 按钮等待动画
-      tmpAccount: {
-        accountId: '',
-        email: '',
-        name: '',
-        password: '',
-        roleId: 2 // 对应后端数据库普通用户角色Id
+      search:{
+        page:null,
+        size:null,
+        fieldVal:'',
+        fieldSelect:null
       },
-      search: {
-        page: null,
-        size: null,
-        school_name: null,
-        approve_name: null
+      tmpData: {
+        approve_id: '',
+        approve_name: '',
+        apply_time:'',
+        school_id:'',
+        school_name:'',
+        approve_time:'',
+        approve_comment:'',
+        approve_status: '',
+        approver: '',
+        approve_num:'',
       },
-      createRules: {
-        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
-        name: [{ required: true, trigger: 'blur', validator: validateName }],
-        password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
-      }
     }
   },
   computed: {
-    ...mapGetters(['accountId'])
+    ...mapGetters(['approve_id'])
   },
   methods: {
     unix2CurrentTime,
-    /**
-     * 获取所有角色
-     */
-    getapprovenameList() {
-      getapprovenameList().then(response => {
-        this.approvenameList = response.data.list
-      }).catch(res => {
-        this.$message.error('加载角色失败')
-      })
-    },
-
 
     /**
      * 获取申请表列表
      */
-    getApproveList() {
+    getDataList() {
       this.listLoading = true
       list(this.listQuery).then(response => {
-        console.log('data=' + JSON.stringify(response.data))
-        this.approveList = response.data.list
+        this.dataList = response.data.list
         this.total = response.data.total
         this.listLoading = false
       }).catch(res => {
+        this.listLoading = false
         this.$message.error('加载申请表列表失败!')
       })
     },
 
-    // //搜索申请表
-    // searchBy() {
-    //   this.btnLoading = true
-    //   this.listLoading = true
-    //   this.search.page = this.listQuery.page
-    //   this.search.size = this.listQuery.size
-    //   search(this.search).then(response => {
-    //     this.approveList = response.data.list
-    //     this.total = response.data.total
-    //     this.listLoading = false
-    //     this.btnLoading = false
-    //   }).catch(res => {
-    //     this.$message.error('搜索失败')
-    //   })
-    // },
-
+    /*列表查询功能块*/ 
+    searchData() {
+      this.btnLoading = true
+      this.listLoading = true
+          console.log('前端收到search=' + JSON.stringify(this.searchData))
+      this.search.page = this.listQuery.page
+      this.search.size = this.listQuery.size
+      search(this.search).then(response => {
+        this.dataList = response.data.list
+        this.total = response.data.total
+        this.listLoading = false
+        this.btnLoading = false
+      }).catch(res => {
+        this.$message.error('搜索失败')
+        this.listLoading = false
+        this.btnLoading = false
+      })
+    },
 
     /**
      * 改变每页数量
@@ -327,7 +268,7 @@ export default {
     handleSizeChange(size) {
       this.listQuery.size = size
       this.listQuery.page = 1
-      this.getApproveList()
+      this.getDataList()
     },
     /**
      * 改变页码
@@ -335,7 +276,7 @@ export default {
      */
     handleCurrentChange(page) {
       this.listQuery.page = page
-      this.getApproveList()
+      this.getDataList()
     },
     /**
      * 表格序号
@@ -347,79 +288,31 @@ export default {
     getIndex(index) {
       return (this.listQuery.page - 1) * this.listQuery.size + index + 1
     },
-
-
-
-
-    // /**
-    //  * 添加申请表
-    //  */
-    // addApprove() {
-    //   this.$refs.tmpAccount.validate(valid => {
-    //     if (valid && this.isUniqueDetail(this.tmpAccount)) {
-    //       this.btnLoading = true
-    //       register(this.tmpAccount).then(() => {
-    //         this.$message.success('添加成功')
-    //         this.getApproveList()
-    //         this.dialogFormVisible = false
-    //         this.btnLoading = false
-    //       }).catch(res => {
-    //         this.$message.error('添加申请表失败')
-    //         this.btnLoading = false
-    //       })
-    //     }
-    //   })
-    // },
-
-
-  
-    // /**
-    //  * 更新用户角色
-    //  */
-    // updateAccountRole() {
-    //   updateAccountRole(this.tmpAccount).then(() => {
-    //     this.$message.success('更新成功')
-    //     this.getApproveList()
-    //     this.dialogFormVisible = false
-    //   }).catch(res => {
-    //     this.$message.error('更新失败')
-    //   })
-    // },
-
-    // /**
-    //  * 用户资料是否唯一
-    //  * @param account 用户
-    //  */
-    // isUniqueDetail(account) {
-    //   for (let i = 0; i < this.accountList.length; i++) {
-    //     if (this.accountList[i].name === account.name) {
-    //       this.$message.error('账户名已存在')
-    //       return false
-    //     }
-    //     if (this.accountList[i].email === account.email) {
-    //       this.$message.error('邮箱已存在')
-    //       return false
-    //     }
-    //   }
-    //   return true
-    // },
-
-
+    /**
+     * 显示添加对话框
+     */
+    showAddDialog() {
+      // 显示新增对话框
+      this.dialogFormVisible = true
+      this.dialogStatus = 'add'
+      this.tmpData.school_id = '00001'
+      this.tmpData.school_name = '四川大学'
+    },
     /**
      * 删除申请表
      * @param index 申请表下标
      * @returns {boolean}
      */
-    removeApprove(index) {
+    removeData(index) {
       this.$confirm('删除该申请表？', '警告', {
         confirmButtonText: '是',
         cancelButtonText: '否',
         type: 'warning'
       }).then(() => {
-        const approveId = this.approveList[index].approve_id
-        remove(approveId).then(() => {
+        const approve_id = this.dataList[index].approve_id
+        remove(approve_id).then(() => {
           this.$message.success('删除成功!')
-          this.getApproveList()
+          this.getDataList()
         }).catch(() => {
           this.$message.error('删除失败!')
         })
@@ -427,23 +320,6 @@ export default {
         this.$message.info('已取消删除!')
       })
     },
-    changeShow(){
-      if(this.approveData.approve_name === '专业调整'){
-        this.ShowStute = "adjust";
-      }
-      if(this.approveData.approve_name === '续办专业'){
-       this.ShowStute = "continue";
-      }
-      if(this.approveData.approve_name === '扩办专业'){
-        this.ShowStute = "extend";
-      }
-      if(this.approveData.approve_name === '新专业'){
-        this.ShowStute = "new";
-      }
-      if(this.approveData.approve_statu === '已审批'){
-        this.ShowStute = "Ischeck";
-      }  
-    }
   }
 }
 </script>
