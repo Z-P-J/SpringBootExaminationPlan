@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.plan.mapper.MajorplanVersionMapper">
+    <resultMap id="BaseResultMap" type="com.exam.plan.entity.MajorPlanVersion">
+        <id column="plan_version_id" jdbcType="VARCHAR" property="planVersionId" />
+        <result column="plan_name" jdbcType="VARCHAR" property="planName" />
+        <result column="state" jdbcType="VARCHAR" property="state" />
+        <result column="create_date" jdbcType="DATE" property="createDate" />
+        <result column="approve_status" jdbcType="VARCHAR" property="approveStatus" />
+        <result column="leader_sign" jdbcType="VARCHAR" property="leaderSign" />
+        <result column="xuelichu_suggestion" jdbcType="LONGVARCHAR" property="xuelichuSuggestion" />
+        <result column="major_id" jdbcType="VARCHAR" property="majorId" />
+        <result column="course_id" jdbcType="VARCHAR" property="courseId" />
+    </resultMap>
+</mapper>

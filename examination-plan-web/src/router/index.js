@@ -122,16 +122,16 @@ export const asyncRouterMap = [
   //   ]
   // },
   {
-    path: '/major-plan',
+    path: '/majorplan',
     component: Layout,
-    redirect: '/major-plan/list',
+    redirect: '/majorplan/list',
     icon: 'icon',
     noDropDown: true,
     // name: '专业计划',
     children: [{
       path: 'list',
       name: '专业计划',
-      component: _import('major-plan/list'),
+      component: _import('majorplan/list'),
       meta: { permission: ['role:list'] }
     }]
   },
