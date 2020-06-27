@@ -11,6 +11,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.security.Principal;
@@ -133,6 +134,16 @@ public class ExamInfoController {
         final List<ExamCourse> list = this.examCourseService.listByCondition(condition);
         final PageInfo<ExamCourse> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @PostMapping("/coursebatch")
+    @ResponseBody
+    public Result courseAddByBatch(@RequestBody final List<ExamCourse> course) {
+        System.out.println("addExamCourse course=" + course);
+        for(ExamCourse item:course){
+            this.examCourseService.save(item);
+        }
+        return ResultGenerator.genOkResult();
     }
 
     @PostMapping("/course")

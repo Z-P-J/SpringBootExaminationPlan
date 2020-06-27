@@ -70,6 +70,14 @@ export function courseAdd(Form) {
   })
 }
 
+export function courseAddByBatch(Form) {
+  return request({
+    url: '/exam-set/coursebatch',
+    method: 'post',
+    data: Form
+  })
+}
+
 export function courseRemove(Id) {
   return request({
     url: '/exam-set/course/' + Id,

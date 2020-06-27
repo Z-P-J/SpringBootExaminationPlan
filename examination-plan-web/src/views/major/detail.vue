@@ -274,8 +274,8 @@ export default {
       if (this.tmpData.major_id != null & this.tmpData.major_id !== '') {
         return
       }
-      this.tmpData.major_id = 'A100000'
-      this.tmpData.national_major_code = 'A100000'
+      this.tmpData.major_id = '类似于A100000'
+      this.tmpData.national_major_code = ''
       this.tmpData.major_name = '测试专业'
       this.tmpData.major_brief_introduction = '后续补充介绍'
       this.tmpData.major_type = '本科段'
@@ -295,7 +295,7 @@ export default {
       this.tmpData.graduation_credit = 110
       this.tmpData.total_course_number = 55
       this.tmpData.whether_divide_direction = 1
-      this.tmpData.major_category_code = 'A100000'
+      this.tmpData.major_category_code = ''
       this.tmpData.apply_condition = '暂无'
       this.tmpData.graduation_condition = '暂无'
       this.tmpData.notes = '暂无'

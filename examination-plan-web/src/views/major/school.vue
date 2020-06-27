@@ -15,8 +15,7 @@
             @click.native.prevent="showAddDialog"
           >添加院校</el-button>
           <el-button
-            type="primary"
-            icon="el-icon-plus"
+            icon="el-icon-setting"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showUpdateDialogBatch"
           >批量修改</el-button>
@@ -186,7 +185,7 @@
           v-if="dialogStatus === 'update'"
           :loading="btnLoading"
           @click.native.prevent="updateDataByBatch"
-        >更新</el-button>
+        >添加选中项</el-button>
       </div>
     </el-dialog>
     

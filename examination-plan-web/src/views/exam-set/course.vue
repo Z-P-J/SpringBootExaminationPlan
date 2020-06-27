@@ -15,6 +15,7 @@
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >添加统考考次</el-button>
+          <import-excel @getResult="getMyExcelData" />
           
           <!-- <el-button
             type="primary"
@@ -141,9 +142,11 @@
   </div>
 </template>
 <script>
-import { courseList as list, courseSearch as search, courseRemove as remove, courseAdd as add, courseUpdate as update } from '@/api/exam-set'
+import { courseList as list, courseSearch as search, courseRemove as remove, courseAdd as add, courseUpdate as update
+  , courseAddByBatch } from '@/api/exam-set'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
+import importExcel from '@/components/excel/importExcel'
 
 export default {
   created() {
@@ -193,6 +196,9 @@ export default {
   },
   computed: {
     ...mapGetters(['accountId'])
+  },
+  components: {
+    importExcel
   },
   methods: {
     unix2CurrentTime,
@@ -332,6 +338,17 @@ export default {
         })
       }).catch(() => {
         this.$message.info('已取消删除')
+      })
+    },
+    getMyExcelData(data) {
+      // data 为读取的excel数据，在这里进行处理该数据
+      console.log(data)
+      courseAddByBatch(data).then(() => {
+        this.$message.success('更新成功')
+        this.getDataList()
+      }).catch(res => {
+        this.btnLoading = false
+        this.$message.error('更新失败')
       })
     }
   }

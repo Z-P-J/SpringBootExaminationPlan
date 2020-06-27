@@ -287,8 +287,23 @@ public class MajorController {
     @ResponseBody
     public Result schoolAdd(@RequestBody final MajorSchool major) {
         System.out.println("addMajorShcool MajorShcool=" + major);
-        majorSchoolService.save(major);
-        return ResultGenerator.genOkResult();
+        Condition condition=new Condition(MajorWithSchool.class);
+        Example.Criteria criteria;
+
+        criteria = condition.createCriteria();
+        criteria.andCondition("major_id='"+major.major_id+"'");
+        criteria.andCondition("main_target_school='"+major.main_target_school+"'");
+
+        final List<MajorSchool> dbMajor = this.majorSchoolService.listByCondition(condition);
+        if (dbMajor.isEmpty()) {
+            this.majorSchoolService.save(major);
+            return ResultGenerator.genOkResult("数据添加成功");
+        }else{
+            dbMajor.get(0).main_target_school_code=major.main_target_school_code;
+            this.majorSchoolService.update(dbMajor.get(0));
+            return ResultGenerator.genOkResult("数据已存在，默认进行修改");
+        }
+
     }
     @DeleteMapping("/school/{id}")
     @ResponseBody

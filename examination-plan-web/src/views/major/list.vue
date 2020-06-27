@@ -333,6 +333,7 @@ export default {
         this.total = response.data.total
         this.listLoading = false
       }).catch(res => {
+        this.listLoading = false
         this.$message.error('加载列表失败')
       })
     },
