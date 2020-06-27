@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80020
 File Encoding         : 65001
 
-Date: 2020-06-26 19:38:31
+Date: 2020-06-27 18:58:33
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -34,7 +34,7 @@ CREATE TABLE `account` (
 -- ----------------------------
 -- Records of account
 -- ----------------------------
-INSERT INTO `account` VALUES ('1', '123456@qq.com', 'admin', 'admin123', '2019-07-01 00:00:00', '2020-06-26 12:44:23');
+INSERT INTO `account` VALUES ('1', '123456@qq.com', 'admin', 'admin123', '2019-07-01 00:00:00', '2020-06-27 15:26:08');
 INSERT INTO `account` VALUES ('2', 'editor@qq.com', 'editor', '$2a$10$/m4SgZ.ZFVZ7rcbQpJW2tezmuhf/UzQtpAtXb0WZiAE3TeHxq2DYu', '2019-07-02 00:00:00', '2019-07-02 00:00:00');
 INSERT INTO `account` VALUES ('3', 'test@qq.com', 'test', '$2a$10$.0gBYBHAtdkxUUQNg3kII.fqGOngF4BLe8JavthZFalt2QIXHlrhm', '2019-07-03 00:00:00', '2019-07-03 00:00:00');
 INSERT INTO `account` VALUES ('6', '1@qq.com', '4321', '123456', '2020-06-20 17:46:24', '2020-06-20 18:34:21');
@@ -377,10 +377,10 @@ CREATE TABLE `information_of_service_center` (
 -- ----------------------------
 DROP TABLE IF EXISTS `major_categories`;
 CREATE TABLE `major_categories` (
-  `major_category_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `category_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `major_category_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `major_category_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  PRIMARY KEY (`major_category_code`) USING BTREE
+  PRIMARY KEY (`category_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='大类专业';
 
 -- ----------------------------
@@ -443,8 +443,8 @@ CREATE TABLE `major_info` (
 -- ----------------------------
 -- Records of major_info
 -- ----------------------------
-INSERT INTO `major_info` VALUES ('A000001', 'C000001', '汉语言', '暂无介绍', '本科段', '本科', '面向高校', '四川大学', '2', '000', '000', '000', '000', '000', '2020-06-23', '000', '正常', '200', '170', '50', '0', 'B000001', '000', '毕业学分达到要求', '000');
-INSERT INTO `major_info` VALUES ('A000002', 'C000001', '法学', '暂无介绍', '本科段', '本科', '面向社会', '四川大学', '1', '000', '000', '000', '000', '000', '2020-06-23', '000', '即将停考', '200', '170', '50', '1', 'B000001', '000', '毕业学分达到要求', '000');
+INSERT INTO `major_info` VALUES ('A000001', 'C000002', '汉语言', '暂无介绍', '本科段', '本科', '面向高校', '四川大学', '003', '000', '000', '000', '000', '000', '2020-06-23', '000', '正常', '200', '170', '50', '0', 'B000003', '000', '毕业学分达到要求', '000');
+INSERT INTO `major_info` VALUES ('A000002', 'C000001', '法学', '暂无介绍', '本科段', '本科', '面向社会', '四川大学', '001', '000', '000', '000', '000', '000', '2020-06-23', '000', '即将停考', '200', '170', '50', '1', 'B000001', '000', '毕业学分达到要求', '000');
 INSERT INTO `major_info` VALUES ('A100000', 'C000001', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '正常', '200', '110', '55', '1', 'B000001', '暂无', '暂无', '暂无');
 INSERT INTO `major_info` VALUES ('A100001', 'C000001', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '即将停考', '200', '110', '55', '1', 'B000001', '暂无', '暂无', '暂无');
 INSERT INTO `major_info` VALUES ('A100002', 'C000001', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '停考', '200', '110', '55', '1', 'B000001', '这是报考条件说明', '暂无', '暂无');
@@ -513,18 +513,20 @@ DROP TABLE IF EXISTS `major_school`;
 CREATE TABLE `major_school` (
   `id` int NOT NULL AUTO_INCREMENT,
   `major_id` varchar(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `main_target_school` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `main_target_school` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `main_target_school_code` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='专业主考院校';
 
 -- ----------------------------
 -- Records of major_school
 -- ----------------------------
-INSERT INTO `major_school` VALUES ('1', 'A000001', '测试大学', '1');
-INSERT INTO `major_school` VALUES ('2', 'A000001', '电子科技大学', '2');
-INSERT INTO `major_school` VALUES ('3', 'A000001', '测试大学', '5');
-INSERT INTO `major_school` VALUES ('6', 'A000002', '测试大学', '1');
+INSERT INTO `major_school` VALUES ('1', 'A000001', '00001', '1');
+INSERT INTO `major_school` VALUES ('2', 'A000001', '00002', '2');
+INSERT INTO `major_school` VALUES ('6', 'A000002', '00001', '1');
+INSERT INTO `major_school` VALUES ('11', 'A000001', '00004', '4');
+INSERT INTO `major_school` VALUES ('12', 'A000001', '00005', '5');
+INSERT INTO `major_school` VALUES ('13', 'A000001', '00006', '7');
 
 -- ----------------------------
 -- Table structure for nation_course
@@ -717,19 +719,31 @@ INSERT INTO `role_permission` VALUES ('3', '5');
 -- ----------------------------
 DROP TABLE IF EXISTS `school_info`;
 CREATE TABLE `school_info` (
-  `school_id` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `school_id` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `school_name` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `school_address` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `school_postcode` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `school_phone` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
   `school_web` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
-  `notes` text COLLATE utf8mb4_bin
+  `notes` text COLLATE utf8mb4_bin,
+  PRIMARY KEY (`school_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='院校信息(后加';
 
 -- ----------------------------
 -- Records of school_info
 -- ----------------------------
-INSERT INTO `school_info` VALUES ('00001', '四川大学', '', null, '12580', '', 0xE69A82E697B6E999A2E6A0A1E4BFA1E681AF);
+INSERT INTO `school_info` VALUES ('00001', '四川大学', '', '612500', '12580', '', 0xE69A82E697B6E999A2E6A0A1E4BFA1E681AF);
+INSERT INTO `school_info` VALUES ('00002', '电子科技大学', '', '612500', '12581', '', '');
+INSERT INTO `school_info` VALUES ('00003', '西南财经大学', '', '612500', '12582', '', '');
+INSERT INTO `school_info` VALUES ('00004', '西南交通大学', '', '612500', '12583', '', '');
+INSERT INTO `school_info` VALUES ('00005', '四川大学1', '', '612500', '12580', '', 0xE69A82E697B6E999A2E6A0A1E4BFA1E681AF);
+INSERT INTO `school_info` VALUES ('00006', '电子科技大学1', '', '612500', '12581', '', '');
+INSERT INTO `school_info` VALUES ('00007', '西南财经大学1', '', '612500', '12582', '', '');
+INSERT INTO `school_info` VALUES ('00008', '西南交通大学1', '', '612500', '12583', '', '');
+INSERT INTO `school_info` VALUES ('00009', '四川大学2', '', '612500', '12580', '', 0xE69A82E697B6E999A2E6A0A1E4BFA1E681AF);
+INSERT INTO `school_info` VALUES ('00010', '电子科技大学3', '', '612500', '12581', '', '');
+INSERT INTO `school_info` VALUES ('00011', '西南财经大学3', '', '612500', '12582', '', '');
+INSERT INTO `school_info` VALUES ('00012', '西南交通大学3', '', '612500', '12583', '', '');
 
 -- ----------------------------
 -- Table structure for theory_practice
