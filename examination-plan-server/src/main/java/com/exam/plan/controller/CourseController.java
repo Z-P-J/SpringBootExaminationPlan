@@ -133,13 +133,20 @@ public class CourseController {
 
     @DeleteMapping("/textbook/{id}")
     @ResponseBody
-    public Result deleteTextbook(@PathVariable final Long id, final Principal principal) {
+    public Result deleteTextbook(@PathVariable final Long id) {
         final CourseTextBookInfo dbRole = this.courseService.getTextbookById(id);
         if (dbRole == null) {
             return ResultGenerator.genFailedResult("教材不存在");
         }
         this.courseService.deleteTextbookById(id);
         return ResultGenerator.genOkResult();
+    }
+
+    @GetMapping("/textbook/{id}")
+    @ResponseBody
+    public Result listTextbookByCourseId(@PathVariable final String id) {
+        final CourseTextBookInfo info = this.courseService.getTextbookById(id);
+        return ResultGenerator.genOkResult(info);
     }
 
     @PutMapping("/textbook")

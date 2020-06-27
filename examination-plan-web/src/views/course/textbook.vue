@@ -33,13 +33,9 @@
           <span v-text="getTableIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="课程编码" align="center" prop="courseId" />
-      <el-table-column label="课程名" align="center" prop="courseName" /> -->
       <el-table-column label="教材编码" align="center" prop="textbookCode" />
       <el-table-column label="教材名称" align="center" prop="textbookName" />
-      <el-table-column label="作者" align="center" prop="author">
-        <!-- <template slot-scope="scope">{{ scope.row.courseStatus == '0' ? "正常" : "注销" }}</template> -->
-      </el-table-column>
+      <el-table-column label="作者" align="center" prop="author"/>
       <el-table-column label="单价" align="center" prop="price" />
       <el-table-column label="选用类型" align="center" prop="textbookSelectType" />
       <el-table-column label="教材状态" align="center" prop="textbookUseStatus" />

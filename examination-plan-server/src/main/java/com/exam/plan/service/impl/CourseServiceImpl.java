@@ -136,4 +136,9 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   public void deleteCourse(List<String> courseIdList) {
     courseMapper.deleteCourse(courseIdList);
   }
+
+  @Override
+  public List<CourseTextBookInfo> listTextbookByCourseId(String courseId) {
+    return courseTextbookMapper.listTextbookByCourseId(courseId);
+  }
 }
