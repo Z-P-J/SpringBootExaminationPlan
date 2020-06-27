@@ -24,7 +24,7 @@
           </el-form-item>
           <el-form-item>
             <el-select v-model="search.fieldSelect" placeholder="字段名">
-              <el-option label="专业大类编码" value="major_category_code"></el-option>
+              <el-option label="专业大类编码" value="category_code"></el-option>
               <el-option label="名称" value="major_category_name"></el-option>
               <el-option label="学科等级" value="major_category_level"></el-option>
             </el-select>
@@ -49,7 +49,7 @@
           <span v-text="getIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="专业大类编码" align="center" prop="major_category_code" width="180" />
+      <el-table-column label="专业大类编码" align="center" prop="category_code" width="180" />
       <el-table-column label="名称" align="center" prop="major_category_name" width="200" />
       <el-table-column sortable label="学科等级" align="center" prop="major_category_level" width="200" />
       <el-table-column label="管理" align="center"
@@ -90,14 +90,14 @@
         ref="tmpData"
         :rules="rules"
       >
-        <el-form-item label="专业大类编码" prop="major_category_code" required>
+        <el-form-item label="专业大类编码" prop="category_code" required>
           <!-- <el-input
             type="text"
             auto-complete="off"
-            v-model="tmpData.major_category_code"
+            v-model="tmpData.category_code"
           /> -->
-          <el-input v-model="tmpData.major_category_code" v-if="dialogStatus === 'add'"/>
-          <el-input v-model="tmpData.major_category_code" v-else="" :disabled="true"/>
+          <el-input v-model="tmpData.category_code" v-if="dialogStatus === 'add'"/>
+          <el-input v-model="tmpData.category_code" v-else="" :disabled="true"/>
         </el-form-item>
         <el-form-item label="名称" prop="major_category_name" required>
           <el-input
@@ -170,7 +170,7 @@ export default {
         add: '添加大类专业'
       },
       tmpData: {
-        major_category_code: '',
+        category_code: '',
         major_category_level: '',
         major_category_name: ''
       },
@@ -181,7 +181,7 @@ export default {
         fieldSelect: null
       },
       rules: {
-        major_category_code: [
+        category_code: [
           { required: true, message: '请输入大类专业编码', trigger: 'blur' },
           { min: 7, max: 7, message: '7 位编码（1 位字符+6 位数字）', trigger: 'blur' }
         ]
@@ -257,7 +257,7 @@ export default {
       // 显示新增对话框
       this.dialogFormVisible = true
       this.dialogStatus = 'add'
-      this.tmpData.major_category_code = 'B000002'
+      this.tmpData.category_code = 'B000002'
       this.tmpData.major_category_level = '一级学科'
       this.tmpData.major_category_name = '社会学'
     },
@@ -327,7 +327,7 @@ export default {
         cancelButtonText: '否',
         type: 'warning'
       }).then(() => {
-        const id = this.dataList[index].major_category_code
+        const id = this.dataList[index].category_code
         remove(id).then(() => {
           this.$message.success('删除成功')
           this.getDataList()

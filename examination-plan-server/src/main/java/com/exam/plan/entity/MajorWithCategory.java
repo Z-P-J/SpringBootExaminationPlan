@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Data
-@Table(name="major_categories")
+@Table(name="major_categories,major_info")
 public class MajorWithCategory extends Major{
     //直接继承Major,@Column声明major_categories的对应关系，省略resultMap的对应
 //    @Id
@@ -39,8 +39,8 @@ public class MajorWithCategory extends Major{
 //    private String apply_condition;
 //    private String graduation_condition;
 //    private String notes;
-    @Column(name="major_category_code")
-    private String major_category_code;
+    @Column(name="category_code")
+    private String category_code;
     @Column(name="major_category_level")
     private String major_category_level;
     @Column(name="major_category_name")

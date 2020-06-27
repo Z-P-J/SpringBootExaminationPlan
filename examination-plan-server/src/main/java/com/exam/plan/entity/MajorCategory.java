@@ -17,8 +17,8 @@ import javax.persistence.Table;
 public class MajorCategory {
 
     @Id
-    @Column(name="major_category_code")
-    private String major_category_code;
+    @Column(name="category_code")
+    private String category_code;
     @Column(name="major_category_level")
     private String major_category_level;
     @Column(name="major_category_name")
