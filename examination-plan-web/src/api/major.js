@@ -181,10 +181,10 @@ export function schoolUpdate(Form) {
   })
 }
 
-export function schoolUpdateByBatch(Major_id, Ids) {
+export function schoolUpdateByBatch(params) {
   return request({
-    url: '/major/school/batch/' + Major_id,
+    url: '/major/school/batch',
     method: 'put',
-    data: Ids
+    data: params
   })
 }

@@ -10,11 +10,11 @@ public class MajorSchool {
     @Id
     @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    public Integer id;
     @Column(name="major_id")
-    private String major_id;
+    public String major_id;
     @Column(name="main_target_school")
-    private String main_target_school;
+    public String main_target_school;
     @Column(name="main_target_school_code")
-    private String main_target_school_code;
+    public String main_target_school_code;
 }

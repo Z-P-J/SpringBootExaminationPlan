@@ -167,12 +167,6 @@ export const asyncRouterMap = [
       path: 'school',
       name: '主考院校',
       component: _import('major/school')
-    },
-    {
-      hidden: true,
-      path: 'school',
-      name: '主考院校批量修改',
-      component: _import('major/schoolupdate')
     }
     ]
   },

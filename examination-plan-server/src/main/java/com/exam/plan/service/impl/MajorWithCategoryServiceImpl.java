@@ -13,12 +13,12 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class MajorWithCategoryServiceImpl implements IMajorWithCategoryService {
-  @Resource
-  public MajorWithCategoryMapper majorWithCategoryMapper;
+public class MajorWithCategoryServiceImpl extends AbstractService<MajorWithCategory> implements IMajorWithCategoryService {
+//  @Resource
+//  public MajorWithCategoryMapper majorWithCategoryMapper;
 
-  @Override
-  public List<MajorWithCategory> listAllWithCategory(){
-    return this.majorWithCategoryMapper.listAllWithCategory();
-  };
+//  @Override
+//  public List<MajorWithCategory> listAllWithCategory(){
+//    return this.majorWithCategoryMapper.listAllWithCategory();
+//  };
 }

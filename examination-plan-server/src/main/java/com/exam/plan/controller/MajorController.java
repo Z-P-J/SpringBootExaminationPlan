@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.security.Principal;
@@ -31,6 +32,9 @@ public class MajorController {
     //主考院校
     @Resource
     private IMajorSchoolService majorSchoolService;
+    //主考院校
+    @Resource
+    private IMajorWithSchoolService majorWithSchoolService;
     //全国专业
     @Resource
     private IMajorNationalService majorNationalService;
@@ -45,7 +49,11 @@ public class MajorController {
 //        final List<Major> list = this.majorService.listAll();
 //        final PageInfo<Major> pageInfo = new PageInfo<>(list);
 //        return ResultGenerator.genOkResult(pageInfo);
-        final List<MajorWithCategory> list = this.majorWithCategoryService.listAllWithCategory();
+        Condition condition=new Condition(MajorWithCategory.class);
+        Example.Criteria criteria = condition.createCriteria();
+        criteria.andCondition("major_info.major_category_code=major_categories.category_code");
+//        final List<MajorWithCategory> list = this.majorWithCategoryService.listAllWithCategory();
+        final List<MajorWithCategory> list = this.majorWithCategoryService.listByCondition(condition);
         final PageInfo<MajorWithCategory> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
 
@@ -250,15 +258,16 @@ public class MajorController {
         System.out.println("listMajorShcool major_id=" + id);
         PageHelper.startPage(page, size);
 
-        Condition condition=new Condition(MajorSchool.class);
-        condition.createCriteria().andCondition("major_id = '"+id+"'");
+        Condition condition=new Condition(MajorWithSchool.class);
+        Example.Criteria criteria = condition.createCriteria();
+        criteria.andCondition("major_id = '"+id+"'");
+        criteria.andCondition("major_school.main_target_school=school_info.school_id");
 
-        final List<MajorSchool> list = this.majorSchoolService.listByCondition(condition);
-        final PageInfo<MajorSchool> pageInfo = new PageInfo<>(list);
+        final List<MajorWithSchool> list = this.majorWithSchoolService.listByCondition(condition);
+        final PageInfo<MajorWithSchool> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
 
     }
-
     @PostMapping("/school/search/{id}")
     @ResponseBody
     public Result schoolSearch(@PathVariable final String id, @RequestBody final Map<String, Object> param) {
@@ -293,18 +302,28 @@ public class MajorController {
         return ResultGenerator.genOkResult();
     }
 
-    @PutMapping("/school/batch/{id}")
+    @PutMapping("/school/batch")
     @ResponseBody
     public Result schoolUpdateByBatch(
-            @PathVariable final String id, @RequestBody final List<MajorSchool> major, final Principal principal) {
+            @RequestBody final List<MajorSchool> major, final Principal principal) {
+        System.out.println("schoolUpdateByBatch");
+        Condition condition=new Condition(MajorWithSchool.class);
+        Example.Criteria criteria;
         for(MajorSchool item:major){
             System.out.println("schoolUpdateByBatch: "+item);
+            criteria = condition.createCriteria();
+            criteria.andCondition("major_id='"+item.major_id+"'");
+            criteria.andCondition("main_target_school='"+item.main_target_school+"'");
+
+            final List<MajorSchool> dbMajor = this.majorSchoolService.listByCondition(condition);
+            System.out.println("List<MajorSchool> dbMajor: "+dbMajor);
+            if (dbMajor.isEmpty()) {
+                this.majorSchoolService.save(item);
+            }else{
+                dbMajor.get(0).main_target_school_code=item.main_target_school_code;
+                this.majorSchoolService.update(dbMajor.get(0));
+            }
         }
-//        final MajorSchool dbMajor = this.majorSchoolService.getById(id);
-//        if (dbMajor == null) {
-//            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
-//        }
-//        this.majorSchoolService.update(major);
         return ResultGenerator.genOkResult();
     }
 

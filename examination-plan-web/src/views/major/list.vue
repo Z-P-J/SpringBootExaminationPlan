@@ -156,80 +156,80 @@
         :rules="rules"
         ref="tmpData"
       >
-    <el-form-item prop="national_major_code" label="国家专业代码"><el-input v-model="tmpData.national_major_code" placeholder="7 位编码（1 位字符+6 位数字）"/></el-form-item>
-  <el-form-item label="专业类型">
-    <el-select v-model="tmpData.major_type" placeholder="请选择专业类型" :value="tmpData.major_type">
-      <el-option label="基础科段" value="基础科段"></el-option>
-      <el-option label="专科" value="专科"></el-option>
-      <el-option label="本科段" value="本科段"></el-option>
-      <el-option label="独立本科段" value="独立本科段"></el-option>
-    </el-select>
-  </el-form-item>
-  <el-form-item label="学历层次">
-    <el-select v-model="tmpData.education_level" placeholder="请选择学历层次" :value="tmpData.education_level">
-      <el-option label="专科" value="专科"></el-option>
-      <el-option label="本科" value="本科"></el-option>
-    </el-select>
-  </el-form-item>
-  <el-form-item label="开考形式">
-    <el-select v-model="tmpData.exam_type" placeholder="请选择开考形式" :value="tmpData.exam_type">
-      <el-option label="面向高校" value="面向高校"></el-option>
-      <el-option label="面向社会" value="面向社会"></el-option>
-    </el-select>
-  </el-form-item>
-<el-form-item label="首次开考考次" prop="first_exam_id" ><el-input v-model="tmpData.first_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
-<el-form-item label="批准文号"><el-input v-model="tmpData.approve_num" /></el-form-item>
-<el-form-item label="停止新生注册考次" prop="stop_freshman_registration_exam_id" ><el-input v-model="tmpData.stop_freshman_registration_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
-<el-form-item label="停止注册文号"><el-input v-model="tmpData.stop_registration_num" /></el-form-item>
-<el-form-item label="停止报考考次" prop="stop_apply_exam_id" ><el-input v-model="tmpData.stop_apply_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
-<el-form-item label="停止报考文号"><el-input v-model="tmpData.stop_apply_num" /></el-form-item>
-<el-form-item label="停止颁发毕业证日期">
-  <el-date-picker
-      v-model="tmpData.stop_diploma_date"
-      type="date"
-      placeholder="停止颁发毕业证日期">
-    </el-date-picker>
-  </el-form-item>
-<el-form-item label="停止颁发文号"><el-input v-model="tmpData.stop_diploma_num" /></el-form-item>
-  <el-form-item label="专业状态">
-    <el-select v-model="tmpData.major_status" placeholder="请选择专业状态" :value="tmpData.major_status">
-      <el-option label="正常" value="正常"></el-option>
-      <el-option label="停考" value="停考"></el-option>
-      <el-option label="即将停考" value="即将停考"></el-option>
-    </el-select>
-  </el-form-item>
-  <el-form-item label="总学分"><el-input v-model="tmpData.total_credit" type="number"/></el-form-item>
-  <el-form-item label="毕业学分"><el-input v-model="tmpData.graduation_credit"  type="number"/></el-form-item>
-  <el-form-item label="总课程数"><el-input v-model="tmpData.total_course_number"  type="number"/></el-form-item>
-  <el-form-item label="是否分方向"><el-col :span="12">
-  <!-- <el-input v-model="Data.whether_divide_direction" /> -->
-  <el-select v-model="tmpData.whether_divide_direction">
-      <el-option label="是" value="1"></el-option>
-      <el-option label="不分方向" value="0"></el-option>
-    </el-select>
-  </el-col></el-form-item>
-  <el-form-item prop="major_category_code" label="专业大类代码"><el-input v-model="tmpData.major_category_code" /></el-form-item>
-  <el-form-item label="报考条件说明">
-  <el-input
-  type="textarea"
-  autosize
-  placeholder="请输入内容"
-  v-model="tmpData.apply_condition">
-  </el-input></el-form-item>
-<el-form-item label="毕业条件说明">
-  <el-input
-  type="textarea"
-  autosize
-  placeholder="请输入内容"
-  v-model="tmpData.graduation_condition">
-</el-input></el-form-item>
-<el-form-item label="备注">
-<el-input
-  type="textarea"
-  autosize
-  placeholder="请输入内容"
-  v-model="tmpData.notes">
-</el-input></el-form-item>
+      <el-form-item prop="national_major_code" label="国家专业代码"><el-input v-model="tmpData.national_major_code" placeholder="7 位编码（1 位字符+6 位数字）"/></el-form-item>
+      <el-form-item label="专业类型">
+        <el-select v-model="tmpData.major_type" placeholder="请选择专业类型" :value="tmpData.major_type">
+          <el-option label="基础科段" value="基础科段"></el-option>
+          <el-option label="专科" value="专科"></el-option>
+          <el-option label="本科段" value="本科段"></el-option>
+          <el-option label="独立本科段" value="独立本科段"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="学历层次">
+        <el-select v-model="tmpData.education_level" placeholder="请选择学历层次" :value="tmpData.education_level">
+          <el-option label="专科" value="专科"></el-option>
+          <el-option label="本科" value="本科"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="开考形式">
+        <el-select v-model="tmpData.exam_type" placeholder="请选择开考形式" :value="tmpData.exam_type">
+          <el-option label="面向高校" value="面向高校"></el-option>
+          <el-option label="面向社会" value="面向社会"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="首次开考考次" prop="first_exam_id" ><el-input v-model="tmpData.first_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
+      <el-form-item label="批准文号"><el-input v-model="tmpData.approve_num" /></el-form-item>
+      <el-form-item label="停止新生注册考次" prop="stop_freshman_registration_exam_id" ><el-input v-model="tmpData.stop_freshman_registration_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
+      <el-form-item label="停止注册文号"><el-input v-model="tmpData.stop_registration_num" /></el-form-item>
+      <el-form-item label="停止报考考次" prop="stop_apply_exam_id" ><el-input v-model="tmpData.stop_apply_exam_id" placeholder="3 位数字编码（例：171-17 年 4 月考试）"/></el-form-item>
+      <el-form-item label="停止报考文号"><el-input v-model="tmpData.stop_apply_num" /></el-form-item>
+      <el-form-item label="停止颁发毕业证日期">
+      <el-date-picker
+          v-model="tmpData.stop_diploma_date"
+          type="date"
+          placeholder="停止颁发毕业证日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="停止颁发文号"><el-input v-model="tmpData.stop_diploma_num" /></el-form-item>
+        <el-form-item label="专业状态">
+          <el-select v-model="tmpData.major_status" placeholder="请选择专业状态" :value="tmpData.major_status">
+            <el-option label="正常" value="正常"></el-option>
+            <el-option label="停考" value="停考"></el-option>
+            <el-option label="即将停考" value="即将停考"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="总学分"><el-input v-model="tmpData.total_credit" type="number"/></el-form-item>
+        <el-form-item label="毕业学分"><el-input v-model="tmpData.graduation_credit"  type="number"/></el-form-item>
+        <el-form-item label="总课程数"><el-input v-model="tmpData.total_course_number"  type="number"/></el-form-item>
+        <el-form-item label="是否分方向"><el-col :span="12">
+        <!-- <el-input v-model="Data.whether_divide_direction" /> -->
+        <el-select v-model="tmpData.whether_divide_direction">
+            <el-option label="是" value="1"></el-option>
+            <el-option label="不分方向" value="0"></el-option>
+          </el-select>
+        </el-col></el-form-item>
+        <el-form-item prop="major_category_code" label="专业大类代码"><el-input v-model="tmpData.major_category_code" /></el-form-item>
+        <el-form-item label="报考条件说明">
+        <el-input
+        type="textarea"
+        autosize
+        placeholder="请输入内容"
+        v-model="tmpData.apply_condition">
+        </el-input></el-form-item>
+      <el-form-item label="毕业条件说明">
+        <el-input
+        type="textarea"
+        autosize
+        placeholder="请输入内容"
+        v-model="tmpData.graduation_condition">
+      </el-input></el-form-item>
+      <el-form-item label="备注">
+      <el-input
+        type="textarea"
+        autosize
+        placeholder="请输入内容"
+        v-model="tmpData.notes">
+      </el-input></el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>

@@ -4,7 +4,7 @@ import com.exam.plan.entity.MajorWithCategory;
 
 import java.util.List;
 
-public interface IMajorWithCategoryService {
+public interface IMajorWithCategoryService  extends Service<MajorWithCategory>{
 
-    List<MajorWithCategory> listAllWithCategory();
+//    List<MajorWithCategory> listAllWithCategory();
 }
