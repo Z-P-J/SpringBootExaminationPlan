@@ -32,6 +32,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="value.data.createDate"
+            value-format="yyyy-MM-dd"
             :readonly ="true"
             type="date">
           </el-date-picker>

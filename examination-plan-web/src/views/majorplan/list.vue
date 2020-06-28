@@ -178,7 +178,7 @@ export default {
         xuelichuSuggestion: '无',
         leaderSign: '无',
         majorId: 'A000000',
-        courseId: '000000'
+        courseId: '00000'
       },
       majorplanDialog: {
         data: {},
