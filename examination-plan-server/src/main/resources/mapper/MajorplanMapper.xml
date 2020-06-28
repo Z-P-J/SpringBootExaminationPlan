@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.plan.mapper.MajorplanMapper">
+    <!--<resultMap id="BaseResultMap" type="com.exam.plan.entity.MajorPlanVersion">-->
+        <!--<id column="plan_version_id" jdbcType="VARCHAR" property="planVersionId" />-->
+        <!--<result column="plan_name" jdbcType="VARCHAR" property="planName" />-->
+        <!--<result column="state" jdbcType="VARCHAR" property="state" />-->
+        <!--<result column="create_date" jdbcType="DATE" property="createDate" />-->
+        <!--<result column="approve_status" jdbcType="VARCHAR" property="approveStatus" />-->
+        <!--<result column="leader_sign" jdbcType="VARCHAR" property="leaderSign" />-->
+        <!--<result column="xuelichu_suggestion" jdbcType="LONGVARCHAR" property="xuelichuSuggestion" />-->
+        <!--<result column="major_id" jdbcType="VARCHAR" property="majorId" />-->
+        <!--<result column="plan_version_id" jdbcType="VARCHAR" property="courseId" />-->
+    <!--</resultMap>-->
+
+    <update id="disableMajorplan" parameterType="java.util.List">
+        UPDATE major_plan_version
+        SET state = '已编制'
+        WHERE plan_version_id in
+        <foreach collection="planVersionIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="enableMajorplan" parameterType="java.util.List">
+        UPDATE major_plan_version
+        SET state = '已启用'
+        WHERE plan_version_id in
+        <foreach collection="planVersionIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteMajorplan" parameterType="java.util.List">
+        DELETE FROM major_plan_version
+        WHERE plan_version_id in
+        <foreach collection="planVersionIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>

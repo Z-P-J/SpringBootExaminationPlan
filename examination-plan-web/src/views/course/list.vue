@@ -235,6 +235,7 @@ export default {
       const ids = this.multipleSelection.map(v => {
         return v.courseId
       })
+      console.log('ids=' + ids)
       disableCourse(ids).then(response => {
         console.log('data=' + JSON.stringify(response.data))
         this.$refs.multipleTable.clearSelection()
