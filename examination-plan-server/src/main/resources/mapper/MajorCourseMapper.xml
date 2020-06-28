@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.plan.mapper.MajorCourseMapper">
+
+    <update id="updateTimeById">
+        UPDATE role
+        SET update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="disableCourse" parameterType="java.util.List">
+        UPDATE course_info
+        SET course_status = '注销'
+        WHERE course_id in
+        <foreach collection="courseIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="enableCourse" parameterType="java.util.List">
+        UPDATE course_info
+        SET course_status = '正常'
+        WHERE course_id in
+        <foreach collection="courseIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="deleteCourse" parameterType="java.util.List">
+        DELETE FROM course_info
+        WHERE course_id in
+        <foreach collection="courseIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
+</mapper>
