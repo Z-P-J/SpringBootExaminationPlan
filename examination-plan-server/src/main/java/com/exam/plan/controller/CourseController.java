@@ -23,16 +23,16 @@ public class CourseController {
     @Resource
     private ICourseService courseService;
 
-    @GetMapping("/permission")
-    @ResponseBody
-    public Result listWithPermission(
-            @RequestParam(defaultValue = "0") final Integer page,
-            @RequestParam(defaultValue = "0") final Integer size) {
-        PageHelper.startPage(page, size);
-        final List<CourseInfo> list = this.courseService.listAll();
-        final PageInfo<CourseInfo> pageInfo = new PageInfo<>(list);
-        return ResultGenerator.genOkResult(pageInfo);
-    }
+//    @GetMapping("/permission")
+//    @ResponseBody
+//    public Result listWithPermission(
+//            @RequestParam(defaultValue = "0") final Integer page,
+//            @RequestParam(defaultValue = "0") final Integer size) {
+//        PageHelper.startPage(page, size);
+//        final List<CourseInfo> list = this.courseService.listAll();
+//        final PageInfo<CourseInfo> pageInfo = new PageInfo<>(list);
+//        return ResultGenerator.genOkResult(pageInfo);
+//    }
 
     @GetMapping()
     @ResponseBody
@@ -177,6 +177,32 @@ public class CourseController {
     @ResponseBody
     public Result getCourseCharge(@PathVariable final String id) {
         return ResultGenerator.genOkResult(courseService.getChargeById(id));
+    }
+
+    @DeleteMapping("/charge/{id}")
+    @ResponseBody
+    public Result deleteCourseCharge(@PathVariable final String id) {
+        final CourseCharge dbRole = this.courseService.getChargeById(id);
+        if (dbRole == null) {
+            return ResultGenerator.genFailedResult("课程费用不存在");
+        }
+        this.courseService.deleteCourseCharge(id);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PutMapping("/charge")
+    @ResponseBody
+    public Result updateCourseCharge(@RequestBody final CourseCharge info) {
+        courseService.updateCourseCharge(info);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PostMapping("/charge")
+    @ResponseBody
+    public Result addCourseCharge(@RequestBody final CourseCharge info) {
+        System.out.println("addTextbook info=" + info);
+        courseService.saveCourseCharge(info);
+        return ResultGenerator.genOkResult();
     }
 
     @GetMapping("/national")

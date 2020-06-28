@@ -43,6 +43,12 @@ public interface ICourseService extends Service<CourseInfo> {
 
   CourseCharge getChargeById(Object id);
 
+  void deleteCourseCharge(Object id);
+
+  void updateCourseCharge(CourseCharge info);
+
+  void saveCourseCharge(CourseCharge info);
+
   List<CourseNational> listNationalCourse();
 
   CourseNational getNationalCourseById(Object id);

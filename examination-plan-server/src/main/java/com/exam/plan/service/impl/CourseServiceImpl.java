@@ -96,6 +96,23 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   }
 
   @Override
+  public void deleteCourseCharge(Object id) {
+    Optional.ofNullable(this.courseChargeMapper.selectByPrimaryKey(id))
+            .orElseThrow(ResourcesNotFoundException::new);
+    assertDelete(this.courseChargeMapper.deleteByPrimaryKey(id) == 1);
+  }
+
+  @Override
+  public void updateCourseCharge(CourseCharge info) {
+    assertUpdate(this.courseChargeMapper.updateByPrimaryKeySelective(info) == 1);
+  }
+
+  @Override
+  public void saveCourseCharge(CourseCharge info) {
+    assertSave(this.courseChargeMapper.insertSelective(info) == 1);
+  }
+
+  @Override
   public List<CourseNational> listNationalCourse() {
     return courseNationalMapper.selectAll();
   }

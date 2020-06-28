@@ -213,7 +213,16 @@ export const asyncRouterMap = [
       path: 'textbook',
       name: '课程教材',
       component: _import('course/textbook')
+    }, {
+      path: 'charge',
+      name: '课程费用',
+      component: _import('course/charge')
     }]
+    // , {
+    //   path: 'charge',
+    //   name: '理论与实践课程',
+    //   component: _import('course/charge')
+    // }
   },
   {
     path: '/role6',
