@@ -109,6 +109,7 @@
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
     <majorplan-detail-dialog v-model="majorplanDialog"></majorplan-detail-dialog>
+    <div style="float: right;">注：状态转换遵循拓扑排序：新建——>已编制——>已审批——>已启用</div>
   </div>
 </template>
 <script>
