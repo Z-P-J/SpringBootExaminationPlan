@@ -15,7 +15,7 @@
 
     <update id="disableMajorplan" parameterType="java.util.List">
         UPDATE major_plan_version
-        SET state = '已编制'
+        SET state = '已编制',approve_status = '学历处审核'
         WHERE plan_version_id in
         <foreach collection="planVersionIdList" item="id" separator="," open="(" close=")">
             #{id}
@@ -24,7 +24,7 @@
 
     <update id="enableMajorplan" parameterType="java.util.List">
         UPDATE major_plan_version
-        SET state = '已启用'
+        SET state = '已启用',approve_status = '计划发布启用'
         WHERE plan_version_id in
         <foreach collection="planVersionIdList" item="id" separator="," open="(" close=")">
             #{id}

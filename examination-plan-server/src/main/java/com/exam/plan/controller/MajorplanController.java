@@ -70,7 +70,7 @@ public class MajorplanController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Result deleteMajorplan(@PathVariable final Long id, final Principal principal) {
+    public Result deleteMajorplan(@PathVariable final String id, final Principal principal) {
         final MajorPlanVersion dbRole = this.majorplanService.getById(id);
         if (dbRole == null) {
             return ResultGenerator.genFailedResult("计划不存在");
