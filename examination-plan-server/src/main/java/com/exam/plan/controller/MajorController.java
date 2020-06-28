@@ -156,13 +156,7 @@ public class MajorController {
         return ResultGenerator.genOkResult(pageInfo);
     }
 
-    @PostMapping("/category")
-    @ResponseBody
-    public Result categoryAdd(@RequestBody final MajorCategory major) {
-        System.out.println("addMajor major=" + major);
-        majorCategoryService.save(major);
-        return ResultGenerator.genOkResult();
-    }
+
     @DeleteMapping("/category/{id}")
     @ResponseBody
     public Result categoryDelete(@PathVariable final String id, final Principal principal) {
@@ -179,11 +173,16 @@ public class MajorController {
     @ResponseBody
     public Result categoryUpdate(
             @PathVariable final String id, @RequestBody final MajorCategory major, final Principal principal) {
-        final MajorCategory dbMajor = this.majorCategoryService.getById(id);
-        if (dbMajor == null) {
-            return ResultGenerator.genFailedResult("选择的数据不存在，请检查");
-        }
+        System.out.println("updateMajorCategory id=" + id);
         this.majorCategoryService.update(major);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PostMapping("/category")
+    @ResponseBody
+    public Result categoryAdd(@RequestBody final MajorCategory major) {
+        System.out.println("addMajor major=" + major);
+        majorCategoryService.save(major);
         return ResultGenerator.genOkResult();
     }
 
@@ -322,10 +321,11 @@ public class MajorController {
     public Result schoolUpdateByBatch(
             @RequestBody final List<MajorSchool> major, final Principal principal) {
         System.out.println("schoolUpdateByBatch");
-        Condition condition=new Condition(MajorWithSchool.class);
-        Example.Criteria criteria;
+
         for(MajorSchool item:major){
             System.out.println("schoolUpdateByBatch: "+item);
+            Condition condition=new Condition(MajorWithSchool.class);
+            Example.Criteria criteria;
             criteria = condition.createCriteria();
             criteria.andCondition("major_id='"+item.major_id+"'");
             criteria.andCondition("main_target_school='"+item.main_target_school+"'");
