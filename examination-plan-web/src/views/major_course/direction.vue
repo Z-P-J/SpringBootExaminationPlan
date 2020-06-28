@@ -16,7 +16,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
-          >添加全国课程</el-button>
+          >添加专业方向</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -33,9 +33,10 @@
           <span v-text="getTableIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="国家课程代码" align="center" prop="nationMajorCode" />
-      <el-table-column label="课程名称" align="center" prop="courseName" />
-      <el-table-column label="学分" align="center" prop="credit"/>
+      <el-table-column label="专业编码" align="center" prop="majorId" />
+      <el-table-column label="方向编码" align="center" prop="directionId" />
+      <el-table-column label="方向名称" align="center" prop="directionName" />
+      <el-table-column label="总学分" align="center" prop="totalCredit"/>
       <el-table-column
         label="管理"
         align="center"
@@ -64,21 +65,21 @@
       :page-sizes="[9, 18, 36, 72]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <national-course-detail-dialog v-model="nationalCourseDialog"></national-course-detail-dialog>
+    <direction-detail-dialog v-model="nationalCourseDialog"></direction-detail-dialog>
   </div>
 </template>
 <script>
 import {
-  listNationalCourse,
-  removeNationalCourse
-} from '@/api/course'
+  listDirection,
+  removeDirection
+} from '@/api/major-course'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
-import NationalCourseDetailDialog from './national-course-detail-dialog'
+import DirectionDetailDialog from './DirectionDetailDialog'
 
 export default {
   components: {
-    NationalCourseDetailDialog
+    DirectionDetailDialog
   },
   created() {
     this.getList()
@@ -96,9 +97,10 @@ export default {
       dialogFormVisible: false,
       btnLoading: false,
       tempNationalCourse: {
-        nationMajorCode: '',
-        courseName: '',
-        credit: '3'
+        majorId: '',
+        directionId: '',
+        directionName: '',
+        totalCredit: '3'
       },
       nationalCourseDialog: {
         data: {},
@@ -118,13 +120,13 @@ export default {
      */
     getList() {
       this.listLoading = true
-      listNationalCourse(this.listQuery).then(response => {
+      listDirection(this.listQuery).then(response => {
         console.log('data=' + JSON.stringify(response.data))
         this.roleList = response.data.list
         this.total = response.data.total
         this.listLoading = false
       }).catch(res => {
-        this.$message.error('加载课程列表失败')
+        this.$message.error('加载专业列表失败')
       })
     },
     /**
@@ -172,13 +174,13 @@ export default {
      * @returns {boolean}
      */
     remove(index) {
-      this.$confirm('删除该教材？', '警告', {
+      this.$confirm('删除该方向？', '警告', {
         confirmButtonText: '是',
         cancelButtonText: '否',
         type: 'warning'
       }).then(() => {
-        const nationMajorCode = this.roleList[index].nationMajorCode
-        removeNationalCourse(nationMajorCode).then(() => {
+        const majorId = this.roleList[index].majorId
+        removeDirection(majorId).then(() => {
           this.$message.success('删除成功')
           this.getList()
         }).catch(() => {

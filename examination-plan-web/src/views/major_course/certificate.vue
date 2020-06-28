@@ -16,7 +16,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
-          >添加全国课程</el-button>
+          >添加证书</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -33,9 +33,16 @@
           <span v-text="getTableIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="国家课程代码" align="center" prop="nationMajorCode" />
-      <el-table-column label="课程名称" align="center" prop="courseName" />
-      <el-table-column label="学分" align="center" prop="credit"/>
+      <!-- <el-table-column label="课程编码" align="center" prop="courseId" />
+      <el-table-column label="课程名" align="center" prop="courseName" /> -->
+      <el-table-column label="非学历证书代码" align="center" prop="textbookCode" />
+      <el-table-column label="非学历证书名称" align="center" prop="textbookName" />
+      <el-table-column label="免考自学考试课程" align="center" prop="author">
+        <!-- <template slot-scope="scope">{{ scope.row.courseStatus == '0' ? "正常" : "注销" }}</template> -->
+      </el-table-column>
+      <el-table-column label="课程编码" align="center" prop="price" />
+      <el-table-column label="折换分数" align="center" prop="textbookSelectType" />
+      <!--el-table-column label="教材状态" align="center" prop="textbookUseStatus" /-->
       <el-table-column
         label="管理"
         align="center"
@@ -64,24 +71,26 @@
       :page-sizes="[9, 18, 36, 72]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <national-course-detail-dialog v-model="nationalCourseDialog"></national-course-detail-dialog>
+    <certificate-detail-dialog v-model="textbookDialog"></certificate-detail-dialog>
   </div>
 </template>
 <script>
 import {
-  listNationalCourse,
-  removeNationalCourse
+  listTextbook,
+  removeTextbook
 } from '@/api/course'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
-import NationalCourseDetailDialog from './national-course-detail-dialog'
+import CertificateDetailDialog from './CertificateDetailDialog'
 
 export default {
   components: {
-    NationalCourseDetailDialog
+    CertificateDetailDialog
   },
   created() {
-    this.getList()
+    if (this.hasPermission('role:list')) {
+      this.getList()
+    }
   },
   data() {
     return {
@@ -95,12 +104,26 @@ export default {
       },
       dialogFormVisible: false,
       btnLoading: false,
-      tempNationalCourse: {
-        nationMajorCode: '',
+      tempTextbook: {
+        courseId: '',
         courseName: '',
-        credit: '3'
+        textbookCode: '',
+        textbookName: '',
+        textbookISBN: '',
+        textbookType: '教材',
+        chiefEditor: '未知',
+        author: '未知',
+        publishingHouse: '未知',
+        version: '1.0',
+        publicationDate: '2020-01-01',
+        price: 50,
+        textbookSelectType: '国家统编',
+        syllabus: '',
+        textbookUseStatus: '在用',
+        textbookStartTime: '2020-01-01',
+        textbookEndTime: '2020-12-01'
       },
-      nationalCourseDialog: {
+      textbookDialog: {
         data: {},
         show: false,
         type: 'add',
@@ -118,7 +141,7 @@ export default {
      */
     getList() {
       this.listLoading = true
-      listNationalCourse(this.listQuery).then(response => {
+      listTextbook(this.listQuery).then(response => {
         console.log('data=' + JSON.stringify(response.data))
         this.roleList = response.data.list
         this.total = response.data.total
@@ -156,15 +179,15 @@ export default {
      * 显示新增角色对话框
      */
     showAddDialog() {
-      this.nationalCourseDialog.data = this.tempNationalCourse
-      this.nationalCourseDialog.type = 'add'
-      this.nationalCourseDialog.show = true
+      this.textbookDialog.data = this.tempTextbook
+      this.textbookDialog.type = 'add'
+      this.textbookDialog.show = true
     },
     showDetail(index) {
       const course = this.roleList[index]
-      this.nationalCourseDialog.data = course
-      this.nationalCourseDialog.type = 'update'
-      this.nationalCourseDialog.show = true
+      this.textbookDialog.data = course
+      this.textbookDialog.type = 'update'
+      this.textbookDialog.show = true
     },
     /**
      * 移除角色
@@ -172,13 +195,13 @@ export default {
      * @returns {boolean}
      */
     remove(index) {
-      this.$confirm('删除该教材？', '警告', {
+      this.$confirm('删除该证书？', '警告', {
         confirmButtonText: '是',
         cancelButtonText: '否',
         type: 'warning'
       }).then(() => {
-        const nationMajorCode = this.roleList[index].nationMajorCode
-        removeNationalCourse(nationMajorCode).then(() => {
+        const courseId = this.roleList[index].courseId
+        removeTextbook(courseId).then(() => {
           this.$message.success('删除成功')
           this.getList()
         }).catch(() => {

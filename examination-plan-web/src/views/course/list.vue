@@ -122,7 +122,7 @@ import {
 } from '@/api/course'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
-import CourseDetailDialog from './CourseDetailDialog'
+import CourseDetailDialog from './course-detail-dialog'
 
 export default {
   components: {

@@ -174,7 +174,7 @@ import {
   getTextbook,
   removeTextbook
 } from '@/api/course'
-import TextbookDetailDialog from './TextbookDetailDialog'
+import TextbookDetailDialog from './textbook-detail-dialog'
 
 export default {
   components: {

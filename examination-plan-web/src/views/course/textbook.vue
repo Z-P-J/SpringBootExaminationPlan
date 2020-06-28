@@ -77,7 +77,7 @@ import {
 } from '@/api/course'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
-import TextbookDetailDialog from './TextbookDetailDialog'
+import TextbookDetailDialog from './textbook-detail-dialog'
 
 export default {
   components: {

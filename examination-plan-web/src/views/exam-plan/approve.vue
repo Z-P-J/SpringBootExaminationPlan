@@ -16,7 +16,7 @@
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
-          >添加全国课程</el-button>
+          >添加考试计划</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -33,9 +33,10 @@
           <span v-text="getTableIndex(scope.$index)"></span>
         </template>
       </el-table-column>
-      <el-table-column label="国家课程代码" align="center" prop="nationMajorCode" />
-      <el-table-column label="课程名称" align="center" prop="courseName" />
-      <el-table-column label="学分" align="center" prop="credit"/>
+      <el-table-column label="考次编码" align="center" prop="examId" />
+      <el-table-column label="考试计划审批状态" align="center" prop="examApproveStatus"/>
+      <el-table-column label="学历处确认意见" align="center" prop="xuelichuSuggestion" />
+      <el-table-column label="领导审核签字图片" align="center" prop="leaderSign" />
       <el-table-column
         label="管理"
         align="center"
@@ -64,24 +65,26 @@
       :page-sizes="[9, 18, 36, 72]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <national-course-detail-dialog v-model="nationalCourseDialog"></national-course-detail-dialog>
+    <approve-detail-dialog v-model="textbookDialog"></approve-detail-dialog>
   </div>
 </template>
 <script>
 import {
-  listNationalCourse,
-  removeNationalCourse
-} from '@/api/course'
+  listApprove,
+  removeApprove
+} from '@/api/exam-plan'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
-import NationalCourseDetailDialog from './national-course-detail-dialog'
+import ApproveDetailDialog from './approve-detail-dialog'
 
 export default {
   components: {
-    NationalCourseDetailDialog
+    ApproveDetailDialog
   },
   created() {
-    this.getList()
+    if (this.hasPermission('role:list')) {
+      this.getList()
+    }
   },
   data() {
     return {
@@ -95,12 +98,13 @@ export default {
       },
       dialogFormVisible: false,
       btnLoading: false,
-      tempNationalCourse: {
-        nationMajorCode: '',
-        courseName: '',
-        credit: '3'
+      tempTextbook: {
+        examId: '',
+        examApproveStatus: '计划科提交',
+        xuelichuSuggestion: '无',
+        leaderSign: ''
       },
-      nationalCourseDialog: {
+      textbookDialog: {
         data: {},
         show: false,
         type: 'add',
@@ -118,7 +122,7 @@ export default {
      */
     getList() {
       this.listLoading = true
-      listNationalCourse(this.listQuery).then(response => {
+      listApprove(this.listQuery).then(response => {
         console.log('data=' + JSON.stringify(response.data))
         this.roleList = response.data.list
         this.total = response.data.total
@@ -156,15 +160,15 @@ export default {
      * 显示新增角色对话框
      */
     showAddDialog() {
-      this.nationalCourseDialog.data = this.tempNationalCourse
-      this.nationalCourseDialog.type = 'add'
-      this.nationalCourseDialog.show = true
+      this.textbookDialog.data = this.tempTextbook
+      this.textbookDialog.type = 'add'
+      this.textbookDialog.show = true
     },
     showDetail(index) {
       const course = this.roleList[index]
-      this.nationalCourseDialog.data = course
-      this.nationalCourseDialog.type = 'update'
-      this.nationalCourseDialog.show = true
+      this.textbookDialog.data = course
+      this.textbookDialog.type = 'update'
+      this.textbookDialog.show = true
     },
     /**
      * 移除角色
@@ -172,13 +176,13 @@ export default {
      * @returns {boolean}
      */
     remove(index) {
-      this.$confirm('删除该教材？', '警告', {
+      this.$confirm('删除该考次？', '警告', {
         confirmButtonText: '是',
         cancelButtonText: '否',
         type: 'warning'
       }).then(() => {
-        const nationMajorCode = this.roleList[index].nationMajorCode
-        removeNationalCourse(nationMajorCode).then(() => {
+        const examId = this.roleList[index].examId
+        removeApprove(examId).then(() => {
           this.$message.success('删除成功')
           this.getList()
         }).catch(() => {

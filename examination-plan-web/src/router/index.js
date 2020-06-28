@@ -224,31 +224,41 @@ export const asyncRouterMap = [
     }]
   },
   {
-    path: '/role6',
+    path: '/major-course',
     component: Layout,
-    redirect: '/role/list',
+    redirect: '/major-course/list',
     icon: 'role',
-    noDropDown: true,
-    // name: '专业课程',
+    noDropDown: false,
+    name: '专业课程',
     children: [{
       path: 'list',
-      name: '专业课程',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
+      name: '全部课程',
+      component: _import('major_course/list')
+    }, {
+      path: 'direction',
+      name: '专业方向',
+      component: _import('major_course/direction')
     }]
   },
   {
-    path: '/role7',
+    path: '/exam-plan',
     component: Layout,
-    redirect: '/role/list',
+    redirect: '/exam-plan/list',
     icon: 'role',
-    noDropDown: true,
-    // name: '考试计划',
+    noDropDown: false,
+    name: '考试计划',
     children: [{
       path: 'list',
-      name: '考试计划',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
+      name: '开考专业',
+      component: _import('exam-plan/list')
+    }, {
+      path: 'course',
+      name: '开考课程',
+      component: _import('exam-plan/course')
+    }, {
+      path: 'approve',
+      name: '考试计划审批',
+      component: _import('exam-plan/approve')
     }]
   },
   {
