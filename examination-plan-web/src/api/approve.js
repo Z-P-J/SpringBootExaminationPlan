@@ -38,4 +38,27 @@ export function add(tmpApprove) {
     data: tmpApprove
   })
 }
+// continue
+export function continuelist(params, school_id) {
+  return request({
+    url: '/approve/continue/' + school_id,
+    method: 'get',
+    params
+  })
+}
 
+export function extendlist(params, school_id) {
+  return request({
+    url: '/approve/extend/' + school_id,
+    method: 'get',
+    params
+  })
+}
+
+export function addByBatch(Form, Ids) {
+  return request({
+    url: '/approve/batch/' + Ids,
+    method: 'put',
+    data: Form
+  })
+}

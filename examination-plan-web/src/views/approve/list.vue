@@ -26,7 +26,6 @@
               <el-select v-model="search.fieldSelect" placeholder="字段名">
                 <el-option label="申请表编码" value="approve_id"></el-option>
                 <el-option label="申请表名称" value="approve_name"></el-option>
-                <el-option label="申请院校" value="school_name"></el-option>
                 <el-option label="状态" value="approve_status"></el-option>
               </el-select>
             </el-form-item>
@@ -109,7 +108,7 @@
       :page-sizes="[9, 18, 36, 72]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" v-if="operationStatus === 'single'">
       <el-form
         status-icon
         class="small-space"
@@ -124,6 +123,7 @@
             type="text"
             auto-complete="off"
             v-model="tmpData.school_id"
+            @focus="getSchoolList('school')"
           />
         </el-form-item>
         <el-form-item label="院校名称" prop="school_name" required>
@@ -131,6 +131,7 @@
             type="text"
             auto-complete="off"
             v-model="tmpData.school_name"
+            :disabled="true"
           />
         </el-form-item>
       </el-form>
@@ -138,7 +139,7 @@
         <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
         <router-link
             class="inlineBlock"
-            :to="{ path:'/approve/selectmajor_list/' }">
+            :to="{ path:'/approve/selectmajor_list/', query:{school_id:this.tmpData.school_id, ShowStatus:'adjust'} }">
           <el-button
             type="primary"
             icon="el-icon-plus"
@@ -147,7 +148,7 @@
           </router-link>
           <router-link
             class="inlineBlock"
-            :to="{ path:'/approve/selectmajor_list/' }">
+            :to="{ path:'/approve/selectmajor_list/', query:{school_id:this.tmpData.school_id, ShowStatus:'continue'} }">
           <el-button
               type="primary"
               icon="el-icon-plus"
@@ -156,7 +157,7 @@
           </router-link>
           <router-link
             class="inlineBlock"
-            :to="{ path:'/approve/selectmajor_list/' }">
+            :to="{ path:'/approve/selectmajor_list/', query:{school_id:this.tmpData.school_id, ShowStatus:'extend'} }">
           <el-button
               type="primary"
               icon="el-icon-plus"
@@ -165,7 +166,7 @@
           </router-link>
           <router-link
             class="inlineBlock"
-            :to="{ path:'/approve/add_new/' }"> 
+            :to="{ path:'/approve/add_new/', query:{school_id:this.tmpData.school_id, ShowStatus:'new'} }"> 
          <el-button
             type="primary"
             icon="el-icon-plus"
@@ -174,23 +175,46 @@
           </router-link> 
       </div>  
     </el-dialog>
+    <el-dialog :visible.sync="dialogFormVisible" v-if="operationStatus === 'school'">
+        <el-table
+          :data="schoolDataList"
+          highlight-current-row
+          append-to-body
+        >
+          <el-table-column label="院校编码" align="center" prop="school_id" width="150" />
+          <el-table-column label="院校名称" align="center" prop="school_name" width="150" />
+          <el-table-column label="选择" align="center">
+            <template slot-scope="scope">
+              <el-button
+                type="success"
+                size="mini"
+                @click.native.prevent="updateSchoolData(scope.row)"
+              >选择此项</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+
   </div>
 </template>
 <script>
 import { list, remove, search } from '@/api/approve'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
-
+import { schoolList } from '@/api/school'
 export default {
   created() {
     this.getDataList()
     console.log('前端收到dataList=' + JSON.stringify(this.dataList))
+    this.ShowStatus()
   },
   data() {
     return {
       dataList: [], // 申请表列表
       dialogStatus: 'add',
       dialogFormVisible: false,
+      operationStatus: '',
+      ShowStatus:'',
       textMap: {
         add: '请先输入院校信息'
       },
@@ -219,6 +243,7 @@ export default {
         approver: '',
         approve_num:'',
       },
+      schoolDataList: []
     }
   },
   computed: {
@@ -297,7 +322,47 @@ export default {
       this.dialogStatus = 'add'
       this.tmpData.school_id = '00001'
       this.tmpData.school_name = '四川大学'
+      this.operationStatus = 'single'
     },
+    getSchoolList() {
+      this.operationStatus = 'school'
+      var me = this
+      schoolList(this.listQuery).then(response => {
+        var data = response.data.list
+        data.forEach((item, index) => {
+          item.notes = index + 1 // 伪赋值用于存放院校编码
+        })
+        me.schoolDataList = data
+        console.log('me.schoolDataList' + me.schoolDataList)
+      }).catch(res => {
+        this.$message.error('加载院校列表失败')
+      })
+    },
+
+    updateSchoolData(item) {
+      this.tmpData.school_id = item.school_id
+      this.tmpData.school_name = item.school_name
+      this.$message.success('选择成功')
+      this.operationStatus = 'single'
+    },
+    changeShow(){
+      if(this.tmpData.approve_name === '专业调整'){
+        this.ShowStatus = "adjust";
+      }
+      if(this.tmpData.approve_name === '续办专业'){
+       this.ShowStatus = "continue";
+      }
+      if(this.tmpData.approve_name === '扩办专业'){
+        this.ShowStatus = "extend";
+      }
+      if(this.tmpData.approve_name === '新专业'){
+        this.ShowStatus = "new";
+      }
+      if(this.tmpData.approve_status === '已审批'){
+        this.ShowStatus = "Ischeck";
+      }
+    },
+
     /**
      * 删除申请表
      * @param index 申请表下标

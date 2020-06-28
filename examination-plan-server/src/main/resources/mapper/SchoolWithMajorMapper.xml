@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.plan.mapper.SchoolWithMajorMapper">
+    <resultMap id="Map" type="com.exam.plan.entity.SchoolWithMajor">
+
+    </resultMap>
+
+    <select id="listAllWithMajor" resultMap="Map">
+        SELECT *
+        FROM major_info a,major_school b
+                WHERE a.major_id=b.major_id AND b.main_target_school=#{id}
+    </select>
+
+    <select id="listAllWithExtendMajor" resultMap="Map">
+        SELECT * FROM major_info a
+        WHERE not EXISTS
+        (SELECT * FROM major_school b
+        WHERE b.main_target_school=#{id} AND a.major_id = b.major_id )
+    </select>
+</mapper>

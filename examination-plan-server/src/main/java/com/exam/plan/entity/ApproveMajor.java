@@ -1,22 +1,23 @@
 package com.exam.plan.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
-@Getter
-@Setter
-@ToString
-@Table(name = "major_info")
-public class Major {
-
+@Table(name="approve_major_info")
+public class ApproveMajor{
     @Id
+    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "approve_id")
+    private Integer approve_id;
+
+    @Column(name = "school_id")
+    private String school_id;
+
     @Column(name="major_id")
     private String major_id;
     @Column(name="national_major_code")
@@ -35,8 +36,6 @@ public class Major {
     private String main_target_school;
     @Column(name="first_exam_id")
     private String first_exam_id;
-    @Column(name="approve_num")
-    private String approve_num;
     @Column(name="stop_freshman_registration_exam_id")
     private String stop_freshman_registration_exam_id;
     @Column(name="stop_registration_num")
@@ -67,6 +66,33 @@ public class Major {
     private String graduation_condition;
     @Column(name="notes")
     private String notes;
+
+    public ApproveMajor() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getApprove_id() {
+        return approve_id;
+    }
+
+    public void setApprove_id(Integer approve_id) {
+        this.approve_id = approve_id;
+    }
+
+    public String getSchool_id() {
+        return school_id;
+    }
+
+    public void setSchool_id(String school_id) {
+        this.school_id = school_id;
+    }
 
     public String getMajor_id() {
         return major_id;
@@ -138,14 +164,6 @@ public class Major {
 
     public void setFirst_exam_id(String first_exam_id) {
         this.first_exam_id = first_exam_id;
-    }
-
-    public String getApprove_num() {
-        return approve_num;
-    }
-
-    public void setApprove_num(String approve_num) {
-        this.approve_num = approve_num;
     }
 
     public String getStop_freshman_registration_exam_id() {

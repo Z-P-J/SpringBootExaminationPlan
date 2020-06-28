@@ -49,13 +49,145 @@
         </el-col>
     </el-row>
 
+        <el-row :gutter="18">
+          <el-col :span="18" v-if="this.ShowStatus === 'adjust'">
+            <el-form-item label="专业调整如下："></el-form-item>
+          </el-col>
+          <el-col :span="18" v-if="this.ShowStatus === 'continue'">
+            <el-form-item  label="续办专业如下："></el-form-item>
+          </el-col>
+          <el-col :span="18" v-if="this.ShowStatus === 'extend'">
+            <el-form-item label="扩办专业如下："></el-form-item>
+          </el-col>
+          <el-col :span="18" v-if="this.ShowStatus === 'new'">
+            <el-form-item label="新专业如下："></el-form-item>
+          </el-col>
+        </el-row>
+        <el-table
+          :data="ApproveMajorDataList"
+          border
+          fit
+          highlight-current-row
+          v-if="this.ShowStatus !== 'new'">
+          <el-table-column label="专业编码" align="center" prop="major_id" width="500" />
+          <el-table-column label="专业名称" align="center" prop="major_name"/>
+        </el-table>
+     
+    <!-- 新专业显示 -->
+        <el-form
+          v-loading.body="loading"
+          :model="ApproveNewData"
+          ref="ApproveNewData"
+          label-width="115px"
+        >
+          <el-row :gutter="18" v-if="this.ShowStatus === 'new'">
+            <el-row :gutter="18">
+              <el-col :span="12">
+                <el-form-item label="专业编码" prop="major_id">
+                  <el-input v-model="ApproveNewData.major_id"
+                  :disabled="true" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="国家专业代码" prop="national_major_code">
+                  <el-input v-model="ApproveNewData.national_major_code"
+                  :disabled="true" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="18">
+              <el-col :span="12">
+              <el-form-item label="专业名称"><el-input v-model="ApproveNewData.major_name" :disabled="true"/></el-form-item>
+              </el-col>
+              <el-col :span="12">
+              <el-form-item label="总学分"><el-input v-model="ApproveNewData.total_credit"  type="number" :disabled="true"/></el-form-item></el-col>
+            </el-row>
+            <el-row :gutter="18">
+              <el-col :span="8">
+                <el-form-item label="专业类型">
+                  <el-input v-model="ApproveNewData.major_type" :disabled="true">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="学历层次">
+                  <el-input v-model="ApproveNewData.education_level" :disabled="true">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="开考形式">
+                  <el-input v-model="ApproveNewData.exam_type"  :disabled="true">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="18">
+              <el-col :span="12"><el-form-item label="毕业学分"><el-input v-model="ApproveNewData.graduation_credit"  type="number" :disabled="true" /></el-form-item></el-col>
+              <el-col :span="12"><el-form-item label="总课程数"><el-input v-model="ApproveNewData.total_course_number" type="number" :disabled="true"/></el-form-item></el-col>
+            </el-row>
+            <el-row :gutter="18">
+              <el-col :span="12"><el-form-item label="是否分方向">
+                <el-input v-model="ApproveNewData.whether_divide_direction" :disabled="true">
+                </el-input></el-form-item>
+              </el-col>
+              <el-col :span="12"><el-form-item label="专业大类级别"><el-input v-model="ApproveNewData.major_category_level" :disabled="true"/></el-form-item></el-col>
+            </el-row>
+            <el-row :gutter="18">
+              <el-col :span="12"><el-form-item label="专业大类代码" prop="major_category_code"><el-input v-model="ApproveNewData.major_category_code" :disabled="true"/></el-form-item></el-col>
+              <el-col :span="12"><el-form-item label="专业大类名称"><el-input v-model="ApproveNewData.major_category_name" :disabled="true"/></el-form-item></el-col>
+            </el-row>
+            <el-row :gutter="18">
+              <el-col :span="12">
+                <el-form-item label="报考条件说明">
+                  <el-input
+                  type="textarea"
+                  autosize
+                  placeholder="请输入内容"
+                  v-model="ApproveNewData.apply_condition"
+                  :disabled="true">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="毕业条件说明">
+                  <el-input
+                  type="textarea"
+                  autosize
+                  placeholder="请输入内容"
+                  v-model="ApproveNewData.graduation_condition"
+                  :disabled="true">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-form-item label="备注">
+                  <el-input
+                    type="textarea"
+                    autosize
+                    placeholder="请输入内容"
+                    v-model="ApproveNewData.notes"
+                    :disabled="true">
+                  </el-input>
+              </el-form-item>
+            </el-row> 
+          </el-row> 
+        </el-form>
+                        <!-- 新专业显示结束 -->
+    <!-- //审核部分 -->
       <el-row :gutter="18">
-        <el-col :span="18">
-          <el-form-item label="申请内容如下："></el-form-item>
+        <el-col :span="18" >
+          <el-form-item  >
+          </el-form-item>
         </el-col>
       </el-row>
-     
-    <!-- //审核部分 -->
+      <el-row :gutter="18">
+        <el-col :span="18" >
+          <el-form-item label="审核情况如下：" >
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item label="审核意见：" prop="approve_comment">
         <el-col :span="18">
           <el-input
@@ -68,7 +200,7 @@
         </el-col>
       </el-form-item>
 
-      <el-form-item  v-if="ShowStatus === 'new'" label="专业批准文号：">
+      <el-form-item  v-if="ShowStatus === 'new'" label="批准文号：">
         <el-col :span="18">
           <el-input  
           placeholder="请输入新专业的批准文号" 
@@ -90,10 +222,6 @@
           @click="$router.back(-1)"
           >返回</el-button>
 
-          <!-- <el-button type="danger" 
-          @click.native.prevent="$refs['tmpData'].resetFields()"
-          >重置</el-button> -->
-
           <el-button  type="primary" 
           @click.native.prevent="update"
           >确认</el-button>
@@ -103,17 +231,24 @@
 <script>
 import { unix2CurrentTime } from '@/utils'
 import { list , remove, update, addData, add } from '@/api/approve'
-
+import { getApproveMajorDataList, getApproveNewData } from '@/api/approve_major'
 
 export default {
   created() {
     this.tmpData = this.$route.query.data
     console.log('tmpData=' + JSON.stringify(this.tmpData))
+    console.log('aaaaaShowStatus=' + JSON.stringify(this.tmpData.approve_name))
     this.changeShow()
+    console.log('aaaaaShowStatus=' + JSON.stringify(this.ShowStatus))
+    this.getApproveMajorDataList(this.tmpData.approve_id)
+    this.getApproveNewData(this.tmpData.approve_id)
+    console.log('ApproveNewData=' + JSON.stringify(this.ApproveNewData))
   },
   data() {
     return {
-      ShowStatus:'adjust',
+      ShowStatus:'',
+      ApproveNewData:{},
+      ApproveMajorDataList: [],
       loading: false,
       btnLoading: false,
       toUpdate: false,
@@ -147,26 +282,8 @@ export default {
       if(this.tmpData.approve_name === '新专业'){
         this.ShowStatus = "new";
       }
-      if(this.tmpData.approve_status === '已审批'){
-        this.ShowStatus = "Ischeck";
-      }
     },
 
-  // /**
-  //    * 进行申请表添加
-  //    */
-  //   addData() {
-  //       this.btnLoading = true
-  //       this.tmpData = this.dataList[index]
-  //       console.log("提交表单"+JSON.stringify(this.tmpData))
-  //       add(this.tmpData).then(() => { 
-  //           this.$message.success('申请表提交成功！')
-  //           this.btnLoading = false
-  //       }).catch(res => {
-  //           this.$message.error('申请表提交失败！')
-  //           this.btnLoading = false
-  //       })
-  //   },
     /**
      * 进行审批
      */
@@ -187,7 +304,25 @@ export default {
      */
     updateDetail() {
      
-    }
+    },
+    getApproveMajorDataList(id){
+      console.log('id',id)
+      getApproveMajorDataList(id).then(response => {
+        this.ApproveMajorDataList = response.data.list
+        console.log(' this.ApproveMajorDataList'+ JSON.stringify(this.ApproveMajorDataList))
+      }).catch(res => {
+        
+      })
+    },
+     getApproveNewData(id){
+      console.log('id',id)
+      getApproveNewData(id).then(response => {
+        this.ApproveNewData = response.data
+        console.log(' this.ApproveNewData'+ JSON.stringify(response))
+      }).catch(res => {
+        
+      })
+    },
   }
 }
 </script>

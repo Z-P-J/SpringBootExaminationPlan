@@ -117,26 +117,9 @@
         ref="tmpData"
         :rules="rules"
       >
-      <!-- exams_id: '',
-      time_id: '',
-      exams_type: '',
-      jihua_exams_status: '',
-      kaowu_exams_status: '',
-      kaoji_exams_status: '',
-      exam_date: '',
-      start_time: '',
-      end_time: '',
-      default_charge: '',
-      photo_charge: '',
-      notes: '' -->
         <el-form-item label="考次编码" prop="exams_id" required v-if="operationStatus !== 'batch'">
           <el-input v-model="tmpData.exams_id" v-if="dialogStatus === 'add'"/>
           <el-input v-model="tmpData.exams_id" v-else="" :disabled="true"/>
-          <!-- <el-input
-            type="text"
-            auto-complete="off"
-            v-model="tmpData.exams_id"
-          /> -->
         </el-form-item>
         <el-form-item label="考试类型" prop="exams_type" v-if="operationStatus === 'batch'">
             <el-select v-model="tmpData.exams_type" placeholder="字段名">
