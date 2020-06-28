@@ -2,10 +2,7 @@ package com.exam.plan.service.impl;
 
 import com.exam.plan.entity.*;
 import com.exam.plan.exception.ResourcesNotFoundException;
-import com.exam.plan.mapper.CourseChargeMapper;
-import com.exam.plan.mapper.CourseMapper;
-import com.exam.plan.mapper.CourseNationalMapper;
-import com.exam.plan.mapper.CourseTextbookMapper;
+import com.exam.plan.mapper.*;
 import com.exam.plan.service.ICourseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +23,8 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   private CourseChargeMapper courseChargeMapper;
   @Resource
   private CourseNationalMapper courseNationalMapper;
+  @Resource
+  private TheoryPracticeMapper theoryPracticeMapper;
 
 //  @Override
 //  public List<RoleWithResource> listRoleWithPermission() {
@@ -157,5 +156,32 @@ public class CourseServiceImpl extends AbstractService<CourseInfo> implements IC
   @Override
   public List<CourseTextBookInfo> listTextbookByCourseId(String courseId) {
     return courseTextbookMapper.listTextbookByCourseId(courseId);
+  }
+
+  @Override
+  public List<TheoryPractice> listTheoryPractice() {
+    return theoryPracticeMapper.selectAll();
+  }
+
+  @Override
+  public TheoryPractice getTheoryPracticeById(Object id) {
+    return theoryPracticeMapper.selectByPrimaryKey(id);
+  }
+
+  @Override
+  public void deleteTheoryPractice(Object id) {
+    Optional.ofNullable(this.theoryPracticeMapper.selectByPrimaryKey(id))
+            .orElseThrow(ResourcesNotFoundException::new);
+    assertDelete(this.theoryPracticeMapper.deleteByPrimaryKey(id) == 1);
+  }
+
+  @Override
+  public void updateTheoryPractice(TheoryPractice info) {
+    assertUpdate(this.theoryPracticeMapper.updateByPrimaryKeySelective(info) == 1);
+  }
+
+  @Override
+  public void saveTheoryPractice(TheoryPractice info) {
+    assertSave(this.theoryPracticeMapper.insertSelective(info) == 1);
   }
 }

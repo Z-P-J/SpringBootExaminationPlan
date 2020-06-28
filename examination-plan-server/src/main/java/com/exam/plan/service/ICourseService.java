@@ -67,4 +67,14 @@ public interface ICourseService extends Service<CourseInfo> {
 
   List<CourseTextBookInfo> listTextbookByCourseId(String courseId);
 
+  List<TheoryPractice> listTheoryPractice();
+
+  TheoryPractice getTheoryPracticeById(Object id);
+
+  void deleteTheoryPractice(Object id);
+
+  void updateTheoryPractice(TheoryPractice info);
+
+  void saveTheoryPractice(TheoryPractice info);
+
 }

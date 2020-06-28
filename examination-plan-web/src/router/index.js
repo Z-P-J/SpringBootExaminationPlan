@@ -217,12 +217,11 @@ export const asyncRouterMap = [
       path: 'charge',
       name: '课程费用',
       component: _import('course/charge')
+    }, {
+      path: 'practice',
+      name: '理论与实践课程',
+      component: _import('course/practice')
     }]
-    // , {
-    //   path: 'charge',
-    //   name: '理论与实践课程',
-    //   component: _import('course/charge')
-    // }
   },
   {
     path: '/role6',
