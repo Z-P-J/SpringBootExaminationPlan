@@ -154,3 +154,34 @@ export function removeCourseCharge(courseId) {
     method: 'delete'
   })
 }
+
+export function listPractice(params) {
+  return request({
+    url: '/course/practice',
+    method: 'get',
+    params
+  })
+}
+
+export function addPractice(form) {
+  return request({
+    url: '/course/practice',
+    method: 'post',
+    data: form
+  })
+}
+
+export function updatePractice(form) {
+  return request({
+    url: '/course/practice',
+    method: 'put',
+    data: form
+  })
+}
+
+export function removePractice(courseId) {
+  return request({
+    url: '/course/practice/' + courseId,
+    method: 'delete'
+  })
+}

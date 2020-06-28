@@ -380,7 +380,7 @@ export default {
         this.total = response.data.total
         this.listLoading = false
         this.btnLoading = false
-        this.$message.error('搜索成功')
+        this.$message.success('搜索成功')
       }).catch(res => {
         this.listLoading = false
         this.btnLoading = false
