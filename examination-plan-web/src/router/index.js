@@ -233,11 +233,11 @@ export const asyncRouterMap = [
     children: [{
       path: 'list',
       name: '全部课程',
-      component: _import('major_course/list')
+      component: _import('major-course/list')
     }, {
       path: 'direction',
       name: '专业方向',
-      component: _import('major_course/direction')
+      component: _import('major-course/direction')
     }]
   },
   {
