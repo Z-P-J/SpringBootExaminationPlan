@@ -5,18 +5,20 @@
         <el-form-item>
           <el-button
             type="success"
-            size="mini"
-            icon="el-icon-refresh"
-            v-if="hasPermission('role:list')"
-            @click.native.prevent="getDataList"
-          >刷新</el-button>
+            icon="el-icon-back"
+            @click.native.prevent="$router.back(-1)"
+          >返回</el-button>
           <el-button
             type="primary"
-            size="mini"
             icon="el-icon-plus"
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >添加院校</el-button>
+          <el-button
+            icon="el-icon-setting"
+            v-if="hasPermission('role:add')"
+            @click.native.prevent="showUpdateDialogBatch"
+          >批量修改</el-button>
         </el-form-item>
 
         <span v-if="hasPermission('role:search')">
@@ -49,8 +51,8 @@
         </template>
       </el-table-column>
       <el-table-column label="专业编码" align="center" prop="major_id" width="180" />
-      <el-table-column label="主考院校" align="center" prop="main_target_school" width="200" />
-      <el-table-column label="第N主考院校" align="center" prop="main_target_school_code" width="200" />
+      <el-table-column label="主考院校" align="center" prop="school_name" width="200" />
+      <el-table-column sortable label="第N主考院校" align="center" prop="main_target_school_code" width="200" />
       <el-table-column label="管理" align="center"
         v-if="hasPermission('role:update') || hasPermission('role:add') || hasPermission('role:delete')">
         <template slot-scope="scope">
@@ -78,7 +80,27 @@
       :page-sizes="[9, 18, 36, 72]"
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    <el-dialog :visible.sync="dialogFormVisible" v-if="operationStatus === 'school'">
+        <el-table
+          :data="schoolDataList"
+          highlight-current-row
+          append-to-body
+        >
+          <el-table-column label="院校编码" align="center" prop="school_id" width="150" />
+          <el-table-column label="院校名称" align="center" prop="school_name" width="150" />
+          <el-table-column label="选择" align="center">
+            <template slot-scope="scope">
+              <el-button
+                type="success"
+                size="mini"
+                @click.native.prevent="updateSchoolData(scope.row)"
+              >选择此项</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" v-if="operationStatus === 'single'" >
+      
       <el-form
         status-icon
         class="small-space"
@@ -101,6 +123,7 @@
             type="text"
             auto-complete="off"
             v-model="tmpData.main_target_school"
+            @focus="getSchoolList('school')"
           />
         </el-form-item>
          <el-form-item label="第N主考院校" prop="main_target_school_code">
@@ -122,20 +145,56 @@
           type="success"
           v-if="dialogStatus === 'add'"
           :loading="btnLoading"
-          @click.native.prevent="addAccount"
+          @click.native.prevent="addData"
         >添加</el-button>
         <el-button
           type="primary"
           v-if="dialogStatus === 'update'"
           :loading="btnLoading"
-          @click.native.prevent="updateAccount"
+          @click.native.prevent="updateData"
         >更新</el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" v-if="operationStatus === 'batch'">
+      <el-table
+        :data="schoolDataList"
+        v-loading.body="listLoading"
+        element-loading-text="loading"
+        border
+        fit
+        highlight-current-row
+        @selection-change="handleSchoolSelectionChange"
+      >
+        <el-table-column
+          type="selection"
+          width="40">
+        </el-table-column>
+        <el-table-column label="院校编码" align="center" prop="school_id" width="150" />
+        <el-table-column label="院校名称" align="center" prop="school_name" width="150" />
+        
+        <el-table-column label="自定义第N院校" align="center">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.notes" type="number"/>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click.native.prevent="dialogFormVisible = false">取消</el-button>
+        <el-button
+          type="primary"
+          v-if="dialogStatus === 'update'"
+          :loading="btnLoading"
+          @click.native.prevent="updateDataByBatch"
+        >添加选中项</el-button>
+      </div>
+    </el-dialog>
+    
   </div>
 </template>
 <script>
-import { schoolList as list, schoolSearch as search, schoolRemove as remove, schoolAdd as add, schoolUpdate as update } from '@/api/major'
+import { schoolList as list, schoolSearch as search, schoolRemove as remove, schoolAdd as add, schoolUpdate as update,
+  schoolUpdateByBatch as updateByBatch } from '@/api/major'
+import { schoolList } from '@/api/school'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
 
@@ -165,7 +224,7 @@ export default {
       },
       tmpData: {
         major_id: '',
-        main_target_school: '测试大学',
+        main_target_school: '00001',
         main_target_school_code: 3
       },
       search: {
@@ -174,7 +233,10 @@ export default {
         fieldVal: '',
         fieldSelect: null
       },
-      majorData: {}
+      majorData: {},
+      schoolDataList: [],
+      operationStatus: 'single',
+      multipleSelection: []
     }
   },
   computed: {
@@ -241,16 +303,17 @@ export default {
      */
     showAddDialog() {
       // 显示新增对话框
+      this.operationStatus = 'single'
       this.dialogFormVisible = true
       this.dialogStatus = 'add'
       this.tmpData.major_id = this.majorData.major_id
-      this.tmpData.main_target_school = '测试大学'
+      this.tmpData.main_target_school = '00001'
       this.tmpData.main_target_school_code = 3
     },
     /**
      * 添加
      */
-    addAccount() {
+    addData() {
       this.btnLoading = true
       add(this.tmpData).then(() => {
         this.$message.success('添加成功')
@@ -267,6 +330,7 @@ export default {
      * @param index 下标
      */
     showUpdateDialog(index) {
+      this.operationStatus = 'single'
       this.dialogFormVisible = true
       this.dialogStatus = 'update'
       console.log(this.dataList[index])
@@ -275,7 +339,8 @@ export default {
     /**
      * 更新
      */
-    updateAccount() {
+    updateData() {
+      console.log('tmpdata param:', this.tmpData)
       update(this.tmpData).then(() => {
         this.$message.success('更新成功')
         this.getDataList()
@@ -302,6 +367,67 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
+    },
+    showUpdateDialogBatch() {
+      // 显示新增对话框
+      this.dialogFormVisible = true
+      this.dialogStatus = 'update'
+      this.getSchoolList('batch')
+    },
+    /**
+     * 批量更新院校
+     */
+    handleSchoolSelectionChange(val) {
+      this.multipleSelection = val
+      console.log(this.multipleSelection)
+    },
+    updateDataByBatch() {
+      var params = []
+      var me = this
+      for (var item of this.multipleSelection) { // item代表数组里面的元素
+        var tmpData = {}
+        tmpData['major_id'] = me.majorData.major_id
+        tmpData['main_target_school'] = item.school_id
+        tmpData['main_target_school_code'] = item.notes
+        console.log('tmpData', tmpData)
+        params.push(tmpData)
+      }
+      console.log('params:', params)
+      this.btnLoading = true
+      updateByBatch(params).then(() => {
+        this.$message.success('批量更新成功')
+        this.getDataList()
+        this.dialogFormVisible = false
+        this.btnLoading = false
+        this.operationStatus = 'single'
+      }).catch(res => {
+        this.btnLoading = false
+        this.$message.error('批量更新失败')
+      })
+    },
+    getSchoolList(status) {
+      this.operationStatus = status
+      console.log(this.operationStatus)
+      var me = this
+      // console.log('this.listQuery' + JSON.stringify(this.listQuery))
+      schoolList(this.listQuery).then(response => {
+        var data = response.data.list
+        data.forEach((item, index) => {
+          item.notes = index + 1 // 伪赋值用于存放院校编码
+        })
+        me.schoolDataList = data
+        console.log('me.schoolDataList' + me.schoolDataList)
+      }).catch(res => {
+        this.$message.error('加载院校列表失败')
+      })
+    },
+    updateSchoolData(item) {
+      // console.log(item)
+      this.tmpData.main_target_school = item.school_id
+      // console.log(this.tmpData)
+      // this.dialogFormVisible = false
+      this.operationStatus = 'single'
+      this.$message.success('选择成功')
     }
   }
 }

@@ -23,3 +23,34 @@ export function updateMajorplan(majorplanForm) {
     data: majorplanForm
   })
 }
+
+export function removeMajorplan(majorPlanId) {
+  return request({
+    url: '/majorplan/' + majorPlanId,
+    method: 'delete'
+  })
+}
+
+export function deleteMajorplan(params) {
+  return request({
+    url: '/majorplan/delete',
+    method: 'post',
+    data: params
+  })
+}
+
+export function disableMajorplan(params) {
+  return request({
+    url: '/majorplan/disable',
+    method: 'post',
+    data: params
+  })
+}
+
+export function enableMajorplan(params) {
+  return request({
+    url: '/majorplan/enable',
+    method: 'post',
+    data: params
+  })
+}

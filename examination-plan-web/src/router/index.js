@@ -139,7 +139,7 @@ export const asyncRouterMap = [
     path: '/major',
     component: Layout,
     redirect: '/major/list',
-    icon: 'role',
+    icon: 'chart',
     name: '专业管理',
     noDropDown: false,
     children: [{
@@ -158,6 +158,11 @@ export const asyncRouterMap = [
       component: _import('major/category')
     },
     {
+      path: 'nation',
+      name: '全国专业',
+      component: _import('major/nation')
+    },
+    {
       hidden: true,
       path: 'school',
       name: '主考院校',
@@ -166,18 +171,23 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/role4',
+    path: '/exam-set',
     component: Layout,
-    redirect: '/role/list',
-    icon: 'role',
-    noDropDown: true,
-    // name: '考次管理',
+    redirect: '/exam-set/list',
+    icon: 'education',
+    noDropDown: false,
+    name: '考次管理',
     children: [{
       path: 'list',
       name: '考次管理',
-      component: _import('role/list'),
-      meta: { permission: ['role:list'] }
-    }]
+      component: _import('exam-set/list')
+    },
+    {
+      path: 'course',
+      name: '统考课表',
+      component: _import('exam-set/course')
+    }
+    ]
   },
   {
     path: '/course',

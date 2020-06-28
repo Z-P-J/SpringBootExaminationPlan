@@ -17,31 +17,33 @@
             v-if="hasPermission('role:add')"
             @click.native.prevent="showAddDialog"
           >创建专业计划</el-button>
-          <el-select v-model="courseFilter" placeholder="过滤课程" :value="courseFilter" @change="onChange">
+          <el-select v-model="courseFilter" placeholder="筛选计划" :value="courseFilter" @change="onChange">
             <el-option label="全部" value="all"></el-option>
             <el-option label="已启用" value="enable"></el-option>
-            <el-option label="已停用" value="disable"></el-option>
+            <el-option label="新建" value="newable"></el-option>
+            <el-option label="已编制" value="compable"></el-option>
+            <el-option label="已审批" value="approvable"></el-option>
           </el-select>
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-plus"
-            :disabled="isDisabled('正常')"
-            @click.native.prevent="disableCourse"
+            :disabled="this.multipleSelection.length === 0 || isDisabled('已启用')"
+            @click.native.prevent="disableMajorplan"
           >停用</el-button>
           <el-button
             type="primary"
             size="mini"
             icon="el-icon-plus"
-            :disabled="isDisabled('注销')"
-            @click.native.prevent="enableCourse"
-          >发布</el-button>
+            :disabled="this.multipleSelection.length === 0 || !isDisabled('已启用')"
+            @click.native.prevent="enableMajorplan"
+          >发布启用</el-button>
           <el-button
             type="danger"
             size="mini"
             icon="el-icon-plus"
             :disabled="multipleSelection.length === 0"
-            @click.native.prevent="deleteCourse"
+            @click.native.prevent="deleteMajorplan"
           >删除</el-button>
         </el-form-item>
       </el-form>
@@ -73,7 +75,7 @@
         :filters="[{ text: '正常', value: '0' }, { text: '注销', value: '1' }]"
         :filter-method="filterTag"
         filter-placement="bottom-end">
-        <template slot-scope="scope">{{ scope.row.courseStatus }}</template>
+        <template slot-scope="scope">{{ scope.row.state }}</template>
       </el-table-column> -->
       <el-table-column label="审批状态" align="center" prop="approveStatus" />
       <el-table-column label="学历处意见" align="center" prop="xuelichuSuggestion" />
@@ -92,7 +94,7 @@
             type="danger"
             size="mini"
             v-if="hasPermission('role:delete') && scope.row.name !== '超级管理员'"
-            @click.native.prevent="removeCourse(scope.$index)"
+            @click.native.prevent="removeMajorplan(scope.$index)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -111,7 +113,11 @@
 </template>
 <script>
 import {
-  listMajorplan
+  listMajorplan,
+  deleteMajorplan,
+  removeMajorplan,
+  disableMajorplan,
+  enableMajorplan
 } from '@/api/majorplan'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
@@ -128,6 +134,7 @@ export default {
     if (this.hasPermission('role:list')) {
       this.getList()
     }
+    this.getToday()
   },
   data() {
     /**
@@ -166,12 +173,11 @@ export default {
         planVersionId: '',
         planName: '',
         state: '新建',
-        createDate: '',
+        createDate: '2020-6-29',
         approveStatus: '计划科提交',
         xuelichuSuggestion: '无',
         leaderSign: '无',
-        majorId: '',
-        courseId: ''
+        majorId: ''
       },
       majorplanDialog: {
         data: {},
@@ -201,7 +207,7 @@ export default {
     // },
     filterTag(value, row) {
       // console.log('filterTag value=' + value)
-      return row.courseStatus === value
+      return row.state === value
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
@@ -211,61 +217,62 @@ export default {
       this.getList()
     },
     isDisabled(flag) {
-      return this.multipleSelection.length === 0 || this.multipleSelection.filter(v => {
-        return v.courseStatus === flag
+      return this.multipleSelection.filter(v => {
+        return v.state === flag
       }).length === 0
     },
-    // disableCourse() {
-    //   console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
-    //   this.listLoading = true
-    //   const ids = this.multipleSelection.map(v => {
-    //     return v.courseId
-    //   })
-    //   disableCourse(ids).then(response => {
-    //     console.log('data=' + JSON.stringify(response.data))
-    //     this.$refs.multipleTable.clearSelection()
-    //     this.roleList = response.data.list
-    //     this.total = response.data.total
-    //     this.listLoading = false
-    //   }).error(res => {
-    //     this.listLoading = false
-    //     this.$message.error('课程停用失败')
-    //   })
-    // },
-    // enableCourse() {
-    //   console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
-    //   this.listLoading = true
-    //   const ids = this.multipleSelection.map(v => {
-    //     return v.courseId
-    //   })
-    //   enableCourse(ids).then(response => {
-    //     console.log('data=' + JSON.stringify(response.data))
-    //     this.$refs.multipleTable.clearSelection()
-    //     this.roleList = response.data.list
-    //     this.total = response.data.total
-    //     this.listLoading = false
-    //   }).error(res => {
-    //     this.listLoading = false
-    //     this.$message.error('课程停用失败')
-    //   })
-    // },
-    // deleteCourse() {
-    //   console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
-    //   this.listLoading = true
-    //   const ids = this.multipleSelection.map(v => {
-    //     return v.courseId
-    //   })
-    //   deleteCourse(ids).then(response => {
-    //     console.log('data=' + JSON.stringify(response.data))
-    //     this.$refs.multipleTable.clearSelection()
-    //     this.roleList = response.data.list
-    //     this.total = response.data.total
-    //     this.listLoading = false
-    //   }).error(res => {
-    //     this.listLoading = false
-    //     this.$message.error('课程停用失败')
-    //   })
-    // },
+    disableMajorplan() {
+      console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
+      this.listLoading = true
+      const ids = this.multipleSelection.map(v => {
+        return v.planVersionId
+      })
+      console.log('ids=' + ids + '  ' + typeof (ids))
+      disableMajorplan(ids).then(response => {
+        console.log('data=' + JSON.stringify(response.data))
+        this.$refs.multipleTable.clearSelection()
+        this.roleList = response.data.list
+        this.total = response.data.total
+        this.listLoading = false
+      }).error(res => {
+        this.listLoading = false
+        this.$message.error('停用失败')
+      })
+    },
+    enableMajorplan() {
+      console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
+      this.listLoading = true
+      const ids = this.multipleSelection.map(v => {
+        return v.planVersionId
+      })
+      enableMajorplan(ids).then(response => {
+        console.log('data=' + JSON.stringify(response.data))
+        this.$refs.multipleTable.clearSelection()
+        this.roleList = response.data.list
+        this.total = response.data.total
+        this.listLoading = false
+      }).error(res => {
+        this.listLoading = false
+        this.$message.error('发布失败')
+      })
+    },
+    deleteMajorplan() {
+      console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
+      this.listLoading = true
+      const ids = this.multipleSelection.map(v => {
+        return v.planVersionId
+      })
+      deleteMajorplan(ids).then(response => {
+        console.log('data=' + JSON.stringify(response.data))
+        this.$refs.multipleTable.clearSelection()
+        this.roleList = response.data.list
+        this.total = response.data.total
+        this.listLoading = false
+      }).error(res => {
+        this.listLoading = false
+        this.$message.error('删除失败')
+      })
+    },
     /**
      * 获取课程列表
      */
@@ -319,30 +326,33 @@ export default {
       this.majorplanDialog.data = course
       this.majorplanDialog.type = 'update'
       this.majorplanDialog.show = true
-    }
-    // ,
+    },
     /**
      * 移除角色
      * @param index 角色下标
      * @returns {boolean}
      */
-    // removeCourse(index) {
-    //   this.$confirm('删除该课程？', '警告', {
-    //     confirmButtonText: '是',
-    //     cancelButtonText: '否',
-    //     type: 'warning'
-    //   }).then(() => {
-    //     const courseId = this.roleList[index].courseId
-    //     removeCourse(courseId).then(() => {
-    //       this.$message.success('删除成功')
-    //       this.getList()
-    //     }).catch(() => {
-    //       this.$message.error('删除失败')
-    //     })
-    //   }).catch(() => {
-    //     this.$message.info('已取消删除')
-    //   })
-    // }
+    removeMajorplan(index) {
+      this.$confirm('删除该计划？', '警告', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        const planVersionId = this.roleList[index].planVersionId
+        removeMajorplan(planVersionId).then(() => {
+          this.$message.success('删除成功')
+          this.getList()
+        }).catch(() => {
+          this.$message.error('删除失败')
+        })
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
+    getToday() {
+      this.tempMajorplan.createDate = new Date()
+      console.log('new createDate')
+    }
   }
 }
 </script>

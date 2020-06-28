@@ -25,10 +25,10 @@ public interface MajorplanMapper extends MyMapper<MajorPlanVersion> {
      */
     void updateTimeById(@Param("id") Long id);
 
-    void disableCourse(@Param("courseIdList") List<String> courseIdList);
+    void disableMajorplan(@Param("planVersionIdList") List<String> planVersionIdList);
 
-    void enableCourse(@Param("courseIdList") List<String> courseIdList);
+    void enableMajorplan(@Param("planVersionIdList") List<String> planVersionIdList);
 
-    void deleteCourse(@Param("courseIdList") List<String> courseIdList);
+    void deleteMajorplan(@Param("planVersionIdList") List<String> planVersionIdList);
 
 }

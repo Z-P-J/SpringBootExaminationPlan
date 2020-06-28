@@ -3,7 +3,7 @@ package com.exam.plan.service.impl;
 import com.exam.plan.entity.*;
 import com.exam.plan.exception.ResourcesNotFoundException;
 import com.exam.plan.mapper.CourseChargeMapper;
-import com.exam.plan.mapper.CourseMapper;
+import com.exam.plan.mapper.MajorplanMapper;
 import com.exam.plan.mapper.CourseNationalMapper;
 import com.exam.plan.mapper.CourseTextbookMapper;
 import com.exam.plan.service.IMajorplanService;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @Transactional(rollbackFor = Exception.class)
 public class MajorplanServiceImpl extends AbstractService<MajorPlanVersion> implements IMajorplanService {
     @Resource
-    private CourseMapper courseMapper;
+    private MajorplanMapper majorplanMapper;
     @Resource
     private CourseTextbookMapper courseTextbookMapper;
     @Resource
@@ -31,7 +31,7 @@ public class MajorplanServiceImpl extends AbstractService<MajorPlanVersion> impl
 //  public List<RoleWithResource> listRoleWithPermission() {
 //    // 由于mybatis在嵌套查询时和pagehelper有冲突
 //    // 暂时用for循环代替
-//    final List<RoleWithResource> roles = this.courseMapper.listRoles();
+//    final List<RoleWithResource> roles = this.majorplanMapper.listRoles();
 //
 //    return roles;
 //  }
@@ -39,12 +39,12 @@ public class MajorplanServiceImpl extends AbstractService<MajorPlanVersion> impl
 //  @Override
 //  public void save(MajorPlanVersion entity) {
 //
-//    this.courseMapper.insert(entity);
+//    this.majorplanMapper.insert(entity);
 //  }
 
 //  @Override
 //  public void save(final RoleWithPermission role) {
-//    this.courseMapper.insert(role);
+//    this.majorplanMapper.insert(role);
 ////    this.rolePermissionMapper.saveRolePermission(role.getId(), role.getPermissionIdList());
 //  }
 
@@ -55,7 +55,7 @@ public class MajorplanServiceImpl extends AbstractService<MajorPlanVersion> impl
 //        condition.createCriteria().andCondition("role_id = ", role.getId());
 ////    this.rolePermissionMapper.deleteByCondition(condition);
 ////    this.rolePermissionMapper.saveRolePermission(role.getId(), role.getPermissionIdList());
-//        this.courseMapper.updateTimeById(role.getId());
+//        this.majorplanMapper.updateTimeById(role.getId());
     }
 
     @Override
@@ -123,17 +123,17 @@ public class MajorplanServiceImpl extends AbstractService<MajorPlanVersion> impl
     }
 
     @Override
-    public void disableCourse(List<String> courseIdList) {
-        courseMapper.disableCourse(courseIdList);
+    public void disableMajorplan(List<String> planVersionIdList) {
+        majorplanMapper.disableMajorplan(planVersionIdList);
     }
 
     @Override
-    public void enableCourse(List<String> courseIdList) {
-        courseMapper.enableCourse(courseIdList);
+    public void enableMajorplan(List<String> planVersionIdList) {
+        majorplanMapper.enableMajorplan(planVersionIdList);
     }
 
     @Override
-    public void deleteCourse(List<String> courseIdList) {
-        courseMapper.deleteCourse(courseIdList);
+    public void deleteMajorplan(List<String> planVersionIdList) {
+        majorplanMapper.deleteMajorplan(planVersionIdList);
     }
 }

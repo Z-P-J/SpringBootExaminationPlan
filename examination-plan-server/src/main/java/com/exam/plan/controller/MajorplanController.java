@@ -42,30 +42,38 @@ public class MajorplanController {
         System.out.println("filter=" + filter);
         PageHelper.startPage(page, size);
         final List<MajorPlanVersion> list;
-        list = this.majorplanService.listAll();
-//        if ("all".equalsIgnoreCase(filter)) {
-//            list = this.majorplanService.listAll();
-//        } else if ("enable".equalsIgnoreCase(filter)) {
-//            final Condition condition = new Condition(MajorPlanVersion.class);
-//            condition.createCriteria().andCondition("course_status = ", "正常");
-//            list = this.majorplanService.listByCondition(condition);
-//        } else if ("disable".equalsIgnoreCase(filter)) {
-//            final Condition condition = new Condition(MajorPlanVersion.class);
-//            condition.createCriteria().andCondition("course_status = ", "注销");
-//            list = this.majorplanService.listByCondition(condition);
-//        } else {
-//            list = new ArrayList<>();
-//        }
+//        list = this.majorplanService.listAll();
+        if ("all".equalsIgnoreCase(filter)) {
+            list = this.majorplanService.listAll();
+        } else if ("enable".equalsIgnoreCase(filter)) {
+            final Condition condition = new Condition(MajorPlanVersion.class);
+            condition.createCriteria().andCondition("state = ", "已启用");
+            list = this.majorplanService.listByCondition(condition);
+        } else if ("newable".equalsIgnoreCase(filter)) {
+            final Condition condition = new Condition(MajorPlanVersion.class);
+            condition.createCriteria().andCondition("state = ", "新建");
+            list = this.majorplanService.listByCondition(condition);
+        } else if ("compable".equalsIgnoreCase(filter)) {
+            final Condition condition = new Condition(MajorPlanVersion.class);
+            condition.createCriteria().andCondition("state = ", "已编制");
+            list = this.majorplanService.listByCondition(condition);
+        } else if ("approvable".equalsIgnoreCase(filter)) {
+            final Condition condition = new Condition(MajorPlanVersion.class);
+            condition.createCriteria().andCondition("state = ", "已审批");
+            list = this.majorplanService.listByCondition(condition);
+        } else {
+            list = new ArrayList<>();
+        }
         final PageInfo<MajorPlanVersion> pageInfo = new PageInfo<>(list);
         return ResultGenerator.genOkResult(pageInfo);
     }
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Result deleteCourse(@PathVariable final Long id, final Principal principal) {
+    public Result deleteMajorplan(@PathVariable final Long id, final Principal principal) {
         final MajorPlanVersion dbRole = this.majorplanService.getById(id);
         if (dbRole == null) {
-            return ResultGenerator.genFailedResult("课程不存在");
+            return ResultGenerator.genFailedResult("计划不存在");
         }
         this.majorplanService.deleteById(id);
         return ResultGenerator.genOkResult();
@@ -73,9 +81,9 @@ public class MajorplanController {
 
     @PostMapping("/delete")
     @ResponseBody
-    public Result deleteCourse(@RequestBody final List<String> courseIdList) {
-        System.out.println("deleteCourse courseIdList=" + courseIdList);
-        majorplanService.deleteCourse(courseIdList);
+    public Result deleteMajorplan(@RequestBody final List<String> planVersionIdList) {
+        System.out.println("deleteMajorplan planVersionIdList=" + planVersionIdList);
+        majorplanService.deleteMajorplan(planVersionIdList);
         return list(0, 9, "all");
     }
 
@@ -96,26 +104,26 @@ public class MajorplanController {
 
     @PostMapping("/disable")
     @ResponseBody
-    public Result disableCourse(@RequestBody final List<String> courseIdList) {
-        System.out.println("disableCourse courseIdList=" + courseIdList);
-        majorplanService.disableCourse(courseIdList);
+    public Result disableMajorplan(@RequestBody final List<String> planVersionIdList) {
+        System.out.println("disableMajorplan planVersionIdList=" + planVersionIdList);
+        majorplanService.disableMajorplan(planVersionIdList);
         return list(0, 9, "all");
     }
 
 //    @PostMapping(name = "/disable1")
 //    @ResponseBody
-//    public Result disableCourse() { // @RequestBody final String[] courseIds
-////        System.out.println("disableCourse courseIdList=" + Arrays.toString(courseIds));
-////        majorplanService.disableCourse(courseIdList);
+//    public Result disableMajorplan() { // @RequestBody final String[] courseIds
+////        System.out.println("disableMajorplan planVersionIdList=" + Arrays.toString(courseIds));
+////        majorplanService.disableMajorplan(planVersionIdList);
 ////        return list(0, 9, "all");
 //        return ResultGenerator.genOkResult();
 //    }
 
     @PostMapping("/enable")
     @ResponseBody
-    public Result enableCourse(@RequestBody final List<String> courseIdList) {
-        System.out.println("enableCourse courseIdList=" + courseIdList);
-        majorplanService.enableCourse(courseIdList);
+    public Result enableMajorplan(@RequestBody final List<String> planVersionIdList) {
+        System.out.println("enableMajorplan planVersionIdList=" + planVersionIdList);
+        majorplanService.enableMajorplan(planVersionIdList);
         return list(0, 9, "all");
     }
 

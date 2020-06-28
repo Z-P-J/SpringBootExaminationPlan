@@ -102,6 +102,13 @@ export function removeTextbook(courseId) {
   })
 }
 
+export function getTextbook(courseId) {
+  return request({
+    url: '/course/textbook/' + courseId,
+    method: 'get'
+  })
+}
+
 export function listNationalCourse(params) {
   return request({
     url: '/course/national',

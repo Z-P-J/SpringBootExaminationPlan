@@ -52,10 +52,10 @@ public interface IMajorplanService extends Service<MajorPlanVersion> {
 
     void saveNationalCourse(CourseNational info);
 
-    void disableCourse(List<String> courseIdList);
+    void disableMajorplan(List<String> planVersionIdList);
 
-    void enableCourse(List<String> courseIdList);
+    void enableMajorplan(List<String> planVersionIdList);
 
-    void deleteCourse(List<String> courseIdList);
+    void deleteMajorplan(List<String> planVersionIdList);
 
 }
