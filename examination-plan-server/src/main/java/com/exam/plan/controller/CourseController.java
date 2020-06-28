@@ -23,16 +23,16 @@ public class CourseController {
     @Resource
     private ICourseService courseService;
 
-    @GetMapping("/permission")
-    @ResponseBody
-    public Result listWithPermission(
-            @RequestParam(defaultValue = "0") final Integer page,
-            @RequestParam(defaultValue = "0") final Integer size) {
-        PageHelper.startPage(page, size);
-        final List<CourseInfo> list = this.courseService.listAll();
-        final PageInfo<CourseInfo> pageInfo = new PageInfo<>(list);
-        return ResultGenerator.genOkResult(pageInfo);
-    }
+//    @GetMapping("/permission")
+//    @ResponseBody
+//    public Result listWithPermission(
+//            @RequestParam(defaultValue = "0") final Integer page,
+//            @RequestParam(defaultValue = "0") final Integer size) {
+//        PageHelper.startPage(page, size);
+//        final List<CourseInfo> list = this.courseService.listAll();
+//        final PageInfo<CourseInfo> pageInfo = new PageInfo<>(list);
+//        return ResultGenerator.genOkResult(pageInfo);
+//    }
 
     @GetMapping()
     @ResponseBody
@@ -179,6 +179,32 @@ public class CourseController {
         return ResultGenerator.genOkResult(courseService.getChargeById(id));
     }
 
+    @DeleteMapping("/charge/{id}")
+    @ResponseBody
+    public Result deleteCourseCharge(@PathVariable final String id) {
+        final CourseCharge dbRole = this.courseService.getChargeById(id);
+        if (dbRole == null) {
+            return ResultGenerator.genFailedResult("课程费用不存在");
+        }
+        this.courseService.deleteCourseCharge(id);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PutMapping("/charge")
+    @ResponseBody
+    public Result updateCourseCharge(@RequestBody final CourseCharge info) {
+        courseService.updateCourseCharge(info);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PostMapping("/charge")
+    @ResponseBody
+    public Result addCourseCharge(@RequestBody final CourseCharge info) {
+        System.out.println("addTextbook info=" + info);
+        courseService.saveCourseCharge(info);
+        return ResultGenerator.genOkResult();
+    }
+
     @GetMapping("/national")
     @ResponseBody
     public Result listNationalCourse(@RequestParam(defaultValue = "0") final Integer page,
@@ -215,8 +241,44 @@ public class CourseController {
     @PostMapping("/national")
     @ResponseBody
     public Result addNationalCourse(@RequestBody final CourseNational info) {
-        System.out.println("addTextbook info=" + info);
+        System.out.println("addNationalCourse info=" + info);
         courseService.saveNationalCourse(info);
+        return ResultGenerator.genOkResult();
+    }
+
+
+    @GetMapping("/practice")
+    @ResponseBody
+    public Result listPractice(@RequestParam(defaultValue = "0") final Integer page,
+                                   @RequestParam(defaultValue = "0") final Integer size) {
+        PageHelper.startPage(page, size);
+        final PageInfo<TheoryPractice> pageInfo = new PageInfo<>(courseService.listTheoryPractice());
+        return ResultGenerator.genOkResult(pageInfo);
+    }
+
+    @DeleteMapping("/practice/{id}")
+    @ResponseBody
+    public Result deletePractice(@PathVariable final String id) {
+        final TheoryPractice dbRole = this.courseService.getTheoryPracticeById(id);
+        if (dbRole == null) {
+            return ResultGenerator.genFailedResult("理论实践对应关系不存在");
+        }
+        this.courseService.deleteTheoryPractice(id);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PutMapping("/practice")
+    @ResponseBody
+    public Result updatePractice(@RequestBody final TheoryPractice info) {
+        courseService.updateTheoryPractice(info);
+        return ResultGenerator.genOkResult();
+    }
+
+    @PostMapping("/practice")
+    @ResponseBody
+    public Result addPractice(@RequestBody final TheoryPractice info) {
+        System.out.println("addPractice info=" + info);
+        courseService.saveTheoryPractice(info);
         return ResultGenerator.genOkResult();
     }
 

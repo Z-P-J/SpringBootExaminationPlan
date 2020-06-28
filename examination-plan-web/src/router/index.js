@@ -125,13 +125,18 @@ export const asyncRouterMap = [
     path: '/majorplan',
     component: Layout,
     redirect: '/majorplan/list',
-    icon: 'icon',
+    icon: 'form',
     noDropDown: true,
-    // name: '专业计划',
+    name: '专业计划',
     children: [{
       path: 'list',
       name: '专业计划',
       component: _import('majorplan/list'),
+      meta: { permission: ['role:list'] }
+    }, {
+      path: 'approve',
+      name: '审批专业计划',
+      component: _import('majorplan/approve'),
       meta: { permission: ['role:list'] }
     }]
   },
@@ -208,6 +213,14 @@ export const asyncRouterMap = [
       path: 'textbook',
       name: '课程教材',
       component: _import('course/textbook')
+    }, {
+      path: 'charge',
+      name: '课程费用',
+      component: _import('course/charge')
+    }, {
+      path: 'practice',
+      name: '理论与实践课程',
+      component: _import('course/practice')
     }]
   },
   {

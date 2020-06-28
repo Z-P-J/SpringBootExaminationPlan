@@ -1,13 +1,5 @@
 import request from '@/utils/request'
 
-// export function listRoleWithPermission(params) {
-//   return request({
-//     url: '/role/permission',
-//     method: 'get',
-//     params
-//   })
-// }
-
 export function listCourse(params) {
   return request({
     url: '/course',
@@ -15,14 +7,6 @@ export function listCourse(params) {
     params
   })
 }
-
-// export function listResourcePermission(params) {
-//   return request({
-//     url: '/permission',
-//     method: 'get',
-//     params
-//   })
-// }
 
 export function addCourse(courseForm) {
   return request({
@@ -136,6 +120,68 @@ export function updateNationalCourse(form) {
 export function removeNationalCourse(courseId) {
   return request({
     url: '/course/national/' + courseId,
+    method: 'delete'
+  })
+}
+
+export function listCourseCharge(params) {
+  return request({
+    url: '/course/charge',
+    method: 'get',
+    params
+  })
+}
+
+export function addCourseCharge(form) {
+  return request({
+    url: '/course/charge',
+    method: 'post',
+    data: form
+  })
+}
+
+export function updateCourseCharge(form) {
+  return request({
+    url: '/course/charge',
+    method: 'put',
+    data: form
+  })
+}
+
+export function removeCourseCharge(courseId) {
+  return request({
+    url: '/course/charge/' + courseId,
+    method: 'delete'
+  })
+}
+
+export function listPractice(params) {
+  return request({
+    url: '/course/practice',
+    method: 'get',
+    params
+  })
+}
+
+export function addPractice(form) {
+  return request({
+    url: '/course/practice',
+    method: 'post',
+    data: form
+  })
+}
+
+export function updatePractice(form) {
+  return request({
+    url: '/course/practice',
+    method: 'put',
+    data: form
+  })
+}
+
+export function removePractice(courseId) {
+  return request({
+    url: '/course/practice/' + courseId,
     method: 'delete'
   })
 }

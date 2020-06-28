@@ -35,7 +35,7 @@
             type="primary"
             size="mini"
             icon="el-icon-plus"
-            :disabled="this.multipleSelection.length === 0 || !isDisabled('已启用')"
+            :disabled="this.multipleSelection.length === 0 || isDisabled('已审批')"
             @click.native.prevent="enableMajorplan"
           >发布启用</el-button>
           <el-button
@@ -86,7 +86,7 @@
       >
         <template slot-scope="scope">
         <el-button
-            type="info"
+            type="warning"
             size="mini"
             @click.native.prevent="showDetail(scope.$index)"
           >查看</el-button>
@@ -109,6 +109,7 @@
       layout="total, sizes, prev, pager, next, jumper"
     ></el-pagination>
     <majorplan-detail-dialog v-model="majorplanDialog"></majorplan-detail-dialog>
+    <div style="float: right;">注：状态转换遵循拓扑排序：新建——>已编制——>已审批——>已启用</div>
   </div>
 </template>
 <script>
@@ -170,14 +171,15 @@ export default {
         permissionIdList: []
       },
       tempMajorplan: {
-        planVersionId: '',
-        planName: '',
+        planVersionId: 'P0000',
+        planName: '计算机科学专业计划',
         state: '新建',
         createDate: '2020-6-29',
         approveStatus: '计划科提交',
         xuelichuSuggestion: '无',
         leaderSign: '无',
-        majorId: ''
+        majorId: 'A000000',
+        courseId: '00000'
       },
       majorplanDialog: {
         data: {},

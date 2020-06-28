@@ -43,6 +43,12 @@ public interface ICourseService extends Service<CourseInfo> {
 
   CourseCharge getChargeById(Object id);
 
+  void deleteCourseCharge(Object id);
+
+  void updateCourseCharge(CourseCharge info);
+
+  void saveCourseCharge(CourseCharge info);
+
   List<CourseNational> listNationalCourse();
 
   CourseNational getNationalCourseById(Object id);
@@ -60,5 +66,15 @@ public interface ICourseService extends Service<CourseInfo> {
   void deleteCourse(List<String> courseIdList);
 
   List<CourseTextBookInfo> listTextbookByCourseId(String courseId);
+
+  List<TheoryPractice> listTheoryPractice();
+
+  TheoryPractice getTheoryPracticeById(Object id);
+
+  void deleteTheoryPractice(Object id);
+
+  void updateTheoryPractice(TheoryPractice info);
+
+  void saveTheoryPractice(TheoryPractice info);
 
 }

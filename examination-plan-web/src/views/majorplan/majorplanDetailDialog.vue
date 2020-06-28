@@ -1,5 +1,6 @@
 <template>
-  <el-dialog title="专业计划详情" :visible.sync="value.show">
+<div>
+  <el-dialog title="专业计划详情/学历处提交" :visible.sync="value.show">
     <el-form
       v-loading.body="loading"
       :model="value.data"
@@ -14,12 +15,12 @@
       </el-form-item>
       <el-form-item label="计划名称" prop="planName">
         <el-col :span="6">
-          <el-input v-model="value.data.planName" />
+          <el-input v-model="value.data.planName" :disabled="value.type === 'update'" />
         </el-col>
       </el-form-item>
       <el-form-item label="状态">
         <el-col :span="6">
-        <el-select v-model="value.data.state" placeholder="选择状态" :value="value.data.state">
+        <el-select v-model="value.data.state" :disabled="true" placeholder="选择状态" :value="value.data.state">
             <el-option label="新建" value="新建"></el-option>
             <el-option label="已编制" value="已编制"></el-option>
             <el-option label="已审批" value="已审批"></el-option>
@@ -31,6 +32,7 @@
         <el-col :span="6">
           <el-date-picker
             v-model="value.data.createDate"
+            value-format="yyyy-MM-dd"
             :readonly ="true"
             type="date">
           </el-date-picker>
@@ -38,7 +40,7 @@
       </el-form-item>
       <el-form-item label="审批状态">
         <el-col :span="6">
-        <el-select v-model="value.data.approveStatus" placeholder="选择审批状态" :value="value.data.approveStatus">
+        <el-select v-model="value.data.approveStatus" :disabled="true" placeholder="选择审批状态" :value="value.data.approveStatus">
             <el-option label="计划科提交" value="计划科提交"></el-option>
             <el-option label="学历处审核" value="学历处审核"></el-option>
             <el-option label="领导审核" value="领导审核"></el-option>
@@ -53,7 +55,7 @@
       </el-form-item>
       <el-form-item label="领导意见">
         <el-col :span="6">
-          <el-input v-model="value.data.leaderSign" />
+          <el-input v-model="value.data.leaderSign"  :disabled="true"/>
         </el-col>
       </el-form-item>
       <el-form-item label="专业编码" prop="majorId">
@@ -65,10 +67,25 @@
         <el-col :span="6">
           <el-input v-model="value.data.courseId" />
         </el-col>
+        <!-- <el-col :span="6">
+          <template slot-scope="scope">
+          <el-button
+            type="info"
+            size="mini"
+            @click.native.prevent="showDetail(scope.$index)"
+          >查看</el-button>
+          <el-button
+            type="danger"
+            size="mini"
+            v-if="hasPermission('role:delete') && scope.row.name !== '超级管理员'"
+            @click.native.prevent="remove(scope.$index)"
+          >删除</el-button>
+          </template>
+        </el-col> -->
       </el-form-item>  
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click.native.prevent="value.show = false">取消</el-button>
+      <el-button v-if="value.type === 'update'" :disabled="value.data.approveStatus != '学历处审核'" type="warning" @click.native.prevent="goApprove">去审核</el-button>
       <el-button
         v-if="value.type === 'add'"
         type="success"
@@ -80,9 +97,12 @@
         type="primary"
         :loading="btnLoading"
         @click.native.prevent="updateMajorplan"
-      >调整</el-button>
+      >提交</el-button>
+      <el-button @click.native.prevent="value.show = false">取消</el-button>
     </div>
   </el-dialog>
+  <approve-dialog v-model="approveDialog"></approve-dialog>
+</div>
 </template>
 
 <script>
@@ -91,8 +111,12 @@ import {
   addMajorplan,
   updateMajorplan
 } from '@/api/majorplan'
+import ApproveDialog from './ApproveDialog'
 
 export default {
+  components: {
+    ApproveDialog
+  },
   props: {
     value: {
       type: Object
@@ -136,6 +160,22 @@ export default {
       loading: false,
       btnLoading: false,
       toUpdate: false,
+      approveDialog: {
+        data: {
+          planVersionId: 'P0000',
+          planName: '计算机科学专业计划',
+          state: '新建',
+          createDate: '2020-6-29',
+          approveStatus: '计划科提交',
+          xuelichuSuggestion: '无',
+          leaderSign: '无',
+          majorId: 'A000000',
+          courseId: '000000'
+        },
+        show: false,
+        type: 'approve',
+        callback: this.value.callback
+      },
       majorplanDetailRules: {
         planVersionId: [{ required: true, trigger: 'blur', validator: validateEmpty }],
         planName: [{ required: true, trigger: 'blur', validator: validateEmpty }],
@@ -169,6 +209,8 @@ export default {
      * 修改
      */
     updateMajorplan() {
+      this.value.data.state = '已编制'
+      this.value.data.approveStatus = '学历处审核'
       this.$refs.majorplanForm.validate(valid => {
         if (valid) {
           this.btnLoading = true
@@ -189,6 +231,13 @@ export default {
     getToday() {
       this.value.data.createDate = new Date()
       console.log('new createDate')
+    },
+    goApprove() {
+      this.value.show = false
+      this.btnLoading = false
+      this.approveDialog.data = this.value.data
+      this.approveDialog.type = 'approve'
+      this.approveDialog.show = true
     }
   }
 }
