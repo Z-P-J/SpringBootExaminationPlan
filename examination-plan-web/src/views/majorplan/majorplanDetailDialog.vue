@@ -85,7 +85,7 @@
       </el-form-item>  
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button v-if="value.type === 'update'" type="warning" @click.native.prevent="goApprove">去审核</el-button>
+      <el-button v-if="value.type === 'update'" :disabled="value.data.approveStatus != '学历处审核'" type="warning" @click.native.prevent="goApprove">去审核</el-button>
       <el-button
         v-if="value.type === 'add'"
         type="success"

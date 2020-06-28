@@ -125,7 +125,7 @@ export const asyncRouterMap = [
     path: '/majorplan',
     component: Layout,
     redirect: '/majorplan/list',
-    icon: 'icon',
+    icon: 'form',
     noDropDown: true,
     name: '专业计划',
     children: [{
