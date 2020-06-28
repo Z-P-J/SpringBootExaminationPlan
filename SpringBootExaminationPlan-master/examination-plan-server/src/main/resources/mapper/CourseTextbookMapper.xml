@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.plan.mapper.CourseTextbookMapper">
+
+    <resultMap id="textbookMap" type="com.exam.plan.entity.CourseTextBookInfo">
+<!--        <id column="id" jdbcType="BIGINT" property="id"/>-->
+<!--        <result column="name" jdbcType="VARCHAR" property="name"/>-->
+<!--        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>-->
+<!--        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>-->
+    </resultMap>
+
+    <select id="listTextbookByCourseId" parameterType="java.lang.String" resultMap="textbookMap">
+        SELECT *
+        FROM course_textbook_info r
+        where r.course_id = #{id}
+    </select>
+
+</mapper>
