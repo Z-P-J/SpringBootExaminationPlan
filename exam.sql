@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 80020
 File Encoding         : 65001
 
-Date: 2020-06-27 18:58:33
+Date: 2020-06-28 09:35:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -226,7 +226,7 @@ CREATE TABLE `exam_course` (
   `course_id` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `time_id` varchar(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='统考课表';
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC COMMENT='统考课表';
 
 -- ----------------------------
 -- Records of exam_course
@@ -377,7 +377,7 @@ CREATE TABLE `information_of_service_center` (
 -- ----------------------------
 DROP TABLE IF EXISTS `major_categories`;
 CREATE TABLE `major_categories` (
-  `category_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `category_code` varchar(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `major_category_level` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `major_category_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`category_code`) USING BTREE
@@ -413,7 +413,7 @@ CREATE TABLE `major_direction` (
 DROP TABLE IF EXISTS `major_info`;
 CREATE TABLE `major_info` (
   `major_id` varchar(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `national_major_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `national_major_code` varchar(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `major_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `major_brief_introduction` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `major_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
@@ -433,7 +433,7 @@ CREATE TABLE `major_info` (
   `graduation_credit` int DEFAULT NULL,
   `total_course_number` int DEFAULT NULL,
   `whether_divide_direction` tinyint(1) DEFAULT NULL,
-  `major_category_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `major_category_code` varchar(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `apply_condition` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `graduation_condition` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
@@ -445,9 +445,9 @@ CREATE TABLE `major_info` (
 -- ----------------------------
 INSERT INTO `major_info` VALUES ('A000001', 'C000002', '汉语言', '暂无介绍', '本科段', '本科', '面向高校', '四川大学', '003', '000', '000', '000', '000', '000', '2020-06-23', '000', '正常', '200', '170', '50', '0', 'B000003', '000', '毕业学分达到要求', '000');
 INSERT INTO `major_info` VALUES ('A000002', 'C000001', '法学', '暂无介绍', '本科段', '本科', '面向社会', '四川大学', '001', '000', '000', '000', '000', '000', '2020-06-23', '000', '即将停考', '200', '170', '50', '1', 'B000001', '000', '毕业学分达到要求', '000');
-INSERT INTO `major_info` VALUES ('A100000', 'C000001', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '正常', '200', '110', '55', '1', 'B000001', '暂无', '暂无', '暂无');
-INSERT INTO `major_info` VALUES ('A100001', 'C000001', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '即将停考', '200', '110', '55', '1', 'B000001', '暂无', '暂无', '暂无');
-INSERT INTO `major_info` VALUES ('A100002', 'C000001', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '停考', '200', '110', '55', '1', 'B000001', '这是报考条件说明', '暂无', '暂无');
+INSERT INTO `major_info` VALUES ('A100000', 'C000001', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '停考', '200', '110', '55', '1', 'B000001', '暂无', '暂无', '暂无');
+INSERT INTO `major_info` VALUES ('A100001', 'A100000', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '正常', '200', '110', '55', '1', 'A100000', '暂无', '暂无', '暂无');
+INSERT INTO `major_info` VALUES ('A110001', 'A100000', '测试专业', '后续补充介绍', '本科段', '本科', '面向高校', '四川大学', '001', 'BS001', '000', '000', '000', '000', '2022-12-31', '000', '停考', '200', '110', '55', '1', 'B000007', '暂无', '暂无', '暂无');
 
 -- ----------------------------
 -- Table structure for major_plan_adjust_apply
@@ -516,17 +516,17 @@ CREATE TABLE `major_school` (
   `main_target_school` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `main_target_school_code` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='专业主考院校';
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='专业主考院校';
 
 -- ----------------------------
 -- Records of major_school
 -- ----------------------------
-INSERT INTO `major_school` VALUES ('1', 'A000001', '00001', '1');
+INSERT INTO `major_school` VALUES ('1', 'A000001', '00001', '3');
 INSERT INTO `major_school` VALUES ('2', 'A000001', '00002', '2');
 INSERT INTO `major_school` VALUES ('6', 'A000002', '00001', '1');
 INSERT INTO `major_school` VALUES ('11', 'A000001', '00004', '4');
-INSERT INTO `major_school` VALUES ('12', 'A000001', '00005', '5');
-INSERT INTO `major_school` VALUES ('13', 'A000001', '00006', '7');
+INSERT INTO `major_school` VALUES ('17', 'A000002', '00001', '3');
+INSERT INTO `major_school` VALUES ('18', 'A000002', '00001', '3');
 
 -- ----------------------------
 -- Table structure for nation_course
