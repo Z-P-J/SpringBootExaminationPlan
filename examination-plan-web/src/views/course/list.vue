@@ -36,6 +36,13 @@
             :disabled="isDisabled('注销')"
             @click.native.prevent="enableCourse"
           >启用</el-button>
+          <el-button
+            type="danger"
+            size="mini"
+            icon="el-icon-plus"
+            :disabled="multipleSelection.length === 0"
+            @click.native.prevent="deleteCourse"
+          >删除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -110,7 +117,8 @@ import {
   listCourse,
   removeCourse,
   disableCourse,
-  enableCourse
+  enableCourse,
+  deleteCourse
 } from '@/api/course'
 import { unix2CurrentTime } from '@/utils'
 import { mapGetters } from 'vuex'
@@ -245,6 +253,23 @@ export default {
         return v.courseId
       })
       enableCourse(ids).then(response => {
+        console.log('data=' + JSON.stringify(response.data))
+        this.$refs.multipleTable.clearSelection()
+        this.roleList = response.data.list
+        this.total = response.data.total
+        this.listLoading = false
+      }).error(res => {
+        this.listLoading = false
+        this.$message.error('课程停用失败')
+      })
+    },
+    deleteCourse() {
+      console.log('multipleSelection=' + JSON.stringify(this.multipleSelection))
+      this.listLoading = true
+      const ids = this.multipleSelection.map(v => {
+        return v.courseId
+      })
+      deleteCourse(ids).then(response => {
         console.log('data=' + JSON.stringify(response.data))
         this.$refs.multipleTable.clearSelection()
         this.roleList = response.data.list

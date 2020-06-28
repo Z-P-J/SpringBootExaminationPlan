@@ -29,4 +29,6 @@ public interface CourseMapper extends MyMapper<CourseInfo> {
 
   void enableCourse(@Param("courseIdList") List<String> courseIdList);
 
+  void deleteCourse(@Param("courseIdList") List<String> courseIdList);
+
 }

@@ -63,6 +63,14 @@ export function enableCourse(params) {
   })
 }
 
+export function deleteCourse(params) {
+  return request({
+    url: '/course/delete',
+    method: 'post',
+    data: params
+  })
+}
+
 export function listTextbook(params) {
   return request({
     url: '/course/textbook',
@@ -91,6 +99,13 @@ export function removeTextbook(courseId) {
   return request({
     url: '/course/textbook/' + courseId,
     method: 'delete'
+  })
+}
+
+export function getTextbook(courseId) {
+  return request({
+    url: '/course/textbook/' + courseId,
+    method: 'get'
   })
 }
 

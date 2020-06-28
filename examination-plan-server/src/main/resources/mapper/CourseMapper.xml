@@ -58,4 +58,12 @@
         </foreach>
     </update>
 
+    <update id="deleteCourse" parameterType="java.util.List">
+        DELETE FROM course_info
+        WHERE course_id in
+        <foreach collection="courseIdList" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>

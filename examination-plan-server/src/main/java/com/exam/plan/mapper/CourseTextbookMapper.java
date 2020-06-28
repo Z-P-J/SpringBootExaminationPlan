@@ -10,6 +10,6 @@ import java.util.List;
 @Mapper
 public interface CourseTextbookMapper extends MyMapper<CourseTextBookInfo> {
 
-
+    List<CourseTextBookInfo> listTextbookByCourseId(@Param("id") String courseId);
 
 }

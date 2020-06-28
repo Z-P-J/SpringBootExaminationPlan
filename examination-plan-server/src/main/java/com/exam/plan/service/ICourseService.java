@@ -1,6 +1,7 @@
 package com.exam.plan.service;
 
 import com.exam.plan.entity.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -55,5 +56,9 @@ public interface ICourseService extends Service<CourseInfo> {
   void disableCourse(List<String> courseIdList);
 
   void enableCourse(List<String> courseIdList);
+
+  void deleteCourse(List<String> courseIdList);
+
+  List<CourseTextBookInfo> listTextbookByCourseId(String courseId);
 
 }

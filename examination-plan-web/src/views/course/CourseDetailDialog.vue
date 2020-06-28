@@ -1,5 +1,6 @@
 <template>
-<el-dialog title="课程详情" :visible.sync="value.show">
+<div>
+  <el-dialog title="课程详情" :visible.sync="value.show" @open="onOpen">
       <el-form
       v-loading.body="loading"
       :model="value.data"
@@ -98,6 +99,49 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-button
+        v-if="textbookList.length === 0"
+        type="primary"
+        @click.native.prevent="addTextbook"
+        >添加教材</el-button>
+      <el-table
+      v-else
+      :data="textbookList"
+      border
+      fit
+      highlight-current-row
+    >
+      <!-- <el-table-column label="#" align="center" width="40">
+        <template slot-scope="scope">
+          <span v-text="getTableIndex(scope.$index)"></span>
+        </template>
+      </el-table-column> -->
+      <el-table-column label="教材编码" align="center" prop="textbookCode" />
+      <el-table-column label="教材名称" align="center" prop="textbookName" />
+      <el-table-column label="作者" align="center" prop="author"/>
+      <!-- <el-table-column label="单价" align="center" prop="price" /> -->
+      <el-table-column label="选用类型" align="center" prop="textbookSelectType" />
+      <el-table-column label="教材状态" align="center" prop="textbookUseStatus" />
+      <el-table-column
+        label="管理"
+        align="center"
+        width="200"
+      >
+        <template slot-scope="scope">
+        <el-button
+            type="info"
+            size="mini"
+            @click.native.prevent="showDetail(scope.$index)"
+          >查看</el-button>
+          <el-button
+            type="danger"
+            size="mini"
+            v-if="hasPermission('role:delete') && scope.row.name !== '超级管理员'"
+            @click.native.prevent="remove(scope.$index)"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
     </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,7 +159,10 @@
           @click.native.prevent="updateCourse"
         >更新</el-button>
       </div>
+
     </el-dialog>
+    <textbook-detail-dialog v-model="textbookDialog"></textbook-detail-dialog>
+</div>
 </template>
 
 <script>
@@ -123,10 +170,16 @@ import { unix2CurrentTime } from '@/utils'
 // import { isValidateEmail } from '@/utils/validate'
 import {
   addCourse,
-  updateCourse
+  updateCourse,
+  getTextbook,
+  removeTextbook
 } from '@/api/course'
+import TextbookDetailDialog from './TextbookDetailDialog'
 
 export default {
+  components: {
+    TextbookDetailDialog
+  },
   props: {
     value: {
       type: Object
@@ -158,6 +211,31 @@ export default {
       }
     }
     return {
+      textbookList: [],
+      textbookDialog: {
+        data: {
+          courseId: this.value.data.courseId,
+          courseName: '',
+          textbookCode: '',
+          textbookName: '',
+          textbookISBN: '',
+          textbookType: '教材',
+          chiefEditor: '未知',
+          author: '未知',
+          publishingHouse: '未知',
+          version: '1.0',
+          publicationDate: '2020-01-01',
+          price: 50,
+          textbookSelectType: '国家统编',
+          syllabus: '',
+          textbookUseStatus: '在用',
+          textbookStartTime: '2020-01-01',
+          textbookEndTime: '2020-12-01'
+        },
+        show: false,
+        type: 'add',
+        callback: this
+      },
       loading: false,
       btnLoading: false,
       toUpdate: false,
@@ -187,6 +265,53 @@ export default {
   },
   methods: {
     unix2CurrentTime,
+    onOpen() {
+      console.log('onOpen')
+      this.textbookList.splice(0, this.textbookList.length)
+      if (this.value.type === 'add') {
+        return
+      }
+      getTextbook(this.value.data.courseId).then(response => {
+        console.log('data=' + JSON.stringify(response.data))
+        if (response.data == null) {
+          return
+        }
+        this.textbookList.push(response.data)
+      }).catch(res => {
+        this.$message.error('获取课程教材失败')
+      })
+    },
+    getList() {
+      this.onOpen()
+    },
+    addTextbook() {
+      this.textbookDialog.data.courseId = this.value.data.courseId
+      this.textbookDialog.type = 'add'
+      this.textbookDialog.show = true
+    },
+    showDetail(index) {
+      const course = this.textbookList[index]
+      this.textbookDialog.data = course
+      this.textbookDialog.type = 'update'
+      this.textbookDialog.show = true
+    },
+    remove(index) {
+      this.$confirm('删除该教材？', '警告', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        const courseId = this.textbookList[0].courseId
+        removeTextbook(courseId).then(() => {
+          this.$message.success('删除成功')
+          this.getList()
+        }).catch(() => {
+          this.$message.error('删除失败')
+        })
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
     addCourse() {
       this.$refs.courseForm.validate(valid => {
         if (valid) {
