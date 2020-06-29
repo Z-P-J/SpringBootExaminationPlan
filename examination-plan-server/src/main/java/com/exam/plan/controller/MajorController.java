@@ -98,6 +98,7 @@ public class MajorController {
             return ResultGenerator.genOkResult();
         }
         Condition condition=new Condition(Major.class);
+        System.out.println("updateMajor Major.class=" + Major.class);
         condition.createCriteria().andCondition( "major_id in (" +ids+")");
 
         this.majorService.updateByConditionBatch(ids.split(",").length,major,condition);
