@@ -53,7 +53,7 @@ public class MajorCourseController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public Result deleteCourse(@PathVariable final Long id) {
+    public Result deleteCourse(@PathVariable final String id) {
         final MajorCourseInfo dbRole = this.majorCourseService.getById(id);
         if (dbRole == null) {
             return ResultGenerator.genFailedResult("专业课程不存在");
