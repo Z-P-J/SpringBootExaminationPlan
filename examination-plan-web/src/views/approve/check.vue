@@ -68,10 +68,25 @@
           border
           fit
           highlight-current-row
-          v-if="this.ShowStatus !== 'new'">
+          v-if="this.ShowStatus === 'continue' || this.ShowStatus === 'extend'">
           <el-table-column label="专业编码" align="center" prop="major_id" width="500" />
           <el-table-column label="专业名称" align="center" prop="major_name"/>
         </el-table>
+                                 <!-- 专业调整 -->
+        <el-table
+          :data="ApproveCourseDataList"
+          border
+          fit
+          highlight-current-row
+          v-if="this.ShowStatus === 'adjust'">
+          <el-table-column label="专业编码" align="center" prop="major_id" width="150" />
+          <el-table-column label="课程编码" align="center" prop="course_name" width="150"/>
+          <el-table-column label="课程名称" align="center" prop="course_id" width="150" />
+          <el-table-column label="替换课程编码" align="center" prop="new_course_name" width="150"/>
+          <el-table-column label="替换课程名称" align="center" prop="new_course_id" width="150" />
+          <el-table-column label="课程类型" align="center" prop="course_property"/>
+        </el-table>
+                                 <!-- 专业调整结束 -->
      
     <!-- 新专业显示 -->
         <el-form
@@ -79,8 +94,9 @@
           :model="ApproveNewData"
           ref="ApproveNewData"
           label-width="115px"
+          v-if="this.ShowStatus === 'new'"
         >
-          <el-row :gutter="18" v-if="this.ShowStatus === 'new'">
+          <el-row :gutter="18" >
             <el-row :gutter="18">
               <el-col :span="12">
                 <el-form-item label="专业编码" prop="major_id">
@@ -231,7 +247,7 @@
 <script>
 import { unix2CurrentTime } from '@/utils'
 import { list , remove, update, addData, add } from '@/api/approve'
-import { getApproveMajorDataList, getApproveNewData } from '@/api/approve_major'
+import { getApproveMajorDataList, getApproveNewData, getApproveCourseDataList } from '@/api/approve_major'
 
 export default {
   created() {
@@ -239,16 +255,14 @@ export default {
     console.log('tmpData=' + JSON.stringify(this.tmpData))
     console.log('aaaaaShowStatus=' + JSON.stringify(this.tmpData.approve_name))
     this.changeShow()
-    console.log('aaaaaShowStatus=' + JSON.stringify(this.ShowStatus))
-    this.getApproveMajorDataList(this.tmpData.approve_id)
-    this.getApproveNewData(this.tmpData.approve_id)
-    console.log('ApproveNewData=' + JSON.stringify(this.ApproveNewData))
+   
   },
   data() {
     return {
       ShowStatus:'',
       ApproveNewData:{},
       ApproveMajorDataList: [],
+      ApproveCourseDataList:[],
       loading: false,
       btnLoading: false,
       toUpdate: false,
@@ -272,15 +286,20 @@ export default {
     changeShow(){
       if(this.tmpData.approve_name === '专业调整'){
         this.ShowStatus = "adjust";
+        this.getApproveCourseDataList(this.tmpData.approve_id)
       }
       if(this.tmpData.approve_name === '续办专业'){
        this.ShowStatus = "continue";
+        this.getApproveMajorDataList(this.tmpData.approve_id)
       }
       if(this.tmpData.approve_name === '扩办专业'){
         this.ShowStatus = "extend";
+         this.getApproveMajorDataList(this.tmpData.approve_id)
       }
       if(this.tmpData.approve_name === '新专业'){
         this.ShowStatus = "new";
+        this.getApproveNewData(this.dataList.approve_id)
+    
       }
     },
 
@@ -310,6 +329,15 @@ export default {
       getApproveMajorDataList(id).then(response => {
         this.ApproveMajorDataList = response.data.list
         console.log(' this.ApproveMajorDataList'+ JSON.stringify(this.ApproveMajorDataList))
+      }).catch(res => {
+        
+      })
+    },
+    getApproveCourseDataList(id){
+      console.log('id',id)
+      getApproveCourseDataList(id).then(response => {
+        this.ApproveCourseDataList = response.data.list
+        console.log(' this.ApproveCourseDataList'+ JSON.stringify(this.ApproveCourseDataList))
       }).catch(res => {
         
       })

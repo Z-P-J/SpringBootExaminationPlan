@@ -65,23 +65,39 @@
             <el-form-item label="新专业如下："></el-form-item>
           </el-col>
         </el-row>
-        <el-table
+        <el-table 
           :data="ApproveMajorDataList"
           border
           fit
           highlight-current-row
-          v-if="this.ShowStatus !== 'new'">
+          v-if="this.ShowStatus === 'continue' || this.ShowStatus === 'extend'">
           <el-table-column label="专业编码" align="center" prop="major_id" width="500" />
           <el-table-column label="专业名称" align="center" prop="major_name"/>
         </el-table>
+         <!-- 专业调整 -->
+        <el-table
+          :data="ApproveCourseDataList"
+          border
+          fit
+          highlight-current-row
+          v-if="this.ShowStatus === 'adjust'">
+          <el-table-column label="专业编码" align="center" prop="major_id" width="150" />
+          <el-table-column label="课程编码" align="center" prop="course_name" width="150"/>
+          <el-table-column label="课程名称" align="center" prop="course_id" width="150" />
+          <el-table-column label="替换课程编码" align="center" prop="new_course_name" width="150"/>
+          <el-table-column label="替换课程名称" align="center" prop="new_course_id" width="150" />
+          <el-table-column label="课程类型" align="center" prop="course_property"/>
+        </el-table>
+                                 <!-- 专业调整结束 -->
                         <!-- 新专业显示 -->
         <el-form
           v-loading.body="loading"
           :model="ApproveNewData"
           ref="ApproveNewData"
           label-width="115px"
+          v-if="this.ShowStatus === 'new'"
         >
-          <el-row :gutter="18" v-if="this.ShowStatus === 'new'">
+          <el-row :gutter="18">
             <el-row :gutter="18">
               <el-col :span="12">
                 <el-form-item label="专业编码" prop="major_id">
@@ -176,6 +192,7 @@
           </el-row> 
         </el-form>
                         <!-- 新专业显示结束 -->
+                        
         <el-row :gutter="18">
         <el-col :span="18" >
           <el-form-item  >
@@ -218,16 +235,16 @@
 <script>
 import { unix2CurrentTime } from '@/utils'
 import { isValidateEmail } from '@/utils/validate'
-import { getApproveMajorDataList as list ,getApproveNewData} from '@/api/approve_major'
+import { getApproveMajorDataList as list ,getApproveNewData,getApproveCourseDataList} from '@/api/approve_major'
 export default {
   created() {
     this.dataList = this.$route.query.data
     console.log('前端收到dataList=' + JSON.stringify(this.dataList))
     this.changeShow()
     console.log('ShowStatus=' + JSON.stringify(this.ShowStatus))
-    this.getApproveMajorDataList(this.dataList.approve_id)
-    this.getApproveNewData(this.dataList.approve_id)
+    
     console.log('ApproveNewData=' + JSON.stringify(this.ApproveNewData))
+    console.log('ApproveNewData=' + JSON.stringify(this.ApproveCourseDataList))
   },
   data() {
     return {
@@ -236,8 +253,9 @@ export default {
       btnLoading: false,
       toUpdate: false,
       dataList: {},
+      ApproveCourseDataList:[],
       ApproveMajorDataList: [],
-      ApproveNewData:{}
+      ApproveNewData:{},
     }
   },
 
@@ -245,17 +263,24 @@ export default {
     unix2CurrentTime,
     //根据专业申报表的不同显示不同部分
     changeShow(){
+     
+
       if(this.dataList.approve_name === '专业调整'){
         this.ShowStatus = "adjust";
+        this.getApproveCourseDataList(this.dataList.approve_id)
       }
       if(this.dataList.approve_name === '续办专业'){
        this.ShowStatus = "continue";
+        this.getApproveMajorDataList(this.dataList.approve_id)
       }
       if(this.dataList.approve_name === '扩办专业'){
         this.ShowStatus = "extend";
+         this.getApproveMajorDataList(this.dataList.approve_id)
       }
       if(this.dataList.approve_name === '新专业'){
         this.ShowStatus = "new";
+            this.getApproveNewData(this.dataList.approve_id)
+    
       }
     },
     /**
@@ -269,6 +294,15 @@ export default {
       list(id).then(response => {
         this.ApproveMajorDataList = response.data.list
         console.log(' this.ApproveMajorDataList'+ JSON.stringify(this.ApproveMajorDataList))
+      }).catch(res => {
+        
+      })
+    },
+    getApproveCourseDataList(id){
+      console.log('id',id)
+      getApproveCourseDataList(id).then(response => {
+        this.ApproveCourseDataList = response.data.list
+        console.log(' this.ApproveCourseDataList'+ JSON.stringify(this.ApproveCourseDataList))
       }).catch(res => {
         
       })

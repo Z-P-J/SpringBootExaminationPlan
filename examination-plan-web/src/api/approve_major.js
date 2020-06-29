@@ -31,6 +31,13 @@ export function getApproveMajorDataList(id) {
   })
 }
 
+export function getApproveCourseDataList(id) {
+  return request({
+    url: '/approve_major/courselist/' + id,
+    method: 'get'
+  })
+}
+
 export function getApproveNewData(approve_id) {
   return request({
     url: '/approve_major/newmajor/' + approve_id,

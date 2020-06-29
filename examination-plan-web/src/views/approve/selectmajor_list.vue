@@ -55,7 +55,7 @@
       <el-table-column label="专业编码" align="center" prop="major_id" width="150" />
       <el-table-column label="大类专业编码" align="center" prop="major_category_code" width="150" />
       <el-table-column label="国家专业编码" align="center" prop="national_major_code" width="150" />
-      <el-table-column label="专业名称" align="center" prop="major_name"  />
+      <el-table-column label="专业名称" align="center" prop="major_name" />
       <el-table-column
         sortable
         prop="major_status"
@@ -74,8 +74,9 @@
         <template slot-scope="scope">
           <router-link
             class="inlineBlock"
-            :to="{ path:'/approve/selectcourse', query: { Id:scope.row.major_id, data:scope.row, 
-            actionStatus:'update',ShowStatus:'adjust' } }">
+            :to="{ path:'/approve/selectcourse_list', query: { MajorId:scope.row.major_id, 
+            schoolId: Datafrom,
+            data:scope.row, actionStatus:'update',ShowStatus:'adjust' } }">
             <el-button
               type="warning"
               size="mini"
@@ -105,6 +106,8 @@ import { mapGetters } from 'vuex'
 
 export default {
   created() {
+    console.log('this.$route.query.school_id=',this.$route.query.school_id)
+    this.Datafrom = this.$route.query.school_id
     this.tmpData.school_id = this.$route.query.school_id
     this.ShowStatus = this.$route.query.ShowStatus;
     this.getDataList()
@@ -112,6 +115,7 @@ export default {
   },
   data() {
     return {
+      Datafrom: null,
       dataList: [], // 用户列表
       total: 0, // 数据总数
       listQuery: {

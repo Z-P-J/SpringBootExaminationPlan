@@ -31,6 +31,8 @@ public class ApproveMajorController {
     @Resource
     private IApproveMajorService approveMajorService;
     @Resource
+    private IApproveCourseService approveCourseService;
+    @Resource
     private IApproveService approveService;
 
 
@@ -70,6 +72,25 @@ public class ApproveMajorController {
         System.out.println("approveMajor"+approveMajor.get(0));
 
         return ResultGenerator.genOkResult(approveMajor.get(0));
+    }
+
+    //显示专业调整信息
+    @GetMapping("/courselist/{id}")
+    @ResponseBody
+    public Result ApproveCourselist(
+            @PathVariable final String id) {
+        System.out.println("ApproveCourselist list approve_id"+id);
+        Condition condition=new Condition(ApproveCourse.class);
+        Example.Criteria criteria=condition.createCriteria();
+        criteria.andCondition("approve_id="+id+"");
+
+//        return ResultGenerator.genOkResult(list);
+        PageHelper.startPage(1, 100);
+        final List<ApproveCourse> list = this.approveCourseService.listByCondition(condition);
+        final PageInfo<ApproveCourse> pageInfo = new PageInfo<>(list);
+        System.out.println("pageInfo"+pageInfo);
+
+        return ResultGenerator.genOkResult(pageInfo);
     }
 
     @PostMapping("/single/{id}")
