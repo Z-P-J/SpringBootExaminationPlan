@@ -74,7 +74,12 @@
         :filters="[{ text: '正常', value: '0' }, { text: '注销', value: '1' }]"
         :filter-method="filterTag"
         filter-placement="bottom-end">
-        <template slot-scope="scope">{{ scope.row.courseStatus }}</template>
+        <template slot-scope="scope">
+          <!-- {{ scope.row.courseStatus }} -->
+          <el-tag
+            :type="scope.row.courseStatus === '正常' ? 'success' : 'danger'"
+            disable-transitions>{{scope.row.courseStatus}}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column
         label="管理"
