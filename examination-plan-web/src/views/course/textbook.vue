@@ -38,7 +38,13 @@
       <el-table-column label="作者" align="center" prop="author"/>
       <el-table-column label="单价" align="center" prop="price" />
       <el-table-column label="选用类型" align="center" prop="textbookSelectType" />
-      <el-table-column label="教材状态" align="center" prop="textbookUseStatus" />
+      <el-table-column label="教材状态" align="center" prop="textbookUseStatus">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.textbookUseStatus === '在用' ? 'success' : (scope.row.textbookUseStatus === '未启用' ? 'warning' : 'danger')"
+            disable-transitions>{{scope.row.textbookUseStatus}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         label="管理"
         align="center"

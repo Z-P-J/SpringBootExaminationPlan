@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 29/06/2020 13:22:38
+ Date: 29/06/2020 14:24:17
 */
 
 SET NAMES utf8mb4;
@@ -123,9 +123,9 @@ CREATE TABLE `course_info`  (
 -- ----------------------------
 INSERT INTO `course_info` VALUES ('00001', '00001', '英语', '英语课程', '全国命题', '正常', 0, 0, '100分制', 0, 0, 0, 0, 0, '理论', '无');
 INSERT INTO `course_info` VALUES ('00002', '00002', '英语2', '英语课程2', '全国命题', '正常', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
-INSERT INTO `course_info` VALUES ('00003', '00003', '英语3', '英语课程3', '全国命题', '正常', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
+INSERT INTO `course_info` VALUES ('00003', '00003', '英语3', '英语课程3', '全国命题', '注销', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
 INSERT INTO `course_info` VALUES ('00004', '00004', '数学', '数学课程', '全国命题', '正常', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
-INSERT INTO `course_info` VALUES ('00007', '00007', 'zpj', '无', '全国命题', '正常', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
+INSERT INTO `course_info` VALUES ('00007', '00007', '数据结构', '数据结构', '全国命题', '正常', 3, 60, '100分制', 40, 60, 100, 120, 0, '理论', '无');
 
 -- ----------------------------
 -- Table structure for course_textbook_info
@@ -156,7 +156,8 @@ CREATE TABLE `course_textbook_info`  (
 -- Records of course_textbook_info
 -- ----------------------------
 INSERT INTO `course_textbook_info` VALUES ('00001', '英语', '000000001', '英语', '12345678', '教材', '张三', '张三', '出版社', '1.0', '2020-06-23', 100, '国家统编', '教材大纲', '在用', '2020-01-02', '2020-12-01');
-INSERT INTO `course_textbook_info` VALUES ('00002', '数学', '000000002', '数学', '12345', '教材', '未知', '未知', '未知', '1.0', '2020-01-01', 50, '国家统编', 'sedrfhgtjghnvk', '在用', '2020-01-01', '2020-12-01');
+INSERT INTO `course_textbook_info` VALUES ('00002', '数学', '000000002', '数学', '12345', '教材', '未知', '未知', '未知', '1.0', '2020-01-01', 50, '国家统编', 'sedrfhgtjghnvk', '作废', '2020-01-01', '2020-12-01');
+INSERT INTO `course_textbook_info` VALUES ('00003', '数据结构', '000000003', '数据结构', 'xxxxxxxx', '教材', '未知', '未知', '未知', '1.0', '2020-01-01', 50, '国家统编', '', '未启用', '2020-01-01', '2020-12-01');
 
 -- ----------------------------
 -- Table structure for detail_of_student_service
@@ -528,6 +529,8 @@ CREATE TABLE `nation_course`  (
 -- Records of nation_course
 -- ----------------------------
 INSERT INTO `nation_course` VALUES ('00001', '数学', 3);
+INSERT INTO `nation_course` VALUES ('00002', '语文', 3);
+INSERT INTO `nation_course` VALUES ('00003', '英语', 3);
 INSERT INTO `nation_course` VALUES ('00004', '历史', 3);
 
 -- ----------------------------
